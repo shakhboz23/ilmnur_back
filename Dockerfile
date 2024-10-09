@@ -1,43 +1,42 @@
-# PRODUCTION DOCKERFILE
-# ---------------------
-# This Dockerfile allows to build a Docker image of the NestJS application
-# and based on a NodeJS 20 image. The multi-stage mechanism allows to build
-# the application in a "builder" stage and then create a lightweight production
-# image containing the required dependencies and the JS build files.
-# 
-# Dockerfile best practices
-# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
-# Dockerized NodeJS best practices
-# https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md
-# https://www.bretfisher.com/node-docker-good-defaults/
-# http://goldbergyoni.com/checklist-best-practice-of-node-js-in-production/
+# syntax = docker/dockerfile:1
 
-FROM node:20-alpine as builder
+# Adjust NODE_VERSION as desired
+ARG NODE_VERSION=18.15.0
+FROM node:${NODE_VERSION}-slim as base
 
-ENV NODE_ENV build
+LABEL fly_launch_runtime="NestJS"
 
-USER node
-WORKDIR /home/node
+# NestJS app lives here
+WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# Set production environment
+ENV NODE_ENV=production
 
-COPY --chown=node:node . .
-RUN npx prisma generate \
-    && npm run build \
-    && npm prune --omit=dev
 
-# ---
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
-FROM node:20-alpine
+# Install packages needed to build node modules
+RUN apt-get update -qq && \
+    apt-get install -y python-is-python3 pkg-config build-essential 
 
-ENV NODE_ENV production
+# Install node modules
+COPY --link package-lock.json package.json ./
+RUN npm ci --include=dev
 
-USER node
-WORKDIR /home/node
+# Copy application code
+COPY --link . .
 
-COPY --from=builder --chown=node:node /home/node/package*.json ./
-COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
-COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+# Build application
+RUN npm run build
 
-CMD ["node", "dist/server.js"]
+
+# Final stage for app image
+FROM base
+
+# Copy built application
+COPY --from=build /app /app
+
+# Start the server by default, this can be overwritten at runtime
+EXPOSE 3001
+CMD [ "npm", "run", "start" ]
