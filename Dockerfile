@@ -24,17 +24,6 @@ COPY package-lock.json package.json ./   # Copying files correctly
 RUN npm ci --include=dev
 
 # Copy application code
-COPY . .   # This copies all files from the current directory to /app
+COPY . ./   # Copying all files from the current directory to /app
 
-# Build application
-RUN npm run build
-
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3001
-CMD [ "npm", "run", "start" ]
+#
