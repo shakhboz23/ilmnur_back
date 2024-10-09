@@ -36,5 +36,5 @@ FROM base
 COPY --from=build /app/ /app/
 
 # Start the server by default
-EXPOSE 4200
+EXPOSE 3000
 CMD ["npm", "run", "start"]
