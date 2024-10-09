@@ -8,7 +8,7 @@ import { ExpressPeerServer } from 'peer';
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
-    const PORT = process.env.PORT || 4000;
+    const PORT = process.env.PORT || 4200;
     app.enableCors();
     app.setGlobalPrefix('api');
     app.use(cookieParser());
