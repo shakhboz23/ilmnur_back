@@ -20,10 +20,21 @@ RUN apt-get update -qq && \
     apt-get install -y python-is-python3 pkg-config build-essential 
 
 # Install node modules
-COPY package-lock.json package.json ./   # Copying files correctly
+COPY package-lock.json package.json ./
 RUN npm ci --include=dev
 
 # Copy application code
-COPY --from=build /app /app
+COPY . ./
 
-#
+# Build application
+RUN npm run build
+
+# Final stage for app image
+FROM base
+
+# Copy built application
+COPY --from=build /app/ /app/
+
+# Start the server by default
+EXPOSE 3001
+CMD ["npm", "run", "start"]
