@@ -12,7 +12,6 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 
-
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
@@ -21,15 +20,14 @@ RUN apt-get update -qq && \
     apt-get install -y python-is-python3 pkg-config build-essential 
 
 # Install node modules
-COPY package-lock.json package.json ./   # Removed --link flag
+COPY package-lock.json package.json ./   # Copying files correctly
 RUN npm ci --include=dev
 
 # Copy application code
-COPY . .   # Removed --link flag
+COPY . .   # This copies all files from the current directory to /app
 
 # Build application
 RUN npm run build
-
 
 # Final stage for app image
 FROM base
