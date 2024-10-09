@@ -24,6 +24,6 @@ COPY package-lock.json package.json ./   # Copying files correctly
 RUN npm ci --include=dev
 
 # Copy application code
-COPY . ./   # Copying all files from the current directory to /app
+COPY --from=build /app /app
 
 #
