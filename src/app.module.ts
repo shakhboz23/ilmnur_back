@@ -43,6 +43,15 @@ import { CourseModule } from './course/course.module';
       database: process.env.PG_DB,
       autoLoadModels: true,
       logging: true,
+      dialectOptions:
+        process.env.NODE_ENV === 'production'
+          ? {
+              ssl: {
+                require: true,
+                rejectUnauthorized: false,
+              },
+            }
+          : {},
     }),
     ServeStaticModule.forRoot({
       rootPath: resolve(__dirname, '..', 'static'),
