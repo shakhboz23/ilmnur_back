@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
 import { UploadedDto } from './dto/uploaded.dto';
 import { Op } from 'sequelize';
-import { FilesService } from 'src/files/files.service';
+import { FilesService } from '../files/files.service';
 import { UpdateDto } from './dto/update';
 import axios from 'axios';
 

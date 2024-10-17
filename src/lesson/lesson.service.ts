@@ -7,11 +7,11 @@ import {
 import { Lesson, lessonType } from './models/lesson.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { LessonDto } from './dto/lesson.dto';
-import { Tests } from 'src/test/models/test.models';
-import { Uploaded } from 'src/uploaded/models/uploaded.models';
-import { UserService } from 'src/user/user.service';
-import { Course } from 'src/course/models/course.models';
-import { UploadedService } from 'src/uploaded/uploaded.service';
+import { Tests } from '../test/models/test.models';
+import { Uploaded } from '../uploaded/models/uploaded.models';
+import { UserService } from '../user/user.service';
+import { Course } from '../course/models/course.models';
+import { UploadedService } from '../uploaded/uploaded.service';
 
 @Injectable()
 export class LessonService {

@@ -13,7 +13,7 @@ import { UploadedService } from './uploaded.service';
 import { ApiOperation, ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UploadedDto } from './dto/uploaded.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
+import { ImageValidationPipe } from '../pipes/image-validation.pipe';
 import { UpdateDto } from './dto/update';
 
 @ApiTags('Uploaded')

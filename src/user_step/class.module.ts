@@ -3,7 +3,7 @@ import { UserStepService } from './class.service';
 import { UserStepController } from './class.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UserStep } from './models/class.models';
-import { ChatGateway } from 'src/gateway/gateway';
+import { ChatGateway } from '../gateway/gateway';
 
 @Module({
   imports: [SequelizeModule.forFeature([UserStep])],

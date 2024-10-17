@@ -12,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
 import { Response } from 'express';
 import { RegisterStudentDto } from './dto/register.dto';
-import { generateToken, writeToCookie } from 'src/utils/token';
+import { generateToken, writeToCookie } from '../utils/token';
 import { LoginStudentDto } from './dto/login.dto';
 import { UpdateDto } from './dto/update.dto';
 import { NewPasswordDto } from './dto/new-password.dto';

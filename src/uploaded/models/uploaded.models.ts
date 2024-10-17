@@ -5,7 +5,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-// import { Video_lesson } from 'src/video_lesson/models/video_lesson.models';
+// import { Video_lesson } from '../video_lesson/models/video_lesson.models';
 
 interface UploadedAttributes {
   public_id: string;

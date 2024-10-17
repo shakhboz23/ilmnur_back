@@ -6,9 +6,9 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Activity } from 'src/activity/models/activity.models';
-import { Chat } from 'src/chat/models/chat.model';
-import { Role } from 'src/role/models/role.models';
+import { Activity } from '../../activity/models/activity.models';
+import { Chat } from '../../chat/models/chat.model';
+import { Role } from '../../role/models/role.models';
 
 interface UserAttributes {
   name: string;

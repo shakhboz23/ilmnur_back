@@ -7,9 +7,9 @@ import {
 import { Group } from './models/group.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { GroupDto } from './dto/group.dto';
-import { UploadedService } from 'src/uploaded/uploaded.service';
+import { UploadedService } from '../uploaded/uploaded.service';
 import { Sequelize } from 'sequelize-typescript';
-import { User } from 'src/user/models/user.models';
+import { User } from '../user/models/user.models';
 
 @Injectable()
 export class GroupService {

@@ -1,4 +1,4 @@
-import { RoleService } from 'src/role/role.service';
+import { RoleService } from '../role/role.service';
 import {
   Controller,
   Get,

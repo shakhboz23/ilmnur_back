@@ -6,8 +6,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Lesson } from 'src/lesson/models/lesson.models';
-import { Tests } from 'src/test/models/test.models';
+import { Lesson } from '../../lesson/models/lesson.models';
 
 interface Test_settingsAttributes {
   start_date: Date;

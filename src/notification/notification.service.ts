@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Notification } from './models/notification.model';
 import { NotificationDto } from './dto/notification.dto';
 // import { Op } from 'sequelize';
-import { User } from 'src/user/models/user.models';
+import { User } from '../user/models/user.models';
 
 @Injectable()
 export class NotificationService {

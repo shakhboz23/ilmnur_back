@@ -4,7 +4,7 @@ import { NotificationController } from './notification.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Notification } from './models/notification.model';
 import { FilesModule } from '../files/files.module';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 @Module({
   imports: [SequelizeModule.forFeature([Notification]), FilesModule ],
   controllers: [NotificationController],

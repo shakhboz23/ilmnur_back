@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { News } from './models/news.model';
 import { NewsDto } from './dto/news.dto';
 import { FilesService } from '../files/files.service';
-import { User } from 'src/user/models/user.models';
+import { User } from '../user/models/user.models';
 import * as DeviceDetector from 'device-detector-js';
 
 @Injectable()

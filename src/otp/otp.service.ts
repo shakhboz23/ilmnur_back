@@ -11,8 +11,8 @@ import { Otp } from './models/otp.model';
 import { PhoneDto } from './dto/phone.dto';
 import { generate } from 'otp-generator';
 import { VerifyOtpDto } from './dto/verifyOtp.dto';
-import { otpCodeSMSSchema, sendSMS } from 'src/utils/sendSMS';
-import { newTokenForSMS } from 'src/utils/newTokenForSMS';
+import { otpCodeSMSSchema, sendSMS } from '../utils/sendSMS';
+import { newTokenForSMS } from '../utils/newTokenForSMS';
 import { NewTokenDto } from './dto/newToken.dto';
 
 @Injectable()

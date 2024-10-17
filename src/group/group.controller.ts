@@ -27,9 +27,9 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Socket } from 'dgram';
-import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
+import { ImageValidationPipe } from '../pipes/image-validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extractUserIdFromToken } from 'src/utils/token';
+import { extractUserIdFromToken } from '../utils/token';
 import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('Group')

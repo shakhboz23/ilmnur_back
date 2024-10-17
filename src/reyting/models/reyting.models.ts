@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from 'sequelize-typescript';
-import { Role } from 'src/role/models/role.models';
-import { Tests } from 'src/test/models/test.models';
+import { Role } from '../../role/models/role.models';
+import { Tests } from '../../test/models/test.models';
 
 interface ReytingAttributes {
   role_id: number;

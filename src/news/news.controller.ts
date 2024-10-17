@@ -21,13 +21,13 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guard/auth.guard';
+import { AuthGuard } from '../guard/auth.guard';
 import { NewsDto } from './dto/news.dto';
 import { NewsService } from './news.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
-import { UserService } from 'src/user/user.service';
-import { RoleService } from 'src/role/role.service';
+import { ImageValidationPipe } from '../pipes/image-validation.pipe';
+import { UserService } from '../user/user.service';
+import { RoleService } from '../role/role.service';
 
 @ApiTags('News')
 @WebSocketGateway({ cors: { origin: '*', credentials: true } }) // cors

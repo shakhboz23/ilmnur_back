@@ -9,13 +9,13 @@ import {
 import { Reyting } from './models/reyting.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import { User } from 'src/user/models/user.models';
-import { ActivityService } from 'src/activity/activity.service';
+import { User } from '../user/models/user.models';
+import { ActivityService } from '../activity/activity.service';
 import { ReytingDto } from './dto/reyting.dto';
-import { Tests } from 'src/test/models/test.models';
-import { Lesson } from 'src/lesson/models/lesson.models';
+import { Tests } from '../test/models/test.models';
+import { Lesson } from '../lesson/models/lesson.models';
 import { Sequelize } from 'sequelize-typescript';
-import { Role } from 'src/role/models/role.models';
+import { Role } from '../role/models/role.models';
 
 @Injectable()
 export class ReytingService {

@@ -6,7 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { ChatGroupType } from '../dto/chat_group.dto';
-import { Chat } from 'src/chat/models/chat.model';
+import { Chat } from '../../chat/models/chat.model';
 
 interface ChatGroupAttributes {
   title: string;

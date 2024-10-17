@@ -8,8 +8,8 @@ import { UserStep } from './models/class.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
 import { UserStepDto } from './dto/class.dto';
-import { Role } from 'src/role/models/role.models';
-import { Lesson } from 'src/lesson/models/lesson.models';
+import { Role } from '../role/models/role.models';
+import { Lesson } from '../lesson/models/lesson.models';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 

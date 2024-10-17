@@ -13,7 +13,7 @@ import { compare, hash } from 'bcryptjs';
 import { Response } from 'express';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { RegisterTeacherDto } from './dto/register-teacher.dto';
-import { generateToken, writeToCookie } from 'src/utils/token';
+import { generateToken, writeToCookie } from '../utils/token';
 
 @Injectable()
 export class TeacherService {

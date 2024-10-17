@@ -10,9 +10,9 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TestsDto } from './dto/test.dto';
 import { Sequelize } from 'sequelize-typescript';
 import { CheckDto } from './dto/check.dto';
-import { ReytingService } from 'src/reyting/reyting.service';
-import { ReytingDto } from 'src/reyting/dto/reyting.dto';
-import { UserStepService } from 'src/user_step/class.service';
+import { ReytingService } from '../reyting/reyting.service';
+import { ReytingDto } from '../reyting/dto/reyting.dto';
+import { UserStepService } from '../user_step/class.service';
 
 @Injectable()
 export class TestsService {

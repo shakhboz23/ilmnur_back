@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
-import { GenderType } from 'src/role/models/role.models';
+import { GenderType } from '../../role/models/role.models';
 
 export class UpdateProfileDto {
   @ApiProperty({

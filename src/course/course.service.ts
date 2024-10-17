@@ -7,9 +7,9 @@ import {
 import { Course } from './models/course.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { CourseDto } from './dto/course.dto';
-import { Tests } from 'src/test/models/test.models';
-import { UserService } from 'src/user/user.service';
-import { UploadedService } from 'src/uploaded/uploaded.service';
+import { Tests } from '../test/models/test.models';
+import { UserService } from '../user/user.service';
+import { UploadedService } from '../uploaded/uploaded.service';
 
 @Injectable()
 export class CourseService {

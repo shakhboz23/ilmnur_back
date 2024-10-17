@@ -6,7 +6,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { RoleDto } from 'src/role/dto/role.dto';
+import { RoleDto } from '../../role/dto/role.dto';
 
 export class RegisterUserDto extends RoleDto {
   @ApiProperty({

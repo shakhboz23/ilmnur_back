@@ -6,7 +6,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Role } from 'src/role/models/role.models';
+import { Role } from '../../role/models/role.models';
 
 interface UserStepAttributes {
   lesson_id: number;

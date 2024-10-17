@@ -3,7 +3,7 @@ import { StudentService } from './student.service';
 import { StudentController } from './student.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Student } from './models/student.models';
-import { FilesModule } from 'src/files/files.module';
+import { FilesModule } from '../files/files.module';
 
 @Module({
   imports: [SequelizeModule.forFeature([Student]), FilesModule],

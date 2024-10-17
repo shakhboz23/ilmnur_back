@@ -3,11 +3,11 @@ import { RoleService } from './role.service';
 import { RoleController } from './role.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Role } from './models/role.models';
-import { FilesModule } from 'src/files/files.module'; // Verify import path
-import { NotificationModule } from 'src/notification/notification.module';
-import { UserModule } from 'src/user/user.module';
-import { ActivityModule } from 'src/activity/activity.module';
-import { OtpModule } from 'src/otp/otp.module';
+import { FilesModule } from '../files/files.module'; // Verify import path
+import { NotificationModule } from '../notification/notification.module';
+import { UserModule } from '../user/user.module';
+import { ActivityModule } from '../activity/activity.module';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [

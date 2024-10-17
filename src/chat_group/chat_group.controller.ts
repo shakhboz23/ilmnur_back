@@ -10,7 +10,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ChatGroupDto } from './dto/chat_group.dto';
 import { ChatGroupService } from './chat_group.service';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 
 @ApiTags('ChatGroup')
 @Controller('chatgroup')

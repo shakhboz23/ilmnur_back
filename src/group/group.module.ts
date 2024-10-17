@@ -3,8 +3,8 @@ import { GroupService } from './group.service';
 import { GroupController } from './group.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Group } from './models/group.models';
-import { ChatGateway } from 'src/gateway/gateway';
-import { UploadedModule } from 'src/uploaded/uploaded.module';
+import { ChatGateway } from '../gateway/gateway';
+import { UploadedModule } from '../uploaded/uploaded.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

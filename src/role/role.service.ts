@@ -13,18 +13,18 @@ import { Role } from './models/role.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { RoleDto } from './dto/role.dto';
-import { User } from 'src/user/models/user.models';
+import { User } from '../user/models/user.models';
 import { UpdateProfileDto } from './dto/update_profile.dto';
 import { compare, hash } from 'bcryptjs';
 import { CheckDto } from './dto/check.dto';
-import { ActivityService } from 'src/activity/activity.service';
+import { ActivityService } from '../activity/activity.service';
 import { Sequelize } from 'sequelize-typescript';
 import { UpdateDto } from './dto/update.dto';
 import { SearchChildDto } from './dto/searchChild';
-import { Reyting } from 'src/reyting/models/reyting.models';
-import { Tests } from 'src/test/models/test.models';
-import { Lesson } from 'src/lesson/models/lesson.models';
-import { UserService } from 'src/user/user.service';
+import { Reyting } from '../reyting/models/reyting.models';
+import { Tests } from '../test/models/test.models';
+import { Lesson } from '../lesson/models/lesson.models';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class RoleService {

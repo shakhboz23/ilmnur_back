@@ -7,7 +7,7 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-import { Test_settingsDto } from 'src/test_settings/dto/test_settings.dto';
+import { Test_settingsDto } from '../../test_settings/dto/test_settings.dto';
 
 export class TestsDto extends Test_settingsDto {
   @ApiProperty({

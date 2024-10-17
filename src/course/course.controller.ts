@@ -14,9 +14,9 @@ import { CourseService } from './course.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CourseDto } from './dto/course.dto';
 import { JwtService } from '@nestjs/jwt';
-import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
+import { ImageValidationPipe } from '../pipes/image-validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extractUserIdFromToken } from 'src/utils/token';
+import { extractUserIdFromToken } from '../utils/token';
 
 @ApiTags('Course')
 @Controller('course')

@@ -1,4 +1,4 @@
-import { UploadedService } from 'src/uploaded/uploaded.service';
+import { UploadedService } from '../uploaded/uploaded.service';
 import { UserService } from '../user/user.service';
 import {
   BadRequestException,
@@ -11,7 +11,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
 import { ResetpasswordDto } from './dto/resetpassword.dto';
 import * as uuid from 'uuid';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ResetpasswordService {

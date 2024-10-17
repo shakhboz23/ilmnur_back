@@ -4,8 +4,8 @@ import { NewsController } from './news.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { News } from './models/news.model';
 import { FilesModule } from '../files/files.module';
-import { UserModule } from 'src/user/user.module';
-import { RoleModule } from 'src/role/role.module';
+import { UserModule } from '../user/user.module';
+import { RoleModule } from '../role/role.module';
 @Module({
   imports: [SequelizeModule.forFeature([News]), FilesModule, RoleModule, UserModule],
   controllers: [NewsController],

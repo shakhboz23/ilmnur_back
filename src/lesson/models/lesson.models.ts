@@ -7,8 +7,8 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Course } from 'src/course/models/course.models';
-import { Group } from 'src/group/models/group.models';
+import { Course } from '../../course/models/course.models';
+import { Group } from '../../group/models/group.models';
 
 interface LessonAttributes {
   title: string;

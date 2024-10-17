@@ -7,9 +7,9 @@ import { SearchDto } from './dto/search.dto';
 import { Sequelize } from 'sequelize-typescript';
 import { FilesService } from '../files/files.service';
 import cloudinary from '../../cloudinary.config';
-import { User } from 'src/user/models/user.models';
+import { User } from '../user/models/user.models';
 import * as DeviceDetector from 'device-detector-js';
-// import { ChatGateway } from 'src/gateway/gateway';
+// import { ChatGateway } from '../gateway/gateway';
 
 @Injectable()
 export class ChatService {

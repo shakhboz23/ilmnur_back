@@ -7,8 +7,8 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { ChatGroup } from 'src/chat_group/models/chat_group.models';
-import { User } from 'src/user/models/user.models';
+import { ChatGroup } from '../../chat_group/models/chat_group.models';
+import { User } from '../../user/models/user.models';
 
 interface ChatAttr {
   icon: number;
