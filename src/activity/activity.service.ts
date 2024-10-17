@@ -9,7 +9,7 @@ import { Activity } from './models/activity.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { ActivityDto } from './dto/activity.dto';
 import { Op } from 'sequelize';
-import { Role } from 'src/role/models/role.models';
+import { Role } from '../role/models/role.models';
 
 @Injectable()
 export class ActivityService {

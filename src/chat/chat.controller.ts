@@ -21,7 +21,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guard/auth.guard';
+import { AuthGuard } from '../guard/auth.guard';
 import { ChatDto } from './dto/chat.dto';
 import { ChatService } from './chat.service';
 import { FileInterceptor } from '@nestjs/platform-express';
