@@ -4,14 +4,14 @@ import { News } from './models/news.model';
 import { NewsDto } from './dto/news.dto';
 import { FilesService } from '../files/files.service';
 import { User } from '../user/models/user.models';
-import * as DeviceDetector from 'device-detector-js';
+// import * as DeviceDetector from 'device-detector-js';
 
 @Injectable()
 export class NewsService {
   constructor(
     @InjectModel(News) private readonly NewsRepository: typeof News,
   ) {}
-  private readonly deviceDetector = new DeviceDetector();
+  // private readonly deviceDetector = new DeviceDetector();
 
   async create(newsDto: NewsDto) {
     try {

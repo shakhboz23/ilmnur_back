@@ -8,7 +8,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { FilesService } from '../files/files.service';
 import cloudinary from '../../cloudinary.config';
 import { User } from '../user/models/user.models';
-import * as DeviceDetector from 'device-detector-js';
+// import * as DeviceDetector from 'device-detector-js';
 // import { ChatGateway } from '../gateway/gateway';
 
 @Injectable()
@@ -17,15 +17,15 @@ export class ChatService {
     @InjectModel(Chat) private readonly ChatRepository: typeof Chat,
     private readonly fileService: FilesService,
   ) { }
-  private readonly deviceDetector = new DeviceDetector();
+  // private readonly deviceDetector = new DeviceDetector();
 
   async create(chatDto: ChatDto, file: any, headers: { 'user-agent': string }) {
     try {
       // const deviceDetector = new DeviceDetector();
       console.log(chatDto.chatgroup_id, '++++++++++++++++');
       const userAgent = headers['user-agent'];
-      const result_detect = this.deviceDetector.parse(userAgent);
-      console.log(JSON.stringify(result_detect));
+      // const result_detect = this.deviceDetector.parse(userAgent);
+      // console.log(JSON.stringify(result_detect));
       let result: any;
       let filePath: string;
       if (file) {
