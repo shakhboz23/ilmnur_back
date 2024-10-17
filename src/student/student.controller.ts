@@ -13,7 +13,7 @@ import {
 import { StudentService } from './student.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CookieGetter } from 'src/decorators/cookieGetter.decorator';
+import { CookieGetter } from '../decorators/cookieGetter.decorator';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { RegisterStudentDto } from './dto/register.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
