@@ -85,11 +85,14 @@ export class GroupService {
       const groups = await this.groupRepository.findAll({
         ...filters,
       });
+      let my_groups = [];
+      if (user_id) {
+        my_groups = await this.groupRepository.findAll({
+          where: { user_id },
+          ...filters,
+        });
+      }
 
-      const my_groups = await this.groupRepository.findAll({
-        where: { user_id },
-        ...filters,
-      });
 
       return {
         groups,

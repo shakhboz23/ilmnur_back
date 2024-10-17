@@ -84,10 +84,11 @@ export class GroupController {
 
   @ApiOperation({ summary: 'Get all groups' })
   // @UseGuards(AuthGuard)
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @Get()
   getAll(@Headers() headers: string) {
-    const user_id = extractUserIdFromToken(headers, this.jwtService);
+    console.log(headers);
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
     return this.groupService.getAll(user_id);
   }
 
