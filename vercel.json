@@ -20,7 +20,8 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "dist/main.ts"
+      "destination": "dist/main.ts",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
     }
-  ] 
+  ]
 }
