@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/main.ts",
+      "src": "dist/main.js",  // If compiled output is .js
       "use": "@vercel/node"
     }
   ],
@@ -23,12 +23,6 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "dist/main.ts"
-    }
-  ],
   "trailingSlash": false,
   "cleanUrls": true
-} 
+}
