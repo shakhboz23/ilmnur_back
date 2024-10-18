@@ -29,5 +29,13 @@
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "dist/main.ts"
+    }
+  ],
+  "trailingSlash": false,
+  "cleanUrls": true
 } 
