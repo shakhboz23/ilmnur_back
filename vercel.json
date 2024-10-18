@@ -2,15 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/main.ts",
+      "src": "dist/api/lesson.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "dist/main.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+      "src": "/api/(.*)",
+      "dest": "dist/api/$1"
     }
   ]
-} 
+}
