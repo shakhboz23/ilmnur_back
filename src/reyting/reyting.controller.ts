@@ -3,37 +3,45 @@ import {
   Get,
   Post,
   Body,
-  Put,
   Param,
-  UseInterceptors,
-  UploadedFile,
   Delete,
+  Headers,
 } from '@nestjs/common';
 import { ReytingService } from './reyting.service';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ImageValidationPipe } from '../pipes/image-validation.pipe';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ReytingDto } from './dto/reyting.dto';
+import { extractUserIdFromToken } from 'src/utils/token';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('Reyting')
 @Controller('reyting')
 export class ReytingController {
   constructor(
     private readonly reytingService: ReytingService,
+    private readonly jwtService: JwtService,
     // private readonly chatGateway: ChatGateway,ChatGateway
   ) {}
 
   @ApiOperation({ summary: 'Registration a new reyting' })
   @Post('/create')
-  async create(@Body() reytingDto: ReytingDto) {
-    return this.reytingService.create(reytingDto);
+  async create(
+    @Body() reytingDto: ReytingDto,
+    @Headers() headers: Record<string, string>,
+  ) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.reytingService.create(reytingDto, user_id);
   }
 
   @ApiOperation({ summary: 'Get all reytings' })
   // @UseGuards(AuthGuard)
-  @Get('/getall/:subject_id')
-  getAll(@Param('subject_id') subject_id: number) {
-    return this.reytingService.getAll(subject_id);
+  @Get('/getall/:subject_id/:group_id')
+  getAll(
+    @Param('subject_id') subject_id: number,
+    @Param('group_id') group_id: number,
+    @Headers() headers: Record<string, string>,
+  ) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.reytingService.getAll(subject_id, group_id, user_id);
   }
 
   @ApiOperation({ summary: 'Get reytings with pagination' })

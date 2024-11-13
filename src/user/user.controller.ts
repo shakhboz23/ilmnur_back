@@ -29,9 +29,8 @@ export class UserController {
   @Post('register')
   async register(
     @Body() registerUserDto: RegisterUserDto,
-    @Res({ passthrough: true }) res: Response,
   ) {
-    const data = await this.userService.register(registerUserDto, res);
+    const data = await this.userService.register(registerUserDto);
     return data;
   }
 
@@ -44,7 +43,6 @@ export class UserController {
   @Post('login')
   login(
     @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) res: Response,
     // @Req() req: Request,
   ) {
     // const userAgent = req.headers['user-agent'];
@@ -55,7 +53,7 @@ export class UserController {
     // const os = ua.os; // Object containing information about the operating system
 
     // console.log(`Browser: ${browser}, Version: ${version}, OS: ${os.name}`);
-    return this.userService.login(loginUserDto, res);
+    return this.userService.login(loginUserDto);
   }
 
   // @ApiOperation({ summary: 'Login user with send OTP' })
@@ -72,9 +70,9 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get user reytings' })
-  @Get('/reyting')
-  getReyting() {
-    return this.userService.getReyting();
+  @Get('/reyting/:group_id')
+  getReyting(@Param('group_id') group_id: number) {
+    return this.userService.getReyting(group_id);
   }
 
   @ApiOperation({ summary: 'Get user by ID' })
@@ -184,8 +182,7 @@ export class UserController {
   @Post('/auth/google')
   googleAuth(
     @Body() { credential }: { credential: string },
-    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.userService.googleAuth(credential, res);
+    return this.userService.googleAuth(credential);
   }
 }

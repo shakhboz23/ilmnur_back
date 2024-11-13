@@ -7,11 +7,10 @@ import { FilesModule } from '../files/files.module'; // Verify import path
 import { NotificationModule } from '../notification/notification.module';
 import { UserModule } from '../user/user.module';
 import { ActivityModule } from '../activity/activity.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([Reyting]),
-  ],
+  imports: [SequelizeModule.forFeature([Reyting]), JwtModule],
   controllers: [ReytingController],
   providers: [ReytingService],
   exports: [ReytingService],

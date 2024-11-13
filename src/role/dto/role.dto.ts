@@ -9,13 +9,13 @@ import {
 } from 'class-validator';
 
 export class RoleDto {
-  @ApiProperty({
-    example: ['Maths', 'Biology'],
-    description: 'Subjects of the user',
-  })
-  @IsOptional()
-  @IsArray()
-  subjects: string[];
+  // @ApiProperty({
+  //   example: ['Maths', 'Biology'],
+  //   description: 'Subjects of the user',
+  // })
+  // @IsOptional()
+  // @IsArray()
+  // subjects: string[];
 
   @ApiProperty({
     example: 'John Smith',
@@ -23,7 +23,7 @@ export class RoleDto {
   })
   @IsOptional()
   // @IsNumber()
-  user_id: number;
+  user_id?: number;
 
   @ApiProperty({
     example: 'student',

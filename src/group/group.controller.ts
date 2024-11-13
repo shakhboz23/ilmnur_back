@@ -43,7 +43,6 @@ export class GroupController {
   ) {}
 
   @ApiOperation({ summary: 'Create a new group' })
-  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -55,7 +54,7 @@ export class GroupController {
         description: {
           type: 'string',
         },
-        image: {
+        file: {
           type: 'string',
           format: 'binary',
         },
@@ -63,16 +62,16 @@ export class GroupController {
     },
   })
   @Post('/create')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('file'))
   async create(
     @Body() groupDto: GroupDto,
-    @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File,
+    @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
     @Headers() headers: Record<string, string>,
   ) {
-    const user_id = extractUserIdFromToken(headers, this.jwtService);
-    console.log(image);
-    console.log(image, 'djskd');
-    return this.groupService.create(groupDto, user_id, image);
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    console.log(file);
+    console.log(file, 'djskd');
+    return this.groupService.create(groupDto, user_id, file);
   }
 
   @ApiOperation({ summary: 'Get group by ID' })
@@ -97,7 +96,7 @@ export class GroupController {
   @ApiBearerAuth()
   @Get()
   getMyGroup(@Headers() headers: string) {
-    const user_id = extractUserIdFromToken(headers, this.jwtService);
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
     return this.groupService.getAll(user_id, 'my_groups');
   }
 
@@ -109,10 +108,35 @@ export class GroupController {
   }
 
   @ApiOperation({ summary: 'Update group profile by ID' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   // @UseGuards(AuthGuard)
   @Put('/:id')
-  update(@Param('id') id: number, @Body() groupDto: GroupDto) {
-    return this.groupService.update(id, groupDto);
+  @UseInterceptors(FileInterceptor('file'))
+  update(
+    @Param('id') id: number,
+    @Body() groupDto: GroupDto,
+    @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
+    @Headers() headers: Record<string, string>,
+  ) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.groupService.update(id, groupDto, file, user_id);
   }
 
   @ApiOperation({ summary: 'Delete group' })

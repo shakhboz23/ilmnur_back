@@ -3,10 +3,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { User } from '../../user/models/user.models';
+import { Course } from 'src/course/models/course.models';
 
 interface GroupAttributes {
   title: string;
@@ -46,7 +48,7 @@ export class Group extends Model<Group, GroupAttributes> {
   @Column({
     type: DataType.INTEGER,
   })
-  user_id: number;
+  user_id: number; 
 
   @BelongsTo(() => User)
   user: User[];
@@ -56,4 +58,10 @@ export class Group extends Model<Group, GroupAttributes> {
   //   hooks: true,
   // })
   // lesson: Lesson[];
+
+  @HasMany(() => Course, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  course: Course[];
 }

@@ -11,19 +11,8 @@ import { Reyting } from '../../reyting/models/reyting.models';
 import { User } from '../../user/models/user.models';
 
 interface RoleAttributes {
-  subjects: string[];
-  user_status: string;
-  is_online: boolean;
   user_id: number;
   role: string;
-  hashed_password: string;
-  last_activity: Date;
-}
-
-export enum UserStatus {
-  pending = 'pending',
-  inprogress = 'inprogress',
-  solved = 'solved',
 }
 
 export enum GenderType {
@@ -40,11 +29,6 @@ export class Role extends Model<Role, RoleAttributes> {
   })
   id: number;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  image: string;
 
   @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: true })
   subjects: string[];
@@ -80,20 +64,6 @@ export class Role extends Model<Role, RoleAttributes> {
   })
   test_reyting: number;
 
-  @Column({
-    type: DataType.ENUM({
-      values: Object.keys(UserStatus),
-    }),
-    defaultValue: UserStatus.pending,
-  })
-  user_status: UserStatus;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  is_online: boolean;
-
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
@@ -120,10 +90,4 @@ export class Role extends Model<Role, RoleAttributes> {
     allowNull: true,
   })
   last_activity: Date;
-
-  @HasMany(() => Reyting, {
-    onDelete: 'CASCADE',
-    hooks: true,
-  })
-  reyting: Reyting[];
 }

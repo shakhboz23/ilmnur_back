@@ -6,7 +6,7 @@ import {
   NotFoundException,
   Res,
 } from '@nestjs/common';
-import { User } from './models/user.models';
+import { RoleName, User } from './models/user.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -28,6 +28,9 @@ import * as bcrypt from 'bcrypt';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { UpdateDto } from './dto/update.dto';
+import { Reyting } from 'src/reyting/models/reyting.models';
+import { Lesson } from 'src/lesson/models/lesson.models';
+import { Course } from 'src/course/models/course.models';
 
 @Injectable()
 export class UserService {
@@ -40,13 +43,12 @@ export class UserService {
   ) {}
   async register(
     registerUserDto: RegisterUserDto,
-    res: Response,
   ): Promise<object> {
     try {
       let is_new_role = false;
       let { email, role, password } = registerUserDto;
       if (role == 'student') {
-        registerUserDto.subjects = [];
+        // registerUserDto.subjects = [];
       }
       const hashed_password: string = await hash(password, 7);
       let user = await this.userRepository.findOne({
@@ -74,7 +76,7 @@ export class UserService {
           { id: user.id },
           this.jwtService,
         );
-        await writeToCookie(refresh_token, res);
+        // await writeToCookie(refresh_token, res);
         const user_data: any = await this.userRepository.findByPk(user.id, {
           include: { model: Role },
         });
@@ -108,8 +110,8 @@ export class UserService {
           { where: { id: user.id }, returning: true },
         );
 
-        await this.mailService.sendUserConfirmation(updateuser[1][0]);
-        await writeToCookie(refresh_token, res);
+        // await this.mailService.sendUserConfirmation(updateuser[1][0]);
+        // await writeToCookie(refresh_token, res);
 
         const roleData: RoleDto = {
           ...registerUserDto,
@@ -129,11 +131,14 @@ export class UserService {
           include: { model: Role },
         });
 
-        await this.mailService.sendUserConfirmation(user_data);
+        // await this.mailService.sendUserConfirmation(user_data);
 
         return {
           statusCode: HttpStatus.OK,
           message: 'Verification code sended successfully',
+          data: {
+            user: user_data,
+          },
           token: access_token,
         };
       }
@@ -164,7 +169,10 @@ export class UserService {
     };
   }
 
-  async login(loginUserDto: LoginUserDto, res: Response, type?: string): Promise<object> {
+  async login(
+    loginUserDto: LoginUserDto,
+    type?: string,
+  ): Promise<object> {
     try {
       const user = await this.userRepository.findOne({
         where: { email: loginUserDto.email },
@@ -188,7 +196,7 @@ export class UserService {
         { id: user.id },
         this.jwtService,
       );
-      await writeToCookie(refresh_token, res);
+      // await writeToCookie(refresh_token, res);
       return {
         statusCode: HttpStatus.OK,
         mesage: 'Logged in successfully',
@@ -217,20 +225,90 @@ export class UserService {
     }
   }
 
-  async getReyting(): Promise<object> {
+  // async getReyting(
+  //   subject_id: number,
+  //   group_id: number,
+  //   user_id: number,
+  // ): Promise<object> {
+  //   try {
+  //     const filter: any = [];
+  //     if (subject_id != 0) {
+  //       filter.push(
+  //         Sequelize.literal(`
+  //           "test_id" IN (
+  //             SELECT "id" FROM "tests"
+  //             WHERE "id" = "Reyting"."test_id"
+  //             AND "lesson_id" IN (
+  //               SELECT "id" FROM "lesson"
+  //               WHERE "id" = "tests"."lesson_id"
+  //               AND "subject_id" = ${subject_id}
+  //             )
+  //           )
+  //         `),
+  //       );
+  //     }
+  //     const reytings = await this.userRepository.findAll({
+  //       where: {
+  //         [Op.and]: [
+  //           // ...filter,
+  //         ],
+  //       },
+  //       attributes: {
+  //         include: [
+  //           [
+  //             Sequelize.literal(`(
+  //               SELECT COALESCE(SUM("reyting"."ball"), 0)
+  //               FROM "group"
+  //               INNER JOIN "course" ON "course"."group_id" = :group_id
+  //               INNER JOIN "reyting" ON "reyting"."lesson_id" = "Lesson"."id"
+  //               INNER JOIN "user" ON "user"."id" = "reyting"."user_id"
+  //               WHERE "reyting"."user_id" = "user"."id"
+  //             )`),
+  //             'a',
+  //           ],
+  //         ],
+  //       },
+  //       replacements: { group_id, user_id },
+  //       include: [{ model: Reyting }],
+  //     });
+  //     return reytings;
+  //   } catch (error) {
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
+
+  async getReyting(group_id: number): Promise<object> {
     try {
       const users = await this.userRepository.findAll({
-        // where: {
-        //   test_reyting: {
-        //     [Op.gt]: 0,
-        //   },
-        // },
-        order: [['test_reyting', 'DESC']],
+        where: {
+          id: {
+            [Op.in]: Sequelize.literal(`(
+              SELECT DISTINCT "Reyting"."user_id"
+              FROM "reyting" AS "Reyting"
+              INNER JOIN "lesson" AS "Lesson" ON "Lesson"."id" = "Reyting"."lesson_id"
+              INNER JOIN "course" AS "Course" ON "Course"."id" = "Lesson"."course_id"
+              WHERE "Course"."group_id" = :group_id
+            )`),
+          },
+        },
+        attributes: {
+          include: [
+            [
+              Sequelize.literal(`(
+                SELECT SUM("reyting"."ball")
+                FROM "reyting"
+                INNER JOIN "lesson" ON "lesson"."id" = "reyting"."lesson_id"
+                INNER JOIN "course" ON "course"."id" = "lesson"."course_id"
+                INNER JOIN "group" ON "group"."id" = "course"."group_id"
+                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id"
+              )::int`),
+              'totalReyting',
+            ],
+          ],
+        },
+        replacements: { group_id },
       });
-      return {
-        statusCode: HttpStatus.OK,
-        data: users,
-      };
+      return users;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -262,17 +340,17 @@ export class UserService {
                 //   `),
                 //   'subjects',
                 // ],
-                [
-                  Sequelize.literal(`
-                    (
-                      SELECT json_agg(s.title) AS subjects
-                      FROM "subject" AS s
-                      JOIN "role" AS r ON s.id = ANY(r.subjects::int[])
-                      WHERE r."user_id" = :id AND r."role" = :current_role
-                    )
-                  `),
-                  'subjects',
-                ],
+                // [
+                //   Sequelize.literal(`
+                //     (
+                //       SELECT json_agg(s.title) AS subjects
+                //       FROM "subject" AS s
+                //       JOIN "role" AS r ON s.id = ANY(r.subjects::int[])
+                //       WHERE r."user_id" = :id AND r."role" = :current_role
+                //     )
+                //   `),
+                //   'subjects',
+                // ],
               ],
             },
           },
@@ -282,10 +360,7 @@ export class UserService {
       if (!user) {
         throw new NotFoundException('User not found!');
       }
-      return {
-        statusCode: HttpStatus.OK,
-        data: user,
-      };
+      return user;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -568,29 +643,29 @@ export class UserService {
     return payload;
   }
 
-  async googleAuth(credential: string, res: Response) {
+  async googleAuth(credential: string) {
     console.log(credential, 'credential');
     try {
       const payload: any = await this.verify(credential);
-      console.log(payload)
+      console.log(payload);
       const data: any = {
         name: payload.given_name,
         surname: payload.family_name,
         password: credential,
         email: payload.email,
-        role: 'student'
+        role: 'student',
       };
       const is_user = await this.userRepository.findOne({
         where: {
           email: payload.email,
-        }
-      })
+        },
+      });
       let user: any;
       console.log(is_user);
       if (is_user) {
-        user = await this.login(data, res, 'googleauth')
+        user = await this.login(data, 'googleauth');
       } else {
-        user = await this.register(data, res);
+        user = await this.register(data);
       }
       return user;
     } catch (error) {
@@ -598,4 +673,16 @@ export class UserService {
       throw new BadRequestException(error);
     }
   }
+
+  async createDefaultUser() {
+		try {
+			await this.register({
+				name: process.env.INITIAL_NAME,
+				surname: process.env.INITIAL_SURNAME,
+				password: process.env.INITIAL_EMAIL,
+        role: RoleName.super_admin,
+        email: process.env.INITIAL_EMAIL,
+			});
+		} catch {}
+	}
 }

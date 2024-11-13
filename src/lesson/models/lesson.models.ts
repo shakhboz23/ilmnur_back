@@ -76,13 +76,16 @@ export class Lesson extends Model<Lesson, LessonAttributes> {
   @ForeignKey(() => Lesson)
   @Column({
     type: DataType.INTEGER,
-    allowNull: true,
+    allowNull: true, 
   })
   lesson_id: number;
 
   @BelongsTo(() => Course)
-  course: Course[];
+  course: Course[]; 
 
-  @HasMany(() => Lesson)
+  @HasMany(() => Lesson, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
   lessons: Lesson[];
 }

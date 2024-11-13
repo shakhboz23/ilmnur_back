@@ -5,13 +5,13 @@ import {
 } from 'class-validator';
 
 export class ReytingDto {
-  @ApiProperty({
-    example: 'https://example.com',
-    description: 'The image of the user',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  role_id: number;
+  // @ApiProperty({
+  //   example: 'https://example.com',
+  //   description: 'The image of the user',
+  // })
+  // @IsNotEmpty()
+  // @IsNumber()
+  // role_id: number;
 
   @ApiProperty({
     example: 'John Doe',
@@ -27,5 +27,5 @@ export class ReytingDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  test_id: number;
+  lesson_id: number;
 }

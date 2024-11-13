@@ -11,7 +11,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CourseDto } from './dto/course.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ImageValidationPipe } from '../pipes/image-validation.pipe';
@@ -60,10 +66,10 @@ export class CourseController {
   async create(
     @Body() courseDto: CourseDto,
     @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File,
-    @Headers() headers: string
+    @Headers() headers: string,
   ) {
     console.log(image);
-    const user_id = extractUserIdFromToken(headers, this.jwtService);
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
     console.log(user_id);
     return this.courseService.create(courseDto, image);
   }
@@ -71,8 +77,17 @@ export class CourseController {
   @ApiOperation({ summary: 'Get course by ID' })
   // @UseGuards(AuthGuard)
   @Get('/getById/:id')
-  getById(@Param('id') id: number) {
-    return this.courseService.getById(id);
+  getById(@Param('id') id: number, @Headers() headers: string) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    console.log(user_id);
+    return this.courseService.getById(id, user_id);
+  }
+
+  @ApiOperation({ summary: 'Get group by ID' })
+  // @UseGuards(AuthGuard)
+  @Get('/getUsersByGroupId/:group_id')
+  getUsersByGroupId(@Param('group_id') group_id: number) {
+    return this.courseService.getUsersByGroupId(group_id);
   }
 
   @ApiOperation({ summary: 'Get all courses' })

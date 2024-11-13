@@ -10,11 +10,11 @@ export class CheckDto {
   @IsArray()
   answers: string[];
 
-  @ApiProperty({
-    example: 1,
-    description: 'Lesson id',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  lesson_id: number;
+  // @ApiProperty({
+  //   example: 1,
+  //   description: 'Lesson id',
+  // })
+  // @IsNotEmpty()
+  // @IsNumber()
+  // lesson_id: number;
 }

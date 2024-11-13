@@ -10,6 +10,10 @@ import { CourseDto } from './dto/course.dto';
 import { Tests } from '../test/models/test.models';
 import { UserService } from '../user/user.service';
 import { UploadedService } from '../uploaded/uploaded.service';
+import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
+import { User } from 'src/user/models/user.models';
+import { Role } from 'src/role/models/role.models';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class CourseService {
@@ -35,7 +39,10 @@ export class CourseService {
         file_data = await this.uploadedService.create({ file_type }, cover);
         cover = file_data.data.url;
       }
-      const course: any = await this.courseRepository.create({...courseDto, cover});
+      const course: any = await this.courseRepository.create({
+        ...courseDto,
+        cover,
+      });
       return {
         statusCode: HttpStatus.OK,
         message: 'Created successfully',
@@ -53,7 +60,7 @@ export class CourseService {
       //   new BadRequestException('User not found!');
       // }
 
-      const courses: any = await this.courseRepository.findAll({     
+      const courses: any = await this.courseRepository.findAll({
         order: [['id', 'ASC']],
       });
       if (!courses.length) {
@@ -67,11 +74,18 @@ export class CourseService {
 
   async getByCourse(group_id: number): Promise<Object> {
     try {
-      const courses: any = await this.courseRepository.findAll({     
+      const courses: any = await this.courseRepository.findAll({
         where: {
           group_id,
         },
         order: [['id', 'ASC']],
+        include: [
+          {
+            model: Subscriptions,
+            attributes: ['user_id'],
+            include: [{ model: User, include: [{ model: Role }] }],
+          },
+        ],
       });
       if (!courses.length) {
         throw new NotFoundException('Courses not found');
@@ -82,21 +96,57 @@ export class CourseService {
     }
   }
 
-  async getById(id: number): Promise<object> {
+  async getUsersByGroupId(group_id: number): Promise<object> {
+    try {
+      const users = await this.courseRepository.findOne({
+        where: { group_id },
+        include: [{ model: Subscriptions, include: [{ model: User }] }],
+      });
+      // console.log(groups);
+      if (!users) {
+        throw new NotFoundException('Users not found');
+      }
+      return users;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getById(id: number, user_id: number): Promise<object> {
     try {
       const course = await this.courseRepository.findOne({
         where: { id },
-        include: [
-          { model: Tests, attributes: ['id'] },
-        ],
+        attributes: {
+          include: [
+            [
+              Sequelize.literal(
+                `(SELECT "user"."id" FROM "user" JOIN "group" ON "group"."id" = "Course"."group_id" LIMIT 1)::int`,
+              ),
+              'user_id',
+            ],
+            [
+              Sequelize.literal(
+                `(SELECT COUNT(*) FROM "lesson" WHERE "lesson"."course_id" = :id AND "lesson"."type" = 'lesson')::int`,
+              ),
+              'lessons_count',
+            ],
+            [
+              Sequelize.literal(
+                `(SELECT COUNT(*) FROM "reyting" WHERE "reyting"."lesson_id" IN (SELECT "id" FROM "lesson" WHERE "lesson"."course_id" = :id) AND "reyting"."user_id" = :user_id AND "reyting"."ball" > 70)::int`,
+              ),
+              'finished_count',
+            ],
+          ],
+        },
+        replacements: {
+          id,
+          user_id,
+        },
       });
       if (!course) {
         throw new NotFoundException('Course not found');
       }
-      return {
-        statusCode: HttpStatus.OK,
-        data: course,
-      };
+      return course;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

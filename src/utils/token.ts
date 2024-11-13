@@ -31,23 +31,26 @@ export async function writeToCookie(refresh_token: string, res: Response) {
   }
 }
 
-export function extractUserIdFromToken(headers: any, jwtService: any, is_optional?: boolean): number | null {
+export function extractUserIdFromToken(
+  headers: any,
+  jwtService: any,
+  is_optional?: boolean,
+): number | null {
   const authHeader = headers['authorization'];
   const token = authHeader?.split(' ')[1];
-  console.log(token);
-
-  if (!token.IsNotEmpty) {
+  console.log(token, !token, 'token');
+  if (!token || token == 'null') {
     console.log(is_optional);
     if (is_optional) return;
     throw new UnauthorizedException('Token not found');
   }
-  
+
   try {
     const user = jwtService.verify(token, {
       secret: process.env.ACCESS_TOKEN_KEY,
     });
     console.log(token);
-    console.log(user)
+    console.log(user);
     return user?.id || null;
   } catch (error) {
     console.log(error);

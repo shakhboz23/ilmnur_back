@@ -1,5 +1,6 @@
 import {
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
@@ -10,6 +11,8 @@ import {
 } from 'sequelize-typescript';
 import { Group } from '../../group/models/group.models';
 import { Lesson } from '../../lesson/models/lesson.models';
+import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
+import { User } from 'src/user/models/user.models';
 
 interface CourseAttributes {
   title: string;
@@ -71,4 +74,16 @@ export class Course extends Model<Course, CourseAttributes> {
 
   @HasMany(() => Lesson)
   lessons: Lesson[];
+
+  @HasMany(() => Subscriptions, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  subscriptions: Subscriptions[];
+
+  // @BelongsToMany(() => User, {
+  // through: { model: () => Subscriptions }, // Use a function to specify the model type
+  // foreignKey: 'course_id'
+  // })
+  // users: User[];
 }

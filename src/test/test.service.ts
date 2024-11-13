@@ -1,3 +1,4 @@
+import { LessonService } from './../lesson/lesson.service';
 import { Test_settingsService } from './../test_settings/test_settings.service';
 import {
   BadRequestException,
@@ -13,6 +14,7 @@ import { CheckDto } from './dto/check.dto';
 import { ReytingService } from '../reyting/reyting.service';
 import { ReytingDto } from '../reyting/dto/reyting.dto';
 import { UserStepService } from '../user_step/class.service';
+import { Lesson } from 'src/lesson/models/lesson.models';
 
 @Injectable()
 export class TestsService {
@@ -20,10 +22,12 @@ export class TestsService {
     @InjectModel(Tests) private testsRepository: typeof Tests,
     private readonly reytingService: ReytingService,
     private readonly userStepService: UserStepService,
+    private readonly lessonService: LessonService,
     private readonly test_settingsService: Test_settingsService,
   ) {}
 
   async create(testsDto: TestsDto): Promise<object> {
+    console.log(testsDto);
     try {
       const {
         test,
@@ -34,6 +38,7 @@ export class TestsService {
         test_count,
         period,
       } = testsDto;
+      console.log(test);
       let variants: string[];
       if (start_date || end_date || sort_level || test_count || period) {
         await this.test_settingsService.create({
@@ -45,11 +50,12 @@ export class TestsService {
           period,
         });
       }
-      for (let i = 1; i <= Object.keys(test).length; i++) {
+      for (let i = 0; i < test.length; i++) {
+        console.log(test[i], 'testi');
         variants = Object.values(test[i].variant);
         await this.testsRepository.create({
           lesson_id,
-          question: test[i].question[0],
+          question: test[i].question,
           variants: [...variants],
         });
       }
@@ -108,35 +114,39 @@ export class TestsService {
     }
   }
 
-  async getById(id: number): Promise<object> {
+  async getById(lesson_id: number, user_id: number): Promise<object> {
     try {
-      const test_settings: any =
-        await this.test_settingsService.getByLessonId(id);
-      console.log(test_settings);
-      console.log(
-        new Date(test_settings?.data?.end_date).getTime(),
-        'test2303',
-      );
+      // const test_settings: any =
+      //   await this.test_settingsService.getByLessonId(id);
+      // console.log(test_settings);
+      // console.log(
+      //   new Date(test_settings?.data?.end_date).getTime(),
+      //   'test2303',
+      // );
       if (
-        new Date(test_settings?.data?.start_date).getTime() >
-        new Date().getTime()
+        false
+        // new Date(test_settings?.data?.start_date).getTime() >
+        // new Date().getTime()
       ) {
         throw new BadRequestException('start date is invalid');
       } else if (
-        new Date(test_settings?.data?.end_date).getTime() < new Date().getTime()
+        // new Date(test_settings?.data?.end_date).getTime() < new Date().getTime()
+        false
       ) {
         throw new BadRequestException('end date is invalid');
       }
 
       const tests = await this.testsRepository.findAll({
         where: {
-          lesson_id: id,
+          lesson_id,
         },
       });
 
       if (!tests) {
         throw new NotFoundException('Tests not found');
       }
+
+      const lesson: any = await this.lessonService.getById(lesson_id, user_id);
 
       const randomizedVariants = this.shuffle(tests).map((variant) => {
         const randomizedOptions = this.shuffle(variant.get('variants'));
@@ -145,10 +155,10 @@ export class TestsService {
           variants: randomizedOptions,
         };
       });
-
+      console.log(lesson.course);
       return {
-        statusCode: HttpStatus.OK,
-        data: randomizedVariants,
+        user_id: lesson?.course.get('user_id'),
+        test: randomizedVariants,
       };
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -161,6 +171,8 @@ export class TestsService {
       if (!test) {
         throw new NotFoundException('Tests not found');
       }
+      console.log(answer);
+      console.log(test.variants[0]);
       if (test.variants[0] == answer) {
         return [id, true];
       }
@@ -170,8 +182,12 @@ export class TestsService {
     }
   }
 
-  async checkAnswers(role_id: number, checkDto: CheckDto): Promise<object> {
-    const { answers, lesson_id } = checkDto;
+  async checkAnswers(
+    user_id: number,
+    lesson_id: number,
+    checkDto: CheckDto,
+  ): Promise<object> {
+    const { answers } = checkDto;
     let message: string;
     try {
       const results = {};
@@ -190,14 +206,18 @@ export class TestsService {
         }
       }
       const percentage = (ball / Object.keys(results)?.length) * 100;
+      console.log(percentage);
       if (percentage >= 70) {
         const data: ReytingDto = {
-          role_id,
+          // role_id,
           ball,
-          test_id: id,
+          lesson_id,
         };
-        const reyting_data: any = await this.reytingService.create(data);
-        await this.userStepService.create({ lesson_id, role_id });
+        const reyting_data: any = await this.reytingService.create(
+          data,
+          user_id,
+        );
+        // await this.userStepService.create({ lesson_id, role_id });
         if (reyting_data.message == 'Already added!') {
           message = 'Already added!';
         }

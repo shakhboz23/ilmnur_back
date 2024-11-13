@@ -1,7 +1,5 @@
-import { FilesService } from '../files/files.service';
 import {
   BadRequestException,
-  ForbiddenException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -9,13 +7,9 @@ import {
 import { Reyting } from './models/reyting.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import { User } from '../user/models/user.models';
-import { ActivityService } from '../activity/activity.service';
 import { ReytingDto } from './dto/reyting.dto';
-import { Tests } from '../test/models/test.models';
-import { Lesson } from '../lesson/models/lesson.models';
 import { Sequelize } from 'sequelize-typescript';
-import { Role } from '../role/models/role.models';
+import { User } from 'src/user/models/user.models';
 
 @Injectable()
 export class ReytingService {
@@ -23,16 +17,22 @@ export class ReytingService {
     @InjectModel(Reyting) private reytingRepository: typeof Reyting,
   ) {}
 
-  async create(reytingDto: ReytingDto): Promise<object> {
+  async create(reytingDto: ReytingDto, user_id: number): Promise<object> {
     try {
       const is_reyting = await this.reytingRepository.findOne({
         where: {
-          role_id: reytingDto.role_id,
-          test_id: reytingDto.test_id,
+          user_id,
+          lesson_id: reytingDto.lesson_id,
         },
       });
+      console.log(!is_reyting);
       if (!is_reyting) {
-        const reyting = await this.reytingRepository.create(reytingDto);
+        console.log(is_reyting);
+        const reyting = await this.reytingRepository.create({
+          ...reytingDto,
+          user_id,
+        });
+        console.log(reyting);
         return {
           statusCode: HttpStatus.OK,
           message: 'Successfully added!',
@@ -65,7 +65,11 @@ export class ReytingService {
   //   }
   // }
 
-  async getAll(subject_id: number): Promise<object> {
+  async getAll(
+    subject_id: number,
+    group_id: number,
+    user_id: number,
+  ): Promise<object> {
     try {
       const filter: any = [];
       if (subject_id != 0) {
@@ -85,14 +89,25 @@ export class ReytingService {
       }
       const reytings = await this.reytingRepository.findAll({
         where: {
-          [Op.and]: [...filter],
+          [Op.and]: [
+            ...filter,
+            {
+              id: {
+                [Op.in]: Sequelize.literal(`(
+                  SELECT "Reyting"."id"
+                  FROM "group" 
+                  INNER JOIN "course" ON "course"."group_id" = :group_id 
+                  INNER JOIN "lesson" ON "lesson"."course_id" = "course"."id"
+                  WHERE "lesson"."id" = "Reyting"."lesson_id"
+                )`),
+              },
+            },
+          ],
         },
-        include: [{ model: Role }],
+        replacements: { group_id },
+        include: [{ model: User }],
       });
-      return {
-        statusCode: HttpStatus.OK,
-        data: reytings,
-      };
+      return reytings;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

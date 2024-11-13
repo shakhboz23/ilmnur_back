@@ -110,7 +110,7 @@ export class RoleService {
       });
       if (user) {
         user = await this.roleRepository.update(
-          { is_online, last_activity },
+          {  },
           { where: { user_id: id, role }, returning: true },
         );
         return {
@@ -609,7 +609,7 @@ export class RoleService {
         }
       }
       const update = await this.roleRepository.update(
-        { image: image.url },
+        {  },
         {
           where: { user_id, role },
           returning: true,

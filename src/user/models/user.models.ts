@@ -1,5 +1,6 @@
 import {
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   HasMany,
@@ -9,6 +10,7 @@ import {
 import { Activity } from '../../activity/models/activity.models';
 import { Chat } from '../../chat/models/chat.model';
 import { Role } from '../../role/models/role.models';
+import { Reyting } from 'src/reyting/models/reyting.models';
 
 interface UserAttributes {
   name: string;
@@ -16,6 +18,9 @@ interface UserAttributes {
   email: string;
   current_role: string;
   is_active: boolean;
+  is_online: boolean;
+  last_activity: Date;
+  image: string;
   hashed_password: string;
   hashed_refresh_token: string;
 }
@@ -23,6 +28,7 @@ interface UserAttributes {
 export enum RoleName {
   student = 'student',
   teacher = 'teacher',
+  super_admin = 'super_admin'
 }
 
 @Table({ tableName: 'user' })
@@ -56,6 +62,12 @@ export class User extends Model<User, UserAttributes> {
     defaultValue: false,
   })
   is_active: boolean;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  is_online: boolean;
 
   @Column({
     type: DataType.STRING,
@@ -94,4 +106,34 @@ export class User extends Model<User, UserAttributes> {
     hooks: true,
   })
   activity: Activity[];
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  last_activity: Date;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  image: string;
+
+  // @HasMany(() => Subscriptions, {
+  //   onDelete: 'CASCADE',
+  //   hooks: true,
+  // })
+  // subscriptions: Subscriptions[];
+
+  @HasMany(() => Reyting, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  reyting: Reyting[];
+
+  // @BelongsToMany(() => Course, {
+  //   through: { model: () => Subscriptions }, // Use a function to specify the model type
+  //   foreignKey: 'user_id',
+  // })
+  // courses: Course[];
 }

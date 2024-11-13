@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
@@ -27,6 +27,9 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ResetpasswordModule } from './resetpassword/resetpassword.module';
 import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
+import { LikeModule } from './likes/like.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -63,6 +66,7 @@ import { CourseModule } from './course/course.module';
     GroupModule,
     CourseModule,
     LessonModule,
+    LikeModule,
     // ChatGateway,
     TeacherModule,
     ChatModule,
@@ -81,6 +85,20 @@ import { CourseModule } from './course/course.module';
     UserStepModule,
     CloudinaryModule,
     ResetpasswordModule,
+    SubscriptionsModule,
   ],
 })
-export class AppModule {}
+// export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+
+	constructor(
+		private readonly userService: UserService,
+	) {}
+
+	async onApplicationBootstrap() {
+		await this.userService.createDefaultUser();
+		// ConsoleUtils.startAutoClear();
+	}
+
+}
+

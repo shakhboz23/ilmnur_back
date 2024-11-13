@@ -16,6 +16,7 @@ import { LessonDto } from './dto/lesson.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ImageValidationPipe } from '../pipes/image-validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { extractUserIdFromToken } from 'src/utils/token';
 
 @ApiTags('Lesson')
 @Controller('lesson')
@@ -49,7 +50,7 @@ export class LessonController {
         published: {
           type: 'boolean',
         },
-        file: {
+        video: {
           type: 'string',
           format: 'binary',
         },
@@ -57,41 +58,44 @@ export class LessonController {
     },
   })
   @Post('/create')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('video'))
   async create(
     @Body() lessonDto: LessonDto,
-    @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
+    @UploadedFile(new ImageValidationPipe()) video: Express.Multer.File,
   ) {
-    return this.lessonService.create(lessonDto, file);
+    return this.lessonService.create(lessonDto, video);
   }
 
   @ApiOperation({ summary: 'Get lesson by ID' })
   // @UseGuards(AuthGuard)
   @Get('/getById/:id')
-  getById(@Param('id') id: number) {
-    return this.lessonService.getById(id);
+  getById(@Param('id') id: number, @Headers() headers?: string) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.lessonService.getById(id, user_id);
   }
 
   @ApiOperation({ summary: 'Get all lessons' })
   // @UseGuards(AuthGuard)
   @Get('/')
-  getAll(@Headers() headers?: string) {
-    const auth_header = headers['authorization'];
-    const token = auth_header?.split(' ')[1];
-    console.log(token, 'token2303');
-    const user = token
-      ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
-      : null;
-    const user_id = user?.id;
-    console.log(user_id, '565456');
+  getAll() {
+    // const auth_header = headers['authorization'];
+    // const token = auth_header?.split(' ')[1];
+    // console.log(token, 'token2303');
+    // const user = token
+    //   ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
+    //   : null;
+    // const user_id = user?.id;
+    // console.log(user_id, '565456');
+
     return this.lessonService.getAll();
   }
 
   @ApiOperation({ summary: 'Get all lessons' })
   // @UseGuards(AuthGuard)
   @Get('/getByCourse/:id')
-  getByCourse(@Param('id') id: number) {
-    return this.lessonService.getByCourse(id);
+  getByCourse(@Param('id') id: number, @Headers() headers: string) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.lessonService.getByCourse(+id, user_id);
   }
 
   @ApiOperation({ summary: 'Get lessons with pagination' })
@@ -103,9 +107,44 @@ export class LessonController {
 
   @ApiOperation({ summary: 'Update lesson profile by ID' })
   // @UseGuards(AuthGuard)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        course_id: {
+          type: 'number',
+        },
+        lesson_id: {
+          type: 'number',
+        },
+        title: {
+          type: 'string',
+        },
+        content: {
+          type: 'string',
+        },
+        type: {
+          type: 'string',
+        },
+        published: {
+          type: 'boolean',
+        },
+        video: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @Put('/:id')
-  update(@Param('id') id: number, @Body() lessonDto: LessonDto) {
-    return this.lessonService.update(id, lessonDto);
+  @UseInterceptors(FileInterceptor('file'))
+  update(
+    @Param('id') id: number,
+    @Body() lessonDto: LessonDto, 
+    @UploadedFile(new ImageValidationPipe()) video: Express.Multer.File,
+  ) { 
+    return this.lessonService.update(id, lessonDto, video);
   }
 
   @ApiOperation({ summary: 'Delete lesson' })

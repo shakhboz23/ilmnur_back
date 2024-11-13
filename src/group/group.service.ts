@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -93,7 +94,6 @@ export class GroupService {
         });
       }
 
-
       return {
         groups,
         my_groups,
@@ -120,7 +120,7 @@ export class GroupService {
       throw new BadRequestException(error.message);
     }
   }
-
+  
   async pagination(page: number): Promise<object> {
     try {
       const offset = (page - 1) * 10;
@@ -145,16 +145,34 @@ export class GroupService {
     }
   }
 
-  async update(id: number, groupDto: GroupDto): Promise<object> {
+  async update(
+    id: number,
+    groupDto: GroupDto,
+    cover: any,
+    user_id: number,
+  ): Promise<object> {
     try {
       const groupes = await this.groupRepository.findByPk(id);
       if (!groupes) {
         throw new NotFoundException('Group not found');
       }
-      const update = await this.groupRepository.update(groupDto, {
-        where: { id },
-        returning: true,
-      });
+      if (groupes.user_id != user_id) {
+        throw new ForbiddenException("You don't have an access");
+      }
+      const file_type: string = 'image';
+      let file_data: any;
+      let image_url: string;
+      if (cover) {
+        file_data = await this.uploadedService.create({ file_type }, cover);
+        cover = file_data.data.url;
+      }
+      const update = await this.groupRepository.update(
+        { ...groupDto, cover: cover || groupes.cover },
+        {
+          where: { id },
+          returning: true,
+        },
+      );
       return {
         statusCode: HttpStatus.OK,
         message: 'Updated successfully',
