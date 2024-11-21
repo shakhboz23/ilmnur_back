@@ -28,7 +28,7 @@ export class LessonService {
     private readonly courseService: CourseService,
     // private readonly userService: UserService,
     private uploadedService: UploadedService,
-  ) {}
+  ) { }
 
   async create(lessonDto: LessonDto, video: any): Promise<object> {
     try {
@@ -50,11 +50,20 @@ export class LessonService {
           video = file_data.data.url;
         }
         lessonDto.lesson_id = +lessonDto.lesson_id || null;
-        const video_lesson = await this.lessonRepository.create({
+        let video_lesson: any = await this.lessonRepository.create({
           ...lessonDto,
           video,
         });
-        return video_lesson;
+        video_lesson = await this.lessonRepository.update(
+          {
+            position: video_lesson.id,
+          },
+          {
+            where: { id: video_lesson.id },
+            returning: true,
+          },
+        );
+        return video_lesson[1][0];
       } else {
         const exist = await this.lessonRepository.findOne({
           where: { title },
@@ -76,16 +85,24 @@ export class LessonService {
     }
   }
 
-  async getAll(): Promise<object> {
+  async getAll(category_id: number): Promise<object> {
     try {
       // const user_data: any = await this.userService.getById(user_id);
       // if (!user_data) {
       //   new BadRequestException('User not found!');
       // }
-
+      category_id = category_id == 0 ? undefined : +category_id
+      let category: any = {}
+      if (category_id) {
+        category = { category_id }
+      }
       const lessons: any = await this.lessonRepository.findAll({
         where: { type: 'lesson' },
-        include: [{ model: Lesson }],
+        include: [{ model: Lesson }, {
+          model: Course, attributes: [], where: {
+            ...category
+          }
+        }],
         order: [['id', 'ASC']],
       });
       if (!lessons.length) {
@@ -99,6 +116,7 @@ export class LessonService {
 
   async getByCourse(course_id: number, user_id: number): Promise<Object> {
     try {
+
       console.log(user_id);
       user_id = user_id || null;
       // if (user_id == undefined) {
@@ -124,7 +142,7 @@ export class LessonService {
             },
           },
         ],
-        order: [['id', 'ASC']],
+        order: [['position', 'ASC']],
         attributes: {
           include: [
             [

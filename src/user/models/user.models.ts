@@ -42,11 +42,13 @@ export class User extends Model<User, UserAttributes> {
 
   @Column({
     type: DataType.STRING,
+    unique: true,
   })
   name: string;
 
   @Column({
     type: DataType.STRING,
+    unique: true,
   })
   surname: string;
 

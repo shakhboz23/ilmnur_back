@@ -6,6 +6,14 @@ interface TestsAttributes {
   lesson_id: number;
   question: string;
   variants: string[];
+  type: TestType;
+}
+
+export enum TestType {
+  variant = 'variant',
+  multiple = 'multiple',
+  fill = 'fill',
+  customizable = 'customizable',
 }
 
 @Table({ tableName: 'tests' })
@@ -37,4 +45,12 @@ export class Tests extends Model<Tests, TestsAttributes> {
     allowNull: false,
   })
   variants: string[];
+
+  @Column({
+    type: DataType.ENUM({
+      values: Object.keys(TestType),
+    }),
+    defaultValue: TestType.variant,
+  })
+  type: TestType;
 }

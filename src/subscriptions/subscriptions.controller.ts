@@ -27,7 +27,7 @@ export class SubscriptionsController {
   constructor(
     private readonly subscriptionsService: SubscriptionsService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Create a new subscriptions' })
   @Post('/create')
@@ -53,7 +53,7 @@ export class SubscriptionsController {
       user_id,
     );
   }
-
+  
   @ApiOperation({ summary: 'Get subscriptions by ID' })
   // @UseGuards(AuthGuard)
   @Get('/getById/:id')

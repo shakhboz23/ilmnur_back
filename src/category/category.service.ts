@@ -30,7 +30,7 @@ export class CategoryService {
   async getAll(): Promise<object> {
     try {
       const category: any = await this.categoryRepository.findAll({
-        order: [['name', 'ASC']],
+        order: [['category', 'ASC']],
       });
       if (category.IsNotEmpty) {
         throw new NotFoundException('Category not found');

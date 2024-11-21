@@ -37,6 +37,7 @@ export class TestsService {
         sort_level,
         test_count,
         period,
+        mix,
       } = testsDto;
       console.log(test);
       let variants: string[];
@@ -48,6 +49,7 @@ export class TestsService {
           sort_level,
           test_count,
           period,
+          mix,
         });
       }
       for (let i = 0; i < test.length; i++) {

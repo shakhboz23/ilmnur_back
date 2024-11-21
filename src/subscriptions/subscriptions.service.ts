@@ -22,7 +22,7 @@ export class SubscriptionsService {
     private subscriptionsRepository: typeof Subscriptions,
     private readonly userService: UserService,
     private uploadedService: UploadedService,
-  ) {}
+  ) { }
 
   async create(
     subscriptionsDto: SubscriptionsDto,

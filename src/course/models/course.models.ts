@@ -1,18 +1,16 @@
 import {
   BelongsTo,
-  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
   HasMany,
-  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Group } from '../../group/models/group.models';
 import { Lesson } from '../../lesson/models/lesson.models';
 import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
-import { User } from 'src/user/models/user.models';
+import { Category } from 'src/category/models/category.models';
 
 interface CourseAttributes {
   title: string;
@@ -21,6 +19,7 @@ interface CourseAttributes {
   discount: number;
   cover: string;
   group_id: number;
+  category_id: number;
 }
 
 @Table({ tableName: 'course' })
@@ -71,6 +70,15 @@ export class Course extends Model<Course, CourseAttributes> {
 
   @BelongsTo(() => Group)
   group: Group[];
+
+  @ForeignKey(() => Category)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  category_id: number;
+
+  @BelongsTo(() => Category)
+  category: Category[];
 
   @HasMany(() => Lesson)
   lessons: Lesson[];

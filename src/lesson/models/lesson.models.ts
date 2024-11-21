@@ -18,6 +18,7 @@ interface LessonAttributes {
   video: string;
   content: string;
   type: lessonType;
+  position: number;
 }
 
 export enum lessonType {
@@ -33,6 +34,11 @@ export class Lesson extends Model<Lesson, LessonAttributes> {
     primaryKey: true,
   })
   id: number;
+
+  @Column({
+    type: DataType.INTEGER,
+  })
+  position: number;
 
   @Column({
     type: DataType.STRING,
@@ -76,12 +82,12 @@ export class Lesson extends Model<Lesson, LessonAttributes> {
   @ForeignKey(() => Lesson)
   @Column({
     type: DataType.INTEGER,
-    allowNull: true, 
+    allowNull: true,
   })
   lesson_id: number;
 
   @BelongsTo(() => Course)
-  course: Course[]; 
+  course: Course[];
 
   @HasMany(() => Lesson, {
     onDelete: 'CASCADE',

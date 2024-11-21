@@ -11,13 +11,14 @@ import { GroupDto } from './dto/group.dto';
 import { UploadedService } from '../uploaded/uploaded.service';
 import { Sequelize } from 'sequelize-typescript';
 import { User } from '../user/models/user.models';
+import { Course } from 'src/course/models/course.models';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectModel(Group) private groupRepository: typeof Group,
     private readonly uploadedService: UploadedService,
-  ) {}
+  ) { }
 
   async create(
     groupDto: GroupDto,
@@ -54,13 +55,28 @@ export class GroupService {
     }
   }
 
-  async getAll(user_id?: number, type?: string): Promise<object> {
+  async getAll(category_id: number, user_id?: number, type?: string): Promise<object> {
     try {
+      category_id = category_id == 0 ? undefined : +category_id
+      let category: any = {}
+      if (category_id) {
+        category = { category_id }
+      }
       const filters: any = {
         order: [['title', 'ASC']],
-        include: [{ model: User }],
+        include: [{ model: User }, {
+          model: Course, attributes: [], where: {
+            ...category
+          }
+        }],
         attributes: {
           include: [
+            // category_id != 0 ? [
+            //   Sequelize.literal(
+            //     `COALESCE((SELECT COUNT(*) FROM "course" WHERE "course"."category_id" = :category_id)::int, 0)`,
+            //   ),
+            //   'courses_by_category',
+            // ] : undefined,
             [
               Sequelize.literal(
                 `(SELECT COUNT(*) FROM "course" WHERE "course"."group_id" = "Group"."id")::int`,
@@ -81,6 +97,7 @@ export class GroupService {
             ],
           ],
         },
+        replacements: { category_id },
       };
 
       const groups = await this.groupRepository.findAll({
@@ -120,7 +137,7 @@ export class GroupService {
       throw new BadRequestException(error.message);
     }
   }
-  
+
   async pagination(page: number): Promise<object> {
     try {
       const offset = (page - 1) * 10;

@@ -6,7 +6,7 @@ import {
 } from 'sequelize-typescript';
 
 interface CategoryAttributes {
-  name: string;
+  category: string;
 }
 
 @Table({ tableName: 'category' })
@@ -23,5 +23,5 @@ export class Category extends Model<Category, CategoryAttributes> {
     allowNull: false,
     unique: true,
   })
-  name: string;
+  category: string;
 }

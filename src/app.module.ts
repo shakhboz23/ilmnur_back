@@ -30,6 +30,7 @@ import { CourseModule } from './course/course.module';
 import { LikeModule } from './likes/like.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UserService } from './user/user.service';
+import { Subscription_activityModule } from './subscription_activity/subscription_activity.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { UserService } from './user/user.service';
     CloudinaryModule,
     ResetpasswordModule,
     SubscriptionsModule,
+    Subscription_activityModule,
   ],
 })
 // export class AppModule {}

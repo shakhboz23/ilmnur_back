@@ -9,6 +9,7 @@ import {
   Headers,
   UploadedFile,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import {
@@ -30,7 +31,7 @@ export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Create a new course' })
   @ApiConsumes('multipart/form-data')
@@ -51,6 +52,9 @@ export class CourseController {
           type: 'integer',
         },
         group_id: {
+          type: 'integer',
+        },
+        category_id: {
           type: 'integer',
         },
         image: {
@@ -86,8 +90,8 @@ export class CourseController {
   @ApiOperation({ summary: 'Get group by ID' })
   // @UseGuards(AuthGuard)
   @Get('/getUsersByGroupId/:group_id')
-  getUsersByGroupId(@Param('group_id') group_id: number) {
-    return this.courseService.getUsersByGroupId(group_id);
+  getUsersByGroupId(@Param('group_id') group_id: number, @Query('date') date: Date) {
+    return this.courseService.getUsersByGroupId(group_id, date);
   }
 
   @ApiOperation({ summary: 'Get all courses' })
@@ -106,9 +110,9 @@ export class CourseController {
 
   @ApiOperation({ summary: 'Get all courses' })
   // @UseGuards(AuthGuard)
-  @Get('/getByCourse/:id')
-  getByCourse(@Param('id') id: number) {
-    return this.courseService.getByCourse(id);
+  @Get('/getByCourse/:id/:category_id')
+  getByCourse(@Param() { id, category_id }: { id: number, category_id: number }) {
+    return this.courseService.getByCourse(id, category_id);
   }
 
   @ApiOperation({ summary: 'Get courses with pagination' })

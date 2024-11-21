@@ -11,10 +11,11 @@ import { Lesson } from '../../lesson/models/lesson.models';
 interface Test_settingsAttributes {
   start_date: Date;
   end_date: Date;
-  sort_level: number;
+  sort_level: any[];
   test_count: number;
-  lesson_id: number;
   period: number;
+  mix: boolean,
+  lesson_id: number;
 }
 
 @Table({ tableName: 'test_settings' })
@@ -40,9 +41,9 @@ export class Test_settings extends Model<
   end_date: Date;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.JSONB,
   })
-  sort_level: number;
+  sort_level: any[];
 
   @Column({
     type: DataType.INTEGER,
@@ -53,6 +54,12 @@ export class Test_settings extends Model<
     type: DataType.INTEGER,
   })
   period: number;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true,
+  })
+  mix: boolean;
 
   @ForeignKey(() => Lesson)
   @Column({

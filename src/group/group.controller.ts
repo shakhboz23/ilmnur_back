@@ -40,7 +40,7 @@ export class GroupController {
     private readonly groupService: GroupService,
     private readonly jwtService: JwtService,
     private readonly chatGateway: ChatGateway,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Create a new group' })
   @ApiConsumes('multipart/form-data')
@@ -84,11 +84,11 @@ export class GroupController {
   @ApiOperation({ summary: 'Get all groups' })
   // @UseGuards(AuthGuard)
   // @ApiBearerAuth()
-  @Get()
-  getAll(@Headers() headers: string) {
+  @Get('/:category_id')
+  getAll(@Param('category_id') category_id: number, @Headers() headers: string) {
     console.log(headers);
     const user_id = extractUserIdFromToken(headers, this.jwtService, true);
-    return this.groupService.getAll(user_id);
+    return this.groupService.getAll(category_id, user_id);
   }
 
   @ApiOperation({ summary: 'Get all groups' })
@@ -97,7 +97,7 @@ export class GroupController {
   @Get()
   getMyGroup(@Headers() headers: string) {
     const user_id = extractUserIdFromToken(headers, this.jwtService, true);
-    return this.groupService.getAll(user_id, 'my_groups');
+    return this.groupService.getAll(0, user_id, 'my_groups');
   }
 
   @ApiOperation({ summary: 'Get groups with pagination' })

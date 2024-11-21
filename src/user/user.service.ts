@@ -47,9 +47,6 @@ export class UserService {
     try {
       let is_new_role = false;
       let { email, role, password } = registerUserDto;
-      if (role == 'student') {
-        // registerUserDto.subjects = [];
-      }
       const hashed_password: string = await hash(password, 7);
       let user = await this.userRepository.findOne({
         where: { email },

@@ -14,6 +14,8 @@ import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
 import { User } from 'src/user/models/user.models';
 import { Role } from 'src/role/models/role.models';
 import { Sequelize } from 'sequelize-typescript';
+import { Op } from 'sequelize';
+import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
 
 @Injectable()
 export class CourseService {
@@ -21,7 +23,7 @@ export class CourseService {
     @InjectModel(Course) private courseRepository: typeof Course,
     private readonly userService: UserService,
     private readonly uploadedService: UploadedService,
-  ) {}
+  ) { }
 
   async create(courseDto: CourseDto, cover: any): Promise<object> {
     try {
@@ -72,11 +74,19 @@ export class CourseService {
     }
   }
 
-  async getByCourse(group_id: number): Promise<Object> {
+  async getByCourse(group_id: number, category_id: number): Promise<Object> {
     try {
+      console.log(+category_id);
+      console.log(category_id == 0);
+      category_id = category_id == 0 ? undefined : +category_id
+      let category: any = {}
+      if (category_id) {
+        category = { category_id }
+      }
       const courses: any = await this.courseRepository.findAll({
         where: {
           group_id,
+          ...category,
         },
         order: [['id', 'ASC']],
         include: [
@@ -96,16 +106,33 @@ export class CourseService {
     }
   }
 
-  async getUsersByGroupId(group_id: number): Promise<object> {
+  async getUsersByGroupId(group_id: number, date: Date): Promise<object> {
     try {
-      const users = await this.courseRepository.findOne({
+      const targetDate = new Date(date);
+      const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0)); // Kun boshidan
+      const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999)); // Kun oxirigacha
+      console.log(startOfDay, endOfDay);
+      let users = await this.courseRepository.findAll({
         where: { group_id },
-        include: [{ model: Subscriptions, include: [{ model: User }] }],
+        include: [{
+          model: Subscriptions, include: [{ model: User }, {
+            model: SubscriptionActivity, where: {
+              createdAt: {
+                [Op.between]: [startOfDay, endOfDay], // Sana oralig'i
+              },
+            },
+            required: false
+          }, { model: Course }]
+        }],
+        order: [[{ model: Subscriptions, as: 'subscriptions' }, { model: User, as: 'user' }, 'name', 'ASC']],
       });
       // console.log(groups);
       if (!users) {
         throw new NotFoundException('Users not found');
       }
+      users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
+      // console.log(users);
+
       return users;
     } catch (error) {
       throw new BadRequestException(error.message);

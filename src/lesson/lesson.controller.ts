@@ -76,8 +76,8 @@ export class LessonController {
 
   @ApiOperation({ summary: 'Get all lessons' })
   // @UseGuards(AuthGuard)
-  @Get('/')
-  getAll() {
+  @Get('/:category_id')
+  getAll(@Param('category_id') category_id: number) {
     // const auth_header = headers['authorization'];
     // const token = auth_header?.split(' ')[1];
     // console.log(token, 'token2303');
@@ -87,7 +87,7 @@ export class LessonController {
     // const user_id = user?.id;
     // console.log(user_id, '565456');
 
-    return this.lessonService.getAll();
+    return this.lessonService.getAll(category_id);
   }
 
   @ApiOperation({ summary: 'Get all lessons' })

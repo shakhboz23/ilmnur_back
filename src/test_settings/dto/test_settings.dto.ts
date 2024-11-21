@@ -24,7 +24,7 @@ export class Test_settingsDto {
   })
   @IsOptional()
   // @IsNumber()
-  sort_level: number;
+  sort_level: any[];
 
   @ApiProperty({
     example: 3,
@@ -49,4 +49,12 @@ export class Test_settingsDto {
   @IsOptional()
   // @IsNumber()
   period: number;
+
+  @ApiProperty({
+    example: true,
+    description: 'Test mix',
+  })
+  @IsOptional()
+  // @IsNumber()
+  mix: boolean;
 }

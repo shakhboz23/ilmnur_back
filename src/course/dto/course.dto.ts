@@ -52,6 +52,14 @@ export class CourseDto {
   group_id: number;
 
   @ApiProperty({
+    example: 1,
+    description: 'Course id',
+  })
+  @IsNotEmpty()
+  @IsNumberString()
+  category_id: number;
+
+  @ApiProperty({
     example: false,
     description: 'Course type',
   })
