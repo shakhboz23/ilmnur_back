@@ -13,10 +13,12 @@ import { Chat } from '../../chat/models/chat.model';
 import { Role } from '../../role/models/role.models';
 import { Reyting } from 'src/reyting/models/reyting.models';
 import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
+import { Course } from 'src/course/models/course.models';
 
 interface SubscriptionActivityAttributes {
   subscription_id: number;
   status: SubscriptionActivityStatus;
+  course_id: number;
   createdAt?: Date;
 }
 
@@ -44,7 +46,7 @@ export class SubscriptionActivity extends Model<SubscriptionActivity, Subscripti
     defaultValue: SubscriptionActivityStatus.none,
   })
   status: SubscriptionActivityStatus;
-  
+
   @Column({
     type: DataType.DATE,
   })
@@ -60,5 +62,12 @@ export class SubscriptionActivity extends Model<SubscriptionActivity, Subscripti
   @BelongsTo(() => Subscriptions)
   subcription: Subscriptions[];
 
-  
+  @ForeignKey(() => Course)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  course_id: number;
+
+  @BelongsTo(() => Course)
+  course: Course[];
 }

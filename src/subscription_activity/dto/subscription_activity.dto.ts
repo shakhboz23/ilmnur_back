@@ -10,7 +10,14 @@ export class SubscriptionActivityDto {
   @IsNotEmpty()
   @IsNumber()
   subscription_id: number;
-  
+
+  @ApiProperty({
+    example: 1,
+    description: 'course id',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  course_id: number;
 
   @ApiProperty({
     example: 'John Smith',

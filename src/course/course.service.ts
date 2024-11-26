@@ -16,6 +16,7 @@ import { Role } from 'src/role/models/role.models';
 import { Sequelize } from 'sequelize-typescript';
 import { Op } from 'sequelize';
 import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
+import { Group } from 'src/group/models/group.models';
 
 @Injectable()
 export class CourseService {
@@ -25,7 +26,7 @@ export class CourseService {
     private readonly uploadedService: UploadedService,
   ) { }
 
-  async create(courseDto: CourseDto, cover: any): Promise<object> {
+  async create(courseDto: CourseDto, cover: any, user_id: number): Promise<object> {
     try {
       const { title } = courseDto;
       const exist = await this.courseRepository.findOne({
@@ -43,6 +44,7 @@ export class CourseService {
       }
       const course: any = await this.courseRepository.create({
         ...courseDto,
+        user_id,
         cover,
       });
       return {
@@ -106,34 +108,47 @@ export class CourseService {
     }
   }
 
-  async getUsersByGroupId(group_id: number, date: Date): Promise<object> {
+  async getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number): Promise<object> {
     try {
+      // course_id = course_id || null;
+      // let id: any;
+      // course_id ? id = { course_id } : {};
+      let id = {};
       const targetDate = new Date(date);
       const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0)); // Kun boshidan
       const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999)); // Kun oxirigacha
       console.log(startOfDay, endOfDay);
-      let users = await this.courseRepository.findAll({
+      let users: any = await this.courseRepository.findAll({
         where: { group_id },
         include: [{
           model: Subscriptions, include: [{ model: User }, {
             model: SubscriptionActivity, where: {
+              course_id,
               createdAt: {
                 [Op.between]: [startOfDay, endOfDay], // Sana oralig'i
               },
             },
             required: false
-          }, { model: Course }]
+          }, { model: Course, where: { ...id } }]
         }],
         order: [[{ model: Subscriptions, as: 'subscriptions' }, { model: User, as: 'user' }, 'name', 'ASC']],
       });
-      // console.log(groups);
+      console.log(users, '23033')
+      let user: any = await this.courseRepository.findOne({
+        where: { group_id },
+        include: [{
+          model: Subscriptions, where: { user_id }
+        }, //{ model: Group, where: { user_id }, required: false }
+        ],
+      });
+      console.log(user, '2222');
       if (!users) {
         throw new NotFoundException('Users not found');
       }
       users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
       // console.log(users);
 
-      return users;
+      return { users, user: user?.subscriptions[0] };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

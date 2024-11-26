@@ -42,13 +42,14 @@ export class Subscription_activityService {
     // user_id: number,
   ): Promise<object> {
     try {
-      const { subscription_id, status, date } = subscriptionActivityDto
+      const { subscription_id, course_id, status, date } = subscriptionActivityDto
       const targetDate = new Date(date);
       const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0)); // Kun boshidan
       const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999)); // Kun oxirigacha
 
       const exist = await this.subscription_activityRepository.findOne({
         where: {
+          course_id,
           subscription_id, createdAt: {
             [Op.between]: [startOfDay, endOfDay], // Sana oralig'i
           },

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Test_settingsDto } from 'src/test_settings/dto/test_settings.dto';
 
@@ -22,7 +22,7 @@ class QuestionDto {
   })
   @IsArray()
   @IsNotEmpty({ each: true })
-  variant: string[];
+  variants: string[];
 }
 
 export class TestsDto extends Test_settingsDto {
@@ -42,4 +42,14 @@ export class TestsDto extends Test_settingsDto {
   @ValidateNested({ each: true })
   @Type(() => QuestionDto)
   test: QuestionDto[];
+
+  @ApiProperty({
+    example: 1,
+    description: 'Test id of the tests',
+  })
+  @IsOptional()
+  // @IsArray()
+  // @ValidateNested({ each: true })
+  // @Type(() => QuestionDto)
+  files: any[];
 }

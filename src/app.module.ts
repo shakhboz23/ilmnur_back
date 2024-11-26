@@ -5,10 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { resolve } from 'path';
 import { FilesModule } from './files/files.module';
-import { TeacherModule } from './teachers/teacher.module';
 import { ChatModule } from './chat/chat.module';
 import { LessonModule } from './lesson/lesson.module';
-import { StudentModule } from './student/student.module';
 import { UserModule } from './user/user.module';
 import { GroupModule } from './group/group.module';
 import { ChatGroupModule } from './chat_group/chat_group.module';
@@ -69,9 +67,7 @@ import { Subscription_activityModule } from './subscription_activity/subscriptio
     LessonModule,
     LikeModule,
     // ChatGateway,
-    TeacherModule,
     ChatModule,
-    StudentModule,
     TestsModule,
     UserModule,
     ChatGroupModule,

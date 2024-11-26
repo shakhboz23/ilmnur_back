@@ -12,9 +12,8 @@ interface Test_settingsAttributes {
   start_date: Date;
   end_date: Date;
   sort_level: any[];
-  test_count: number;
   period: number;
-  mix: boolean,
+  mix: boolean;
   lesson_id: number;
 }
 
@@ -44,11 +43,6 @@ export class Test_settings extends Model<
     type: DataType.JSONB,
   })
   sort_level: any[];
-
-  @Column({
-    type: DataType.INTEGER,
-  })
-  test_count: number;
 
   @Column({
     type: DataType.INTEGER,

@@ -9,11 +9,12 @@ import { UserStepModule } from '../user_step/class.module';
 import { Test_settingsModule } from '../test_settings/test_settings.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LessonModule } from 'src/lesson/lesson.module';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Tests]), ReytingModule, UserStepModule, Test_settingsModule, JwtModule, LessonModule],
+  imports: [SequelizeModule.forFeature([Tests]), ReytingModule, UserStepModule, Test_settingsModule, JwtModule, LessonModule, FilesModule],
   controllers: [TestsController],
-  providers: [TestsService], 
+  providers: [TestsService],
   exports: [TestsService],
 })
-export class TestsModule {}
+export class TestsModule { }

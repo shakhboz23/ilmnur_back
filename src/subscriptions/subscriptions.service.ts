@@ -48,10 +48,10 @@ export class SubscriptionsService {
   ): Promise<object> {
     try {
       const user: any = await this.userService.register(
-        creaetSubscriptionsDto,
+        {...creaetSubscriptionsDto, role: 'student'},
       );
       console.log(user);
-      const { course_id } = creaetSubscriptionsDto;
+      const { course_id, role } = creaetSubscriptionsDto;
       user_id = user.data?.user.id;
       const exist = await this.subscriptionsRepository.findOne({
         where: { user_id, course_id },
@@ -60,7 +60,7 @@ export class SubscriptionsService {
       if (exist) {
         throw new BadRequestException('Already created');
       }
-      return this.subscriptionsRepository.create({ course_id, user_id, is_active: SubscribeActive.pending });
+      return this.subscriptionsRepository.create({ course_id, user_id, role, is_active: SubscribeActive.pending });
     } catch (error) {
       throw new BadRequestException(error.message);
     }

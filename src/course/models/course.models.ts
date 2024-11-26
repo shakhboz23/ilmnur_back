@@ -4,6 +4,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -11,6 +12,8 @@ import { Group } from '../../group/models/group.models';
 import { Lesson } from '../../lesson/models/lesson.models';
 import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
 import { Category } from 'src/category/models/category.models';
+import { User } from 'src/user/models/user.models';
+import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
 
 interface CourseAttributes {
   title: string;
@@ -20,6 +23,7 @@ interface CourseAttributes {
   cover: string;
   group_id: number;
   category_id: number;
+  user_id: number
 }
 
 @Table({ tableName: 'course' })
@@ -71,6 +75,16 @@ export class Course extends Model<Course, CourseAttributes> {
   @BelongsTo(() => Group)
   group: Group[];
 
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  user_id: number;
+
+  @BelongsTo(() => User)
+  user: User[];
+
+
   @ForeignKey(() => Category)
   @Column({
     type: DataType.INTEGER,
@@ -88,6 +102,12 @@ export class Course extends Model<Course, CourseAttributes> {
     hooks: true,
   })
   subscriptions: Subscriptions[];
+
+  @HasMany(() => SubscriptionActivity, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  subscriptionActivity: SubscriptionActivity;
 
   // @BelongsToMany(() => User, {
   // through: { model: () => Subscriptions }, // Use a function to specify the model type

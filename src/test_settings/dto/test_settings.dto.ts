@@ -27,14 +27,6 @@ export class Test_settingsDto {
   sort_level: any[];
 
   @ApiProperty({
-    example: 3,
-    description: 'Test sort level',
-  })
-  @IsOptional()
-  // @IsNumber()
-  test_count: number;
-
-  @ApiProperty({
     example: 1,
     description: 'Test id',
   })

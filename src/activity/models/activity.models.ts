@@ -18,6 +18,8 @@ interface ActivityAttributes {
 export enum RoleName {
   student = 'student',
   teacher = 'teacher',
+  admin = 'admin',
+  super_admin = 'super_admin',
 }
 
 @Table({ tableName: 'activity' })

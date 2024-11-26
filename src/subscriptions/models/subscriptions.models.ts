@@ -11,10 +11,12 @@ import {
 } from 'sequelize-typescript';
 import { Course } from '../../course/models/course.models';
 import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
+import { RoleName } from 'src/activity/models/activity.models';
 
 interface SubscriptionsAttributes {
   course_id: number;
   user_id: number;
+  role: RoleName;
   is_active: SubscribeActive;
 }
 
@@ -35,6 +37,13 @@ export class Subscriptions extends Model<Subscriptions, SubscriptionsAttributes>
   })
   id: number;
 
+  @Column(
+    DataType.ENUM({
+      values: Object.keys(RoleName),
+    }),
+  )
+  role: RoleName;
+
   @ForeignKey(() => Course)
   @Column({
     type: DataType.INTEGER,
@@ -54,7 +63,7 @@ export class Subscriptions extends Model<Subscriptions, SubscriptionsAttributes>
 
   @BelongsTo(() => User)
   user: User[];
-  
+
   @Column(
     DataType.ENUM({
       values: Object.keys(SubscribeActive),

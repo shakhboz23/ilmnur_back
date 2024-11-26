@@ -13,21 +13,24 @@ import { Sequelize } from 'sequelize-typescript';
 import { CheckDto } from './dto/check.dto';
 import { ReytingService } from '../reyting/reyting.service';
 import { ReytingDto } from '../reyting/dto/reyting.dto';
-import { UserStepService } from '../user_step/class.service';
 import { Lesson } from 'src/lesson/models/lesson.models';
+import { Course } from 'src/course/models/course.models';
+import { Category } from 'src/category/models/category.models';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class TestsService {
   constructor(
     @InjectModel(Tests) private testsRepository: typeof Tests,
     private readonly reytingService: ReytingService,
-    private readonly userStepService: UserStepService,
     private readonly lessonService: LessonService,
     private readonly test_settingsService: Test_settingsService,
-  ) {}
+    private readonly fileService: FilesService,
+  ) { }
 
   async create(testsDto: TestsDto): Promise<object> {
-    console.log(testsDto);
+    // console.log(testsDto);
+    console.log(testsDto.files, '2303');
     try {
       const {
         test,
@@ -35,26 +38,24 @@ export class TestsService {
         start_date,
         end_date,
         sort_level,
-        test_count,
         period,
         mix,
       } = testsDto;
       console.log(test);
       let variants: string[];
-      if (start_date || end_date || sort_level || test_count || period) {
+      if (start_date || end_date || sort_level || period) {
         await this.test_settingsService.create({
           lesson_id,
           start_date,
           end_date,
           sort_level,
-          test_count,
           period,
           mix,
         });
       }
       for (let i = 0; i < test.length; i++) {
         console.log(test[i], 'testi');
-        variants = Object.values(test[i].variant);
+        variants = Object.values(test[i].variants);
         await this.testsRepository.create({
           lesson_id,
           question: test[i].question,
@@ -67,6 +68,26 @@ export class TestsService {
       };
     } catch (error) {
       throw new BadRequestException(error.message);
+    }
+  }
+
+  async create_url(file: any) {
+    try {
+      console.log('object');
+      if (file) {
+        file = await this.fileService.createFile(file, 'image');
+        console.log(file);
+        if (file != 'error') {
+          return { statusCode: HttpStatus.OK, data: file };
+        } else {
+          return {
+            statusCode: HttpStatus.BAD_REQUEST,
+            error: 'Error while uploading a file',
+          };
+        }
+      }
+    } catch (error) {
+      return { statusCode: HttpStatus.BAD_REQUEST, error: error.message };
     }
   }
 
@@ -142,6 +163,7 @@ export class TestsService {
         where: {
           lesson_id,
         },
+        include: [{ model: Lesson, include: [{ model: Course, include: [{ model: Category }] }] }]
       });
 
       if (!tests) {
@@ -149,6 +171,12 @@ export class TestsService {
       }
 
       const lesson: any = await this.lessonService.getById(lesson_id, user_id);
+      const category: any = await this.testsRepository.findOne({
+        where: {
+          lesson_id,
+        },
+        include: [{ model: Lesson, attributes: ['course_id'], include: [{ model: Course, attributes: ['category_id'], include: [{ model: Category, attributes: ['id'] }] }] }]
+      });
 
       const randomizedVariants = this.shuffle(tests).map((variant) => {
         const randomizedOptions = this.shuffle(variant.get('variants'));
@@ -160,6 +188,7 @@ export class TestsService {
       console.log(lesson.course);
       return {
         user_id: lesson?.course.get('user_id'),
+        category_id: category?.lesson?.course?.category?.id,
         test: randomizedVariants,
       };
     } catch (error) {

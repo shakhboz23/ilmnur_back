@@ -7,13 +7,17 @@ import {
   Param,
   Delete,
   Headers,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { TestsService } from './test.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TestsDto } from './dto/test.dto';
 import { CheckDto } from './dto/check.dto';
 import { extractUserIdFromToken } from 'src/utils/token';
 import { JwtService } from '@nestjs/jwt';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
 
 @ApiTags('Tests')
 @Controller('tests')
@@ -82,6 +86,29 @@ export class TestsController {
   @Get('pagination/:page')
   pagination(@Param('page') page: number) {
     return this.testsService.pagination(page);
+  }
+
+  @ApiOperation({ summary: 'Create a url' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  // @UseGuards(AuthGuard)
+  @Post('/create_url')
+  @UseInterceptors(FileInterceptor('file'))
+  create_url(
+    @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
+  ) {
+    console.log('object');
+    return this.testsService.create_url(file);
   }
 
   @ApiOperation({ summary: 'Update tests profile by ID' })
