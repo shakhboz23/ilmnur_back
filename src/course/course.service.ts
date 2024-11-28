@@ -99,9 +99,9 @@ export class CourseService {
           },
         ],
       });
-      if (!courses.length) {
-        throw new NotFoundException('Courses not found');
-      }
+      // if (!courses.length) {
+      //   throw new NotFoundException('Courses not found');
+      // }
       return courses;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -186,9 +186,9 @@ export class CourseService {
           user_id,
         },
       });
-      if (!course) {
-        throw new NotFoundException('Course not found');
-      }
+      // if (!course) {
+      //   throw new NotFoundException('Course not found');
+      // }
       return course;
     } catch (error) {
       throw new BadRequestException(error.message);

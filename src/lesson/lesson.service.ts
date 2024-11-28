@@ -105,9 +105,9 @@ export class LessonService {
         }],
         order: [['id', 'ASC']],
       });
-      if (!lessons.length) {
-        throw new NotFoundException('Lessons not found');
-      }
+      // if (!lessons.length) {
+      //   throw new NotFoundException('Lessons not found');
+      // }
       return lessons;
     } catch (error) {
       throw new BadRequestException(error.message);
