@@ -175,7 +175,7 @@ export class TestsService {
         where: {
           lesson_id,
         },
-        include: [{ model: Lesson, attributes: ['course_id'], include: [{ model: Course, attributes: ['category_id'], include: [{ model: Category, attributes: ['id'] }] }] }]
+        include: [{ model: Lesson, attributes: ['course_id', 'id'], include: [{ model: Course, attributes: ['category_id'], include: [{ model: Category, attributes: ['id'] }] }] }]
       });
 
       const randomizedVariants = this.shuffle(tests).map((variant) => {
@@ -189,6 +189,7 @@ export class TestsService {
       return {
         user_id: lesson?.course.get('user_id'),
         category_id: category?.lesson?.course?.category?.id,
+        lesson_id: category?.lesson?.id,
         test: randomizedVariants,
       };
     } catch (error) {

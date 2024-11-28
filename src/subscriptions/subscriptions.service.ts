@@ -30,12 +30,12 @@ export class SubscriptionsService {
   ): Promise<object> {
     try {
       const { course_id } = subscriptionsDto;
-      const exist = await this.subscriptionsRepository.findOne({
-        where: { user_id, course_id },
-      });
-      if (exist) {
-        throw new BadRequestException('Already created');
-      }
+      // const exist = await this.subscriptionsRepository.findOne({
+      //   where: { user_id, course_ids },
+      // });
+      // if (exist) {
+      //   throw new BadRequestException('Already created');
+      // }
       return this.subscriptionsRepository.create({ course_id, user_id, is_active: SubscribeActive.requested });
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -48,19 +48,23 @@ export class SubscriptionsService {
   ): Promise<object> {
     try {
       const user: any = await this.userService.register(
-        {...creaetSubscriptionsDto, role: 'student'},
+        { ...creaetSubscriptionsDto, role: 'student' },
       );
       console.log(user);
-      const { course_id, role } = creaetSubscriptionsDto;
+      const { course_ids, role } = creaetSubscriptionsDto;
       user_id = user.data?.user.id;
-      const exist = await this.subscriptionsRepository.findOne({
-        where: { user_id, course_id },
-      });
-      console.log(course_id, user_id, '9999');
-      if (exist) {
-        throw new BadRequestException('Already created');
+      // const exist = await this.subscriptionsRepository.findOne({
+      //   where: { user_id, course_ids },
+      // });
+      // if (exist) {
+      //   throw new BadRequestException('Already created');
+      // }
+      let subcription: any;
+      let i: any;
+      for (i of course_ids) {
+        subcription = await this.subscriptionsRepository.create({ course_id: i, user_id, role, is_active: SubscribeActive.pending });
       }
-      return this.subscriptionsRepository.create({ course_id, user_id, role, is_active: SubscribeActive.pending });
+      return subcription;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

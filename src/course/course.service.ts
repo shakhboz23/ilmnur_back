@@ -110,10 +110,11 @@ export class CourseService {
 
   async getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number): Promise<object> {
     try {
-      // course_id = course_id || null;
-      // let id: any;
-      // course_id ? id = { course_id } : {};
-      let id = {};
+      course_id = +course_id || null;
+      let id: any;
+      course_id ? id = { id: course_id } : {};
+      // let id = {};
+      console.log(id);
       const targetDate = new Date(date);
       const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0)); // Kun boshidan
       const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999)); // Kun oxirigacha

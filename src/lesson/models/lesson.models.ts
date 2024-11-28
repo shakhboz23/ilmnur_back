@@ -49,7 +49,6 @@ export class Lesson extends Model<Lesson, LessonAttributes> {
 
   @Column({
     type: DataType.STRING,
-    defaultValue: '',
   })
   video: string;
 

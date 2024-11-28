@@ -38,9 +38,9 @@ export class LessonService {
       if (lessonDto.type == 'lesson') {
         let file_type: string;
         let file_data: any;
-        if (!content || !video) {
+        if (!content) {
           throw new BadRequestException(
-            'Please enter a video, content and lesson_id',
+            'Please enter a content',
           );
         }
         if (video) {
