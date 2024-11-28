@@ -57,17 +57,15 @@ export class GroupService {
 
   async getAll(category_id: number, user_id?: number, type?: string): Promise<object> {
     try {
-      category_id = category_id == 0 ? undefined : +category_id
+      // category_id = category_id == 0 ? undefined : +category_id
       let category: any = {}
-      if (category_id) {
-        category = { category_id }
+      if (category_id != 0) {
+        category = { where: { category_id } }
       }
       const filters: any = {
         order: [['title', 'ASC']],
         include: [{ model: User }, {
-          model: Course, attributes: [], where: {
-            ...category
-          }
+          model: Course, attributes: [], ...category,
         }],
         attributes: {
           include: [
