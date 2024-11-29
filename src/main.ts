@@ -17,7 +17,7 @@ async function bootstrap() {
     // const peerServer = ExpressPeerServer(server, { path: '/peerjs' }); // Create the PeerJS server with a custom path
     const peerServer = ExpressPeerServer(server);
     console.log(peerServer)
-    app.use('/peerjs', peerServer);
+    app.use('/peerjs', peerServer); 
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     const config = new DocumentBuilder()

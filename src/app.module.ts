@@ -75,7 +75,7 @@ import { Subscription_activityModule } from './subscription_activity/subscriptio
     NotificationModule,
     MessagesModule,
     RoleModule,
-    ActivityModule,
+    ActivityModule, 
     ReytingModule,
     NewsModule,
     OtpModule,

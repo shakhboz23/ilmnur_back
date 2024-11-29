@@ -16,18 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    // "paths": {
-    //   "src": [
-    //     "src/*"
-    //   ]
-    // }
+    "noFallthroughCasesInSwitch": false
   },
   "include": [
     "src/**/*.ts",
-    "src/mail/templates/**/*.hbs",
-    "src/test_settings/models/test_settings.models.ts"
-  ],
+    "src/mail/templates/**/*.hbs"
+, "src/test_settings/models/test_settings.models.ts"  ],
   "exclude": [
     "node_modules"
   ]

@@ -80,7 +80,7 @@ export class CategoryService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-  }
+  }   
 
   async update(id: number, categoryDto: CategoryDto): Promise<object> {
     try {
