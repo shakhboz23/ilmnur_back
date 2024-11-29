@@ -1,0 +1,35 @@
+import { RoleReytingDto } from './dto/filter_reyting';
+import { FilesService } from '../files/files.service';
+import { Role } from './models/role.models';
+import { RoleDto } from './dto/role.dto';
+import { UpdateProfileDto } from './dto/update_profile.dto';
+import { CheckDto } from './dto/check.dto';
+import { ActivityService } from '../activity/activity.service';
+import { UpdateDto } from './dto/update.dto';
+import { SearchChildDto } from './dto/searchChild';
+import { UserService } from '../user/user.service';
+export declare class RoleService {
+    private roleRepository;
+    private readonly fileService;
+    private readonly activityService;
+    private readonly userService;
+    constructor(roleRepository: typeof Role, fileService: FilesService, activityService: ActivityService, userService: UserService);
+    create(roleDto: RoleDto): Promise<object>;
+    checkPassword(checkDto: CheckDto): Promise<object>;
+    userAvailable(id: number, is_online: boolean, role: string): Promise<object>;
+    getAll(role: string): Promise<object>;
+    getAllStudent(class_id: number): Promise<object>;
+    getUserRoles(user_id: number, role: string): Promise<object>;
+    getReyting(role: string, roleReytingDto: RoleReytingDto): Promise<object>;
+    getTeacherReyting(subject_id: number, roleReytingDto: RoleReytingDto): Promise<object>;
+    getByUserId(user_id: number, role: string): Promise<object>;
+    getById(id: number): Promise<object>;
+    pagination(page: number, limit: number): Promise<object>;
+    updateProfile(id: string, updateDto: UpdateProfileDto): Promise<object>;
+    update(id: number, updateDto: UpdateDto): Promise<object>;
+    countUsers(users: any): Promise<object>;
+    updateStatus(id: number, role: string): Promise<object>;
+    updateParentId(searchChildDto: SearchChildDto): Promise<object>;
+    updateProfileImage(user_id: number, role: string, image: any): Promise<object>;
+    delete(id: number): Promise<object>;
+}
