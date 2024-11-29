@@ -95,19 +95,27 @@ export class CourseController {
     return this.courseService.getUsersByGroupId(group_id, date, user_id, course_id);
   }
 
-  @ApiOperation({ summary: 'Get all courses' })
+  @ApiOperation({ summary: 'Get all lessons' })
   // @UseGuards(AuthGuard)
-  @Get('/')
-  getAll(@Headers() headers?: string) {
-    const auth_header = headers['authorization'];
-    const token = auth_header?.split(' ')[1];
-    const user = token
-      ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
-      : null;
-    const user_id = user?.id;
-    console.log(user_id, '565456');
-    return this.courseService.getAll();
+  @Get('/:category_id')
+  getAll(@Param('category_id') category_id: number) {
+    return this.courseService.getAll(category_id);
   }
+
+
+  // @ApiOperation({ summary: 'Get all courses' })
+  // // @UseGuards(AuthGuard)
+  // @Get('/')
+  // getAll(@Headers() headers?: string) {
+  //   const auth_header = headers['authorization'];
+  //   const token = auth_header?.split(' ')[1];
+  //   const user = token
+  //     ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
+  //     : null;
+  //   const user_id = user?.id;
+  //   console.log(user_id, '565456');
+  //   return this.courseService.getAll();
+  // }
 
   @ApiOperation({ summary: 'Get all courses' })
   // @UseGuards(AuthGuard)

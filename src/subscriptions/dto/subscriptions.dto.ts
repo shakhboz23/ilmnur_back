@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { SubscribeActive } from '../models/subscriptions.models';
 import { RoleName } from 'src/activity/models/activity.models';
 
@@ -8,7 +8,7 @@ export class SubscriptionsDto {
     example: 'student',
     description: 'role name',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(RoleName)
   role: RoleName;
 

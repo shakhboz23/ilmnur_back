@@ -37,11 +37,12 @@ export class Subscriptions extends Model<Subscriptions, SubscriptionsAttributes>
   })
   id: number;
 
-  @Column(
-    DataType.ENUM({
+  @Column({
+    type: DataType.ENUM({
       values: Object.keys(RoleName),
     }),
-  )
+    defaultValue: RoleName.student
+  })
   role: RoleName;
 
   @ForeignKey(() => Course)

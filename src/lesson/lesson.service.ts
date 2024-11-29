@@ -91,17 +91,14 @@ export class LessonService {
       // if (!user_data) {
       //   new BadRequestException('User not found!');
       // }
-      category_id = category_id == 0 ? undefined : +category_id
       let category: any = {}
-      if (category_id) {
-        category = { category_id }
+      if (+category_id) {
+        category = { where: { category_id } }
       }
       const lessons: any = await this.lessonRepository.findAll({
         where: { type: 'lesson' },
         include: [{ model: Lesson }, {
-          model: Course, attributes: [], where: {
-            ...category
-          }
+          model: Course, attributes: [], ...category,
         }],
         order: [['id', 'ASC']],
       });

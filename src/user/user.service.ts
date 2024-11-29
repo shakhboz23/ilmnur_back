@@ -318,7 +318,7 @@ export class UserService {
         throw new NotFoundException('User not found!');
       }
       const userdata: any = await this.userRepository.findByPk(id);
-      const current_role: string = userdata.current_role;
+      const current_role: string = userdata?.current_role || 'student';
       const user = await this.userRepository.findOne({
         where: { id },
         include: [

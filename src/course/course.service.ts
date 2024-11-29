@@ -44,6 +44,7 @@ export class CourseService {
       }
       const course: any = await this.courseRepository.create({
         ...courseDto,
+        group_id: +courseDto.group_id,
         user_id,
         cover,
       });
@@ -57,14 +58,14 @@ export class CourseService {
     }
   }
 
-  async getAll(): Promise<object> {
+  async getAll(category_id: number): Promise<object> {
     try {
-      // const user_data: any = await this.userService.getById(user_id);
-      // if (!user_data) {
-      //   new BadRequestException('User not found!');
-      // }
-
+      let category: any = {}
+      if (+category_id) {
+        category = { where: { category_id } }
+      }
       const courses: any = await this.courseRepository.findAll({
+        ...category,
         order: [['id', 'ASC']],
       });
       if (!courses.length) {
@@ -78,18 +79,20 @@ export class CourseService {
 
   async getByCourse(group_id: number, category_id: number): Promise<Object> {
     try {
-      console.log(+category_id);
-      console.log(category_id == 0);
-      category_id = category_id == 0 ? undefined : +category_id
-      let category: any = {}
-      if (category_id) {
-        category = { category_id }
-      }
-      const courses: any = await this.courseRepository.findAll({
+      let category: any = {
         where: {
           group_id,
-          ...category,
-        },
+        }
+      }
+      if (+category_id) {
+        category = {
+          where: {
+            category_id, group_id
+          }
+        }
+      }
+      const courses: any = await this.courseRepository.findAll({
+        ...category,
         order: [['id', 'ASC']],
         include: [
           {
@@ -178,6 +181,12 @@ export class CourseService {
                 `(SELECT COUNT(*) FROM "reyting" WHERE "reyting"."lesson_id" IN (SELECT "id" FROM "lesson" WHERE "lesson"."course_id" = :id) AND "reyting"."user_id" = :user_id AND "reyting"."ball" > 70)::int`,
               ),
               'finished_count',
+            ],
+            [
+              Sequelize.literal(
+                `(CASE WHEN EXISTS (SELECT 1 FROM "subscriptions" WHERE "subscriptions"."course_id" = "Course"."id" AND "subscriptions"."user_id" = :user_id) THEN true ELSE false END)`,
+              ),
+              'is_subscribed',
             ],
           ],
         },

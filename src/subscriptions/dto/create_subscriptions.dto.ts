@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { RoleName } from 'src/activity/models/activity.models';
 import { RegisterUserDto } from 'src/user/dto/register.dto';
 
@@ -8,7 +8,7 @@ export class CreateSubscriptionsDto extends RegisterUserDto {
     example: 'student',
     description: 'role name',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(RoleName)
   role: RoleName;
 
