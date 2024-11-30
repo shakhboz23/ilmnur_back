@@ -28,13 +28,15 @@ const uuid = require("uuid");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const bcrypt = require("bcrypt");
 const google_auth_library_1 = require("google-auth-library");
+const files_service_1 = require("../files/files.service");
 let UserService = class UserService {
-    constructor(userRepository, jwtService, roleService, mailService, resetpasswordService) {
+    constructor(userRepository, jwtService, roleService, mailService, resetpasswordService, fileService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.roleService = roleService;
         this.mailService = mailService;
         this.resetpasswordService = resetpasswordService;
+        this.fileService = fileService;
     }
     async register(registerUserDto) {
         var _a;
@@ -323,6 +325,37 @@ let UserService = class UserService {
             };
         }
     }
+    async updateProfile(id, updateDto, image) {
+        console.log(image);
+        try {
+            let user = await this.userRepository.findByPk(id);
+            if (!user) {
+                throw new common_1.NotFoundException('User not found');
+            }
+            if (image) {
+                image = await this.fileService.createFile(image, 'image');
+                updateDto.image = image.url;
+                console.log(updateDto.image);
+                if (image == 'error') {
+                    return {
+                        status: common_1.HttpStatus.BAD_REQUEST,
+                        error: 'Error while uploading a file',
+                    };
+                }
+            }
+            else {
+                updateDto.image = null;
+            }
+            user = await this.userRepository.update(updateDto, {
+                where: { id },
+                returning: true,
+            });
+            return user[1][0];
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
     async newPassword(newPasswordDto) {
         try {
             const { new_password, confirm_password, activation_link } = newPasswordDto;
@@ -460,6 +493,7 @@ exports.UserService = UserService = __decorate([
     __metadata("design:paramtypes", [Object, jwt_1.JwtService,
         role_service_1.RoleService,
         mail_service_1.MailService,
-        resetpassword_service_1.ResetpasswordService])
+        resetpassword_service_1.ResetpasswordService,
+        files_service_1.FilesService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

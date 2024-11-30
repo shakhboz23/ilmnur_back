@@ -2,7 +2,6 @@ import { RoleReytingDto } from './dto/filter_reyting';
 import { FilesService } from '../files/files.service';
 import { Role } from './models/role.models';
 import { RoleDto } from './dto/role.dto';
-import { UpdateProfileDto } from './dto/update_profile.dto';
 import { CheckDto } from './dto/check.dto';
 import { ActivityService } from '../activity/activity.service';
 import { UpdateDto } from './dto/update.dto';
@@ -25,7 +24,7 @@ export declare class RoleService {
     getByUserId(user_id: number, role: string): Promise<object>;
     getById(id: number): Promise<object>;
     pagination(page: number, limit: number): Promise<object>;
-    updateProfile(id: string, updateDto: UpdateProfileDto): Promise<object>;
+    updateProfile(id: string, updateDto: UpdateDto): Promise<object>;
     update(id: number, updateDto: UpdateDto): Promise<object>;
     countUsers(users: any): Promise<object>;
     updateStatus(id: number, role: string): Promise<object>;

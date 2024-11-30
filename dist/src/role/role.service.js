@@ -363,7 +363,6 @@ let RoleService = class RoleService {
         }
     }
     async updateProfile(id, updateDto) {
-        var _a;
         try {
             let role = await this.roleRepository.findByPk(id, {
                 include: { model: user_models_1.User },
@@ -375,7 +374,6 @@ let RoleService = class RoleService {
                 where: { id },
                 returning: true,
             });
-            await this.userService.update((_a = role.user) === null || _a === void 0 ? void 0 : _a.id, updateDto);
             role = await this.roleRepository.findByPk(id, {
                 include: { model: user_models_1.User },
             });

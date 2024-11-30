@@ -15,6 +15,8 @@ const user_models_1 = require("./models/user.models");
 const role_module_1 = require("../role/role.module");
 const mail_module_1 = require("../mail/mail.module");
 const resetpassword_module_1 = require("../resetpassword/resetpassword.module");
+const jwt_1 = require("@nestjs/jwt");
+const files_module_1 = require("../files/files.module");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -25,6 +27,8 @@ exports.UserModule = UserModule = __decorate([
             (0, common_1.forwardRef)(() => role_module_1.RoleModule),
             mail_module_1.MailModule,
             resetpassword_module_1.ResetpasswordModule,
+            jwt_1.JwtModule,
+            files_module_1.FilesModule,
         ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService],

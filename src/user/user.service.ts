@@ -31,6 +31,7 @@ import { UpdateDto } from './dto/update.dto';
 import { Reyting } from 'src/reyting/models/reyting.models';
 import { Lesson } from 'src/lesson/models/lesson.models';
 import { Course } from 'src/course/models/course.models';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class UserService {
@@ -40,7 +41,9 @@ export class UserService {
     private readonly roleService: RoleService,
     private readonly mailService: MailService,
     private readonly resetpasswordService: ResetpasswordService,
-  ) {}
+    private readonly fileService: FilesService,
+
+  ) { }
   async register(
     registerUserDto: RegisterUserDto,
   ): Promise<object> {
@@ -459,6 +462,43 @@ export class UserService {
     }
   }
 
+  async updateProfile(
+    id: number,
+    updateDto: UpdateDto,
+    image: any
+  ): Promise<object> {
+    console.log(image);
+    try {
+      let user: any = await this.userRepository.findByPk(id);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (image) {
+        image = await this.fileService.createFile(image, 'image');
+        updateDto.image = image.url;
+        console.log(updateDto.image)
+        if (image == 'error') {
+          return {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'Error while uploading a file',
+          };
+        }
+      } else {
+        updateDto.image = null;
+      }
+      user = await this.userRepository.update(updateDto, {
+        where: { id },
+        returning: true,
+      });
+      // user = await this.userRepository.findByPk(id, {
+      //   include: { model: User },
+      // });
+      return user[1][0];
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async newPassword(newPasswordDto: NewPasswordDto): Promise<object> {
     try {
       const { new_password, confirm_password, activation_link } =
@@ -672,14 +712,14 @@ export class UserService {
   }
 
   async createDefaultUser() {
-		try {
-			await this.register({
-				name: process.env.INITIAL_NAME,
-				surname: process.env.INITIAL_SURNAME,
-				password: process.env.INITIAL_EMAIL,
+    try {
+      await this.register({
+        name: process.env.INITIAL_NAME,
+        surname: process.env.INITIAL_SURNAME,
+        password: process.env.INITIAL_EMAIL,
         role: RoleName.super_admin,
         email: process.env.INITIAL_EMAIL,
-			});
-		} catch {}
-	}
+      });
+    } catch { }
+  }
 }

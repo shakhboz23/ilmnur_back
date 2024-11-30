@@ -8,14 +8,22 @@ import {
   Delete,
   Res,
   Put,
+  Headers,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
 import { CheckDto } from './dto/check.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
+import { UpdateDto } from './dto/update.dto';
+import { extractUserIdFromToken } from 'src/utils/token';
+import { JwtService } from '@nestjs/jwt';
+import { ImageValidationPipe } from 'src/pipes/image-validation.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
 @Controller('user')
@@ -23,7 +31,8 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly roleService: RoleService,
-  ) {}
+    private readonly jwtService: JwtService,
+  ) { }
 
   @ApiOperation({ summary: 'Registration a new user' })
   @Post('register')
@@ -115,6 +124,40 @@ export class UserController {
   @Put('/newPassword')
   newPassword(@Body() newPasswordDto: NewPasswordDto) {
     return this.userService.newPassword(newPasswordDto);
+  }
+
+  @ApiOperation({ summary: 'Update user profile by ID' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+        surname: {
+          type: 'string',
+        },
+        bio: {
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  // @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  @Put('profile')
+  updateProfile(
+    @Body() updateDto: UpdateDto,
+    @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File,
+    @Headers() headers?: string) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    console.log("HI")
+    return this.userService.updateProfile(user_id, updateDto, image);
   }
 
   // @ApiOperation({ summary: 'Forgot password for user' })

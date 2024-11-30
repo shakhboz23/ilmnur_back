@@ -446,7 +446,7 @@ export class RoleService {
 
   async updateProfile(
     id: string,
-    updateDto: UpdateProfileDto,
+    updateDto: UpdateDto,
   ): Promise<object> {
     try {
       let role: any = await this.roleRepository.findByPk(id, {
@@ -459,7 +459,7 @@ export class RoleService {
         where: { id },
         returning: true,
       });
-      await this.userService.update(role.user?.id, updateDto);
+      // await this.userService.update(role.user?.id, updateDto);
       role = await this.roleRepository.findByPk(id, {
         include: { model: User },
       });

@@ -7,6 +7,8 @@ import { NotificationModule } from '../notification/notification.module';
 import { RoleModule } from '../role/role.module';
 import { MailModule } from '../mail/mail.module';
 import { ResetpasswordModule } from '../resetpassword/resetpassword.module';
+import { JwtModule } from '@nestjs/jwt';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { ResetpasswordModule } from '../resetpassword/resetpassword.module';
     forwardRef(() => RoleModule),
     MailModule,
     ResetpasswordModule,
+    JwtModule,
+    FilesModule,
   ],
   controllers: [UserController],
   providers: [UserService],

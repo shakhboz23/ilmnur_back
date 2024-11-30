@@ -17,6 +17,7 @@ interface UserAttributes {
   surname: string;
   email: string;
   current_role: string;
+  bio: string;
   is_active: boolean;
   is_online: boolean;
   last_activity: Date;
@@ -58,6 +59,11 @@ export class User extends Model<User, UserAttributes> {
     unique: true,
   })
   email: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  bio: string;
 
   @Column({
     type: DataType.BOOLEAN,

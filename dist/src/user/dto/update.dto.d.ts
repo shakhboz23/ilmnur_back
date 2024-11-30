@@ -1,5 +1,6 @@
 export declare class UpdateDto {
-    image: string;
+    image: any;
     name: string;
     surname: string;
+    bio: string;
 }

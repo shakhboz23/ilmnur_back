@@ -21,15 +21,14 @@ __decorate([
         description: 'The image of the user',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], UpdateDto.prototype, "image", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 'John Doe',
         description: 'full name of the user',
     }),
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateDto.prototype, "name", void 0);
@@ -38,8 +37,17 @@ __decorate([
         example: 'John Doe',
         description: 'full name of the user',
     }),
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateDto.prototype, "surname", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: 'John Doe',
+        description: 'full name of the user',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateDto.prototype, "bio", void 0);
 //# sourceMappingURL=update.dto.js.map

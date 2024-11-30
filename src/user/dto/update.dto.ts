@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { GenderType } from '../../role/models/role.models';
 
 export class UpdateDto {
@@ -8,14 +8,13 @@ export class UpdateDto {
     description: 'The image of the user',
   })
   @IsOptional()
-  @IsString()
-  image: string;
+  image: any;
 
   @ApiProperty({
     example: 'John Doe',
     description: 'full name of the user',
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   name: string;
 
@@ -23,7 +22,15 @@ export class UpdateDto {
     example: 'John Doe',
     description: 'full name of the user',
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   surname: string;
+
+  @ApiProperty({
+    example: 'John Doe',
+    description: 'full name of the user',
+  })
+  @IsOptional()
+  @IsString()
+  bio: string;
 }

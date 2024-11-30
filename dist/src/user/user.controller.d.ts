@@ -1,13 +1,17 @@
+/// <reference types="multer" />
 import { RoleService } from '../role/role.service';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginUserDto } from './dto/login.dto';
 import { CheckDto } from './dto/check.dto';
 import { NewPasswordDto } from './dto/new-password.dto';
+import { UpdateDto } from './dto/update.dto';
+import { JwtService } from '@nestjs/jwt';
 export declare class UserController {
     private readonly userService;
     private readonly roleService;
-    constructor(userService: UserService, roleService: RoleService);
+    private readonly jwtService;
+    constructor(userService: UserService, roleService: RoleService, jwtService: JwtService);
     register(registerUserDto: RegisterUserDto): Promise<object>;
     activate(activation_link: string): Promise<{
         message: string;
@@ -26,6 +30,7 @@ export declare class UserController {
         data: any;
     }>;
     newPassword(newPasswordDto: NewPasswordDto): Promise<object>;
+    updateProfile(updateDto: UpdateDto, image: Express.Multer.File, headers?: string): Promise<object>;
     deleteUser(id: string): Promise<object>;
     googleAuth({ credential }: {
         credential: string;

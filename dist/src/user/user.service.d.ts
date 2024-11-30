@@ -9,13 +9,15 @@ import { CheckDto } from '../role/dto/check.dto';
 import { MailService } from '../mail/mail.service';
 import { NewPasswordDto } from './dto/new-password.dto';
 import { UpdateDto } from './dto/update.dto';
+import { FilesService } from 'src/files/files.service';
 export declare class UserService {
     private userRepository;
     private readonly jwtService;
     private readonly roleService;
     private readonly mailService;
     private readonly resetpasswordService;
-    constructor(userRepository: typeof User, jwtService: JwtService, roleService: RoleService, mailService: MailService, resetpasswordService: ResetpasswordService);
+    private readonly fileService;
+    constructor(userRepository: typeof User, jwtService: JwtService, roleService: RoleService, mailService: MailService, resetpasswordService: ResetpasswordService, fileService: FilesService);
     register(registerUserDto: RegisterUserDto): Promise<object>;
     activateLink(activation_link: string): Promise<{
         message: string;
@@ -33,6 +35,7 @@ export declare class UserService {
         message: string;
         data: any;
     }>;
+    updateProfile(id: number, updateDto: UpdateDto, image: any): Promise<object>;
     newPassword(newPasswordDto: NewPasswordDto): Promise<object>;
     update(id: number, updateDto: UpdateDto): Promise<object>;
     updateCurrentRole(id: number, current_role: string): Promise<object>;

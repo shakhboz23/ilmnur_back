@@ -21,10 +21,16 @@ const register_dto_1 = require("./dto/register.dto");
 const login_dto_1 = require("./dto/login.dto");
 const check_dto_1 = require("./dto/check.dto");
 const new_password_dto_1 = require("./dto/new-password.dto");
+const update_dto_1 = require("./dto/update.dto");
+const token_1 = require("../utils/token");
+const jwt_1 = require("@nestjs/jwt");
+const image_validation_pipe_1 = require("../pipes/image-validation.pipe");
+const platform_express_1 = require("@nestjs/platform-express");
 let UserController = class UserController {
-    constructor(userService, roleService) {
+    constructor(userService, roleService, jwtService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.jwtService = jwtService;
     }
     async register(registerUserDto) {
         const data = await this.userService.register(registerUserDto);
@@ -59,6 +65,11 @@ let UserController = class UserController {
     }
     newPassword(newPasswordDto) {
         return this.userService.newPassword(newPasswordDto);
+    }
+    updateProfile(updateDto, image, headers) {
+        const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
+        console.log("HI");
+        return this.userService.updateProfile(user_id, updateDto, image);
     }
     deleteUser(id) {
         return this.userService.deleteUser(id);
@@ -158,6 +169,38 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "newPassword", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Update user profile by ID' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
+                },
+                surname: {
+                    type: 'string',
+                },
+                bio: {
+                    type: 'string',
+                },
+                image: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    (0, common_1.Put)('profile'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)(new image_validation_pipe_1.ImageValidationPipe())),
+    __param(2, (0, common_1.Headers)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_dto_1.UpdateDto, Object, String]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "updateProfile", null);
+__decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Delete user by ID' }),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
@@ -177,6 +220,7 @@ exports.UserController = UserController = __decorate([
     (0, swagger_1.ApiTags)('User'),
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService,
-        role_service_1.RoleService])
+        role_service_1.RoleService,
+        jwt_1.JwtService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

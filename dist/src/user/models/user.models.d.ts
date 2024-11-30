@@ -8,6 +8,7 @@ interface UserAttributes {
     surname: string;
     email: string;
     current_role: string;
+    bio: string;
     is_active: boolean;
     is_online: boolean;
     last_activity: Date;
@@ -25,6 +26,7 @@ export declare class User extends Model<User, UserAttributes> {
     name: string;
     surname: string;
     email: string;
+    bio: string;
     is_active: boolean;
     is_online: boolean;
     current_role: string;
