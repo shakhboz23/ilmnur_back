@@ -138,6 +138,7 @@ export class TestsService {
   }
 
   async getById(lesson_id: number, user_id: number): Promise<object> {
+    console.log(user_id);
     try {
       // const test_settings: any =
       //   await this.test_settingsService.getByLessonId(id);

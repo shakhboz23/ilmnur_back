@@ -35,12 +35,6 @@ let ChatController = class ChatController {
             this.server.on('connection', async (socket) => {
                 const id = +socket.handshake.query.id;
                 console.log(id, 'connection');
-                const user = await this.userService.getById(id);
-                console.log(user);
-                if (user) {
-                    const data = await this.roleService.userAvailable(id, true, user.data.current_role);
-                    this.server.emit('connected', data);
-                }
             });
         }
         catch (_) { }
@@ -49,10 +43,6 @@ let ChatController = class ChatController {
         try {
             const id = +client.handshake.query.id;
             console.log(id, 'id================================');
-            const user = await this.userService.getById(id);
-            const data = await this.roleService.userAvailable(id, false, user.data.current_role);
-            console.log(id, new Date(), '👎🛵👎👎disconnected');
-            this.server.emit('disconnected', data);
         }
         catch (_) { }
     }
@@ -199,7 +189,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "findById", null);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('join-room'),
+    (0, websockets_1.SubscribeMessage)('joinchat-room'),
     __param(0, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),

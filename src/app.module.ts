@@ -29,6 +29,7 @@ import { LikeModule } from './likes/like.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UserService } from './user/user.service';
 import { Subscription_activityModule } from './subscription_activity/subscription_activity.module';
+import { VideoChatModule } from './video_chat/video_chat.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { Subscription_activityModule } from './subscription_activity/subscriptio
     ResetpasswordModule,
     SubscriptionsModule,
     Subscription_activityModule,
+    VideoChatModule,
   ],
 })
 // export class AppModule {}

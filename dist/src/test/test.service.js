@@ -133,6 +133,7 @@ let TestsService = class TestsService {
     }
     async getById(lesson_id, user_id) {
         var _a, _b, _c, _d;
+        console.log(user_id);
         try {
             if (false) {
                 throw new common_1.BadRequestException('start date is invalid');

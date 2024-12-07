@@ -41,6 +41,7 @@ const like_module_1 = require("./likes/like.module");
 const subscriptions_module_1 = require("./subscriptions/subscriptions.module");
 const user_service_1 = require("./user/user.service");
 const subscription_activity_module_1 = require("./subscription_activity/subscription_activity.module");
+const video_chat_module_1 = require("./video_chat/video_chat.module");
 let AppModule = class AppModule {
     constructor(userService) {
         this.userService = userService;
@@ -103,6 +104,7 @@ exports.AppModule = AppModule = __decorate([
             resetpassword_module_1.ResetpasswordModule,
             subscriptions_module_1.SubscriptionsModule,
             subscription_activity_module_1.Subscription_activityModule,
+            video_chat_module_1.VideoChatModule,
         ],
     }),
     __metadata("design:paramtypes", [user_service_1.UserService])
