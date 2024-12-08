@@ -1,6 +1,7 @@
 import { Model } from 'sequelize-typescript';
 import { User } from '../../user/models/user.models';
 import { Course } from 'src/course/models/course.models';
+import { ChatGroup } from 'src/chat_group/models/chat_group.models';
 interface GroupAttributes {
     title: string;
     description: string;
@@ -15,5 +16,6 @@ export declare class Group extends Model<Group, GroupAttributes> {
     user_id: number;
     user: User[];
     course: Course[];
+    chatGroup: ChatGroup[];
 }
 export {};

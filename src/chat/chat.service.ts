@@ -19,13 +19,8 @@ export class ChatService {
   ) { }
   // private readonly deviceDetector = new DeviceDetector();
 
-  async create(chatDto: ChatDto, file: any, headers: { 'user-agent': string }) {
+  async create(chatDto: ChatDto, file: any, user_id: number) {
     try {
-      // const deviceDetector = new DeviceDetector();
-      console.log(chatDto.chatgroup_id, '++++++++++++++++');
-      const userAgent = headers['user-agent'];
-      // const result_detect = this.deviceDetector.parse(userAgent);
-      // console.log(JSON.stringify(result_detect));
       let result: any;
       let filePath: string;
       if (file) {
@@ -39,8 +34,8 @@ export class ChatService {
           };
         }
       }
-      const chat = await this.ChatRepository.create({ ...chatDto });
-      return { status: HttpStatus.OK, data: chat };
+      const chat = await this.ChatRepository.create({ ...chatDto, user_id });
+      return chat;
     } catch (error) {
       return { status: HttpStatus.BAD_REQUEST, error: error.message };
     }

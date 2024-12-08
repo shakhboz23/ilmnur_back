@@ -17,7 +17,7 @@ import { UserService } from '../user/user.service';
 export class ChatGroupController {
   constructor(
     private readonly chatGroupService: ChatGroupService,
-    ) { }
+  ) { }
 
   @ApiOperation({ summary: 'Create a new chat group' })
   @Post('/create')
@@ -27,9 +27,23 @@ export class ChatGroupController {
 
   @ApiOperation({ summary: 'Get chat group by ID' })
   // @UseGuards(AuthGuard)
-  @Get('/getById/:id/:class_name')
-  getById(@Param('id') id: number, @Param('class_name') class_name: number) {
-    return this.chatGroupService.getById(id, class_name);
+  @Get('/getByGroupId/:group_id')
+  getByGroupId(@Param('group_id') group_id: number) {
+    return this.chatGroupService.getById(group_id);
+  }
+
+  @ApiOperation({ summary: 'Get chat group by ID' })
+  // @UseGuards(AuthGuard)
+  @Get('/getMessages/:id')
+  getMessages(@Param('id') id: number) {
+    return this.chatGroupService.getMessages(id);
+  }
+
+  @ApiOperation({ summary: 'Get chat group by ID' })
+  // @UseGuards(AuthGuard)
+  @Get('/getById/:id')
+  getById(@Param('id') id: number) {
+    return this.chatGroupService.getById(id);
   }
 
   @ApiOperation({ summary: 'Get all chat group' })

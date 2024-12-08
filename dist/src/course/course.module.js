@@ -14,12 +14,16 @@ const sequelize_1 = require("@nestjs/sequelize");
 const course_models_1 = require("./models/course.models");
 const user_module_1 = require("../user/user.module");
 const uploaded_module_1 = require("../uploaded/uploaded.module");
+const chat_group_module_1 = require("../chat_group/chat_group.module");
 let CourseModule = class CourseModule {
 };
 exports.CourseModule = CourseModule;
 exports.CourseModule = CourseModule = __decorate([
     (0, common_1.Module)({
-        imports: [sequelize_1.SequelizeModule.forFeature([course_models_1.Course]), user_module_1.UserModule, uploaded_module_1.UploadedModule],
+        imports: [
+            sequelize_1.SequelizeModule.forFeature([course_models_1.Course]),
+            user_module_1.UserModule, uploaded_module_1.UploadedModule, chat_group_module_1.ChatGroupModule,
+        ],
         controllers: [course_controller_1.CourseController],
         providers: [course_service_1.CourseService],
         exports: [course_service_1.CourseService],

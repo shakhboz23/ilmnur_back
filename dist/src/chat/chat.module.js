@@ -15,6 +15,7 @@ const chat_model_1 = require("./models/chat.model");
 const files_module_1 = require("../files/files.module");
 const role_module_1 = require("../role/role.module");
 const user_module_1 = require("../user/user.module");
+const jwt_1 = require("@nestjs/jwt");
 let ChatModule = class ChatModule {
 };
 exports.ChatModule = ChatModule;
@@ -25,6 +26,7 @@ exports.ChatModule = ChatModule = __decorate([
             role_module_1.RoleModule,
             user_module_1.UserModule,
             files_module_1.FilesModule,
+            jwt_1.JwtModule,
         ],
         controllers: [chat_controller_1.ChatController],
         providers: [chat_service_1.ChatService, chat_controller_1.ChatController],

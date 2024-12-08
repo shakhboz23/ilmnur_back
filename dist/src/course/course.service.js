@@ -24,10 +24,13 @@ const role_models_1 = require("../role/models/role.models");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const sequelize_2 = require("sequelize");
 const subscription_activity_models_1 = require("../subscription_activity/models/subscription_activity.models");
+const chat_group_service_1 = require("../chat_group/chat_group.service");
+const chat_group_dto_1 = require("../chat_group/dto/chat_group.dto");
 let CourseService = class CourseService {
-    constructor(courseRepository, userService, uploadedService) {
+    constructor(courseRepository, userService, chatGroupService, uploadedService) {
         this.courseRepository = courseRepository;
         this.userService = userService;
+        this.chatGroupService = chatGroupService;
         this.uploadedService = uploadedService;
     }
     async create(courseDto, cover, user_id) {
@@ -48,6 +51,7 @@ let CourseService = class CourseService {
             }
             const course = await this.courseRepository.create(Object.assign(Object.assign({}, courseDto), { group_id: +courseDto.group_id, user_id,
                 cover }));
+            await this.chatGroupService.create({ title, chat_type: chat_group_dto_1.ChatGroupType.group, group_id: courseDto.group_id });
             return {
                 statusCode: common_1.HttpStatus.OK,
                 message: 'Created successfully',
@@ -248,6 +252,7 @@ exports.CourseService = CourseService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, sequelize_1.InjectModel)(course_models_1.Course)),
     __metadata("design:paramtypes", [Object, user_service_1.UserService,
+        chat_group_service_1.ChatGroupService,
         uploaded_service_1.UploadedService])
 ], CourseService);
 //# sourceMappingURL=course.service.js.map

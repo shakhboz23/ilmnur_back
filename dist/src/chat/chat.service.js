@@ -23,10 +23,8 @@ let ChatService = class ChatService {
         this.ChatRepository = ChatRepository;
         this.fileService = fileService;
     }
-    async create(chatDto, file, headers) {
+    async create(chatDto, file, user_id) {
         try {
-            console.log(chatDto.chatgroup_id, '++++++++++++++++');
-            const userAgent = headers['user-agent'];
             let result;
             let filePath;
             if (file) {
@@ -41,8 +39,8 @@ let ChatService = class ChatService {
                     };
                 }
             }
-            const chat = await this.ChatRepository.create(Object.assign({}, chatDto));
-            return { status: common_1.HttpStatus.OK, data: chat };
+            const chat = await this.ChatRepository.create(Object.assign(Object.assign({}, chatDto), { user_id }));
+            return chat;
         }
         catch (error) {
             return { status: common_1.HttpStatus.BAD_REQUEST, error: error.message };

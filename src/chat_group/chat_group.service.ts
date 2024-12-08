@@ -8,6 +8,8 @@ import { ChatGroup } from './models/chat_group.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
 import { ChatGroupDto } from './dto/chat_group.dto';
+import { Course } from 'src/course/models/course.models';
+import { Chat } from 'src/chat/models/chat.model';
 
 @Injectable()
 export class ChatGroupService {
@@ -18,20 +20,16 @@ export class ChatGroupService {
 
   async create(chatGroupDto: ChatGroupDto): Promise<object> {
     try {
-      const { title,  chat_type } = chatGroupDto;
+      const { title, group_id, chat_type } = chatGroupDto;
       const exist = await this.chatGroupRepository.findOne({
-        where: { title, chat_type },
+        where: { title, chat_type, group_id },
       });
       if (exist) {
         throw new BadRequestException('Already created');
       }
       const data = await this.chatGroupRepository.create(chatGroupDto);
 
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Created successfully',
-        data,
-      };
+      return data;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -51,18 +49,45 @@ export class ChatGroupService {
     }
   }
 
-  async getById(id: number, class_name: number): Promise<object> {
+  async getByGroupId(group_id: number): Promise<object> {
     try {
       const chatGroup = await this.chatGroupRepository.findOne({
-        // where: { [Op.and]: [{ class: class_name }, { id: id }] },
+        where: { group_id },
       });
       if (!chatGroup) {
-        throw new NotFoundException('Class not found');
+        throw new NotFoundException('Group chat not found');
       }
-      return {
-        statusCode: HttpStatus.OK,
-        data: chatGroup,
-      };
+      return chatGroup;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getMessages(id: number): Promise<object> {
+    try {
+      const chatGroup = await this.chatGroupRepository.findOne({
+        where: { id },
+        include: [{ model: Chat },]
+      });
+      if (!chatGroup) {
+        throw new NotFoundException('Group chat not found');
+      }
+      return chatGroup;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getById(group_id: number): Promise<object> {
+    try {
+      const chatGroup = await this.chatGroupRepository.findAll({
+        where: { group_id },
+        include: [{ model: Course }]
+      });
+      if (!chatGroup) {
+        throw new NotFoundException('Chat group not found');
+      }
+      return chatGroup;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

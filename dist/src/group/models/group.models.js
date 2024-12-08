@@ -13,6 +13,7 @@ exports.Group = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const user_models_1 = require("../../user/models/user.models");
 const course_models_1 = require("../../course/models/course.models");
+const chat_group_models_1 = require("../../chat_group/models/chat_group.models");
 let Group = class Group extends sequelize_typescript_1.Model {
 };
 exports.Group = Group;
@@ -63,6 +64,13 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Group.prototype, "course", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => chat_group_models_1.ChatGroup, {
+        onDelete: 'CASCADE',
+        hooks: true,
+    }),
+    __metadata("design:type", Array)
+], Group.prototype, "chatGroup", void 0);
 exports.Group = Group = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'group' })
 ], Group);

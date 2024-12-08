@@ -24,6 +24,14 @@ export class ChatGroupDto {
   title: string;
 
   @ApiProperty({
+    example: 1,
+    description: 'chat group title',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  group_id: number;
+
+  @ApiProperty({
     example: 'A',
     description: 'chat group type',
   })

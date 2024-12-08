@@ -5,6 +5,7 @@ import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
 import { Category } from 'src/category/models/category.models';
 import { User } from 'src/user/models/user.models';
 import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
+import { ChatGroup } from 'src/chat_group/models/chat_group.models';
 interface CourseAttributes {
     title: string;
     description: string;
@@ -31,5 +32,6 @@ export declare class Course extends Model<Course, CourseAttributes> {
     lessons: Lesson[];
     subscriptions: Subscriptions[];
     subscriptionActivity: SubscriptionActivity;
+    chatGroup: ChatGroup;
 }
 export {};

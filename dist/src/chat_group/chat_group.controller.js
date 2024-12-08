@@ -24,8 +24,14 @@ let ChatGroupController = class ChatGroupController {
     create(chatGroupDto) {
         return this.chatGroupService.create(chatGroupDto);
     }
-    getById(id, class_name) {
-        return this.chatGroupService.getById(id, class_name);
+    getByGroupId(group_id) {
+        return this.chatGroupService.getById(group_id);
+    }
+    getMessages(id) {
+        return this.chatGroupService.getMessages(id);
+    }
+    getById(id) {
+        return this.chatGroupService.getById(id);
     }
     getAll() {
         return this.chatGroupService.getAll();
@@ -51,11 +57,26 @@ __decorate([
 ], ChatGroupController.prototype, "create", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get chat group by ID' }),
-    (0, common_1.Get)('/getById/:id/:class_name'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Param)('class_name')),
+    (0, common_1.Get)('/getByGroupId/:group_id'),
+    __param(0, (0, common_1.Param)('group_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], ChatGroupController.prototype, "getByGroupId", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get chat group by ID' }),
+    (0, common_1.Get)('/getMessages/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], ChatGroupController.prototype, "getMessages", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get chat group by ID' }),
+    (0, common_1.Get)('/getById/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ChatGroupController.prototype, "getById", null);
 __decorate([

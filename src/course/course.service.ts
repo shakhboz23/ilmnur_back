@@ -17,12 +17,15 @@ import { Sequelize } from 'sequelize-typescript';
 import { Op } from 'sequelize';
 import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
 import { Group } from 'src/group/models/group.models';
+import { ChatGroupService } from 'src/chat_group/chat_group.service';
+import { ChatGroupType } from 'src/chat_group/dto/chat_group.dto';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectModel(Course) private courseRepository: typeof Course,
     private readonly userService: UserService,
+    private readonly chatGroupService: ChatGroupService,
     private readonly uploadedService: UploadedService,
   ) { }
 
@@ -48,6 +51,7 @@ export class CourseService {
         user_id,
         cover,
       });
+      await this.chatGroupService.create({ title, chat_type: ChatGroupType.group, group_id: courseDto.group_id })
       return {
         statusCode: HttpStatus.OK,
         message: 'Created successfully',

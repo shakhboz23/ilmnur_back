@@ -11,9 +11,7 @@ import { ChatGroup } from '../../chat_group/models/chat_group.models';
 import { User } from '../../user/models/user.models';
 
 interface ChatAttr {
-  icon: number;
   text: string;
-  file_type: object;
   user_id: number;
   chatgroup_id: number;
   file: string;
@@ -29,19 +27,10 @@ export class Chat extends Model<Chat, ChatAttr> {
   id: number;
 
   @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-  })
-  icon: number;
-
-  @Column({
     type: DataType.STRING,
     allowNull: true,
   })
   text: string;
-
-  @Column({ type: DataType.JSON })
-  file_type: object;
 
   @ForeignKey(() => User)
   @Column({

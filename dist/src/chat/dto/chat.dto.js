@@ -25,40 +25,12 @@ __decorate([
 ], ChatDto.prototype, "file", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: {
-            name: "File name",
-            type: "word",
-            size: "1234",
-        },
-        description: 'file info',
-    }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Object)
-], ChatDto.prototype, "file_type", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: 1,
-        description: 'Icon id',
-    }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Number)
-], ChatDto.prototype, "icon", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
         example: 'Assalamu alaikum',
         description: 'User message',
     }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], ChatDto.prototype, "text", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: 1,
-        description: 'User_id',
-    }),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], ChatDto.prototype, "user_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 1,

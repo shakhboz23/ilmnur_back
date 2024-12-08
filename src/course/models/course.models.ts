@@ -14,6 +14,7 @@ import { Subscriptions } from 'src/subscriptions/models/subscriptions.models';
 import { Category } from 'src/category/models/category.models';
 import { User } from 'src/user/models/user.models';
 import { SubscriptionActivity } from 'src/subscription_activity/models/subscription_activity.models';
+import { ChatGroup } from 'src/chat_group/models/chat_group.models';
 
 interface CourseAttributes {
   title: string;
@@ -108,6 +109,12 @@ export class Course extends Model<Course, CourseAttributes> {
     hooks: true,
   })
   subscriptionActivity: SubscriptionActivity;
+
+  @HasMany(() => ChatGroup, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  chatGroup: ChatGroup;
 
   // @BelongsToMany(() => User, {
   // through: { model: () => Subscriptions }, // Use a function to specify the model type

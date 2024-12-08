@@ -5,5 +5,6 @@ export declare enum ChatGroupType {
 }
 export declare class ChatGroupDto {
     title: string;
+    group_id: number;
     chat_type: ChatGroupType;
 }

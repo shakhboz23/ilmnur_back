@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const chat_group_models_1 = require("./models/chat_group.models");
 const sequelize_1 = require("@nestjs/sequelize");
 const jwt_1 = require("@nestjs/jwt");
+const course_models_1 = require("../course/models/course.models");
+const chat_model_1 = require("../chat/models/chat.model");
 let ChatGroupService = class ChatGroupService {
     constructor(chatGroupRepository, jwtService) {
         this.chatGroupRepository = chatGroupRepository;
@@ -24,19 +26,15 @@ let ChatGroupService = class ChatGroupService {
     }
     async create(chatGroupDto) {
         try {
-            const { title, chat_type } = chatGroupDto;
+            const { title, group_id, chat_type } = chatGroupDto;
             const exist = await this.chatGroupRepository.findOne({
-                where: { title, chat_type },
+                where: { title, chat_type, group_id },
             });
             if (exist) {
                 throw new common_1.BadRequestException('Already created');
             }
             const data = await this.chatGroupRepository.create(chatGroupDto);
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                message: 'Created successfully',
-                data,
-            };
+            return data;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -54,16 +52,45 @@ let ChatGroupService = class ChatGroupService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getById(id, class_name) {
+    async getByGroupId(group_id) {
         try {
-            const chatGroup = await this.chatGroupRepository.findOne({});
+            const chatGroup = await this.chatGroupRepository.findOne({
+                where: { group_id },
+            });
             if (!chatGroup) {
-                throw new common_1.NotFoundException('Class not found');
+                throw new common_1.NotFoundException('Group chat not found');
             }
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                data: chatGroup,
-            };
+            return chatGroup;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async getMessages(id) {
+        try {
+            const chatGroup = await this.chatGroupRepository.findOne({
+                where: { id },
+                include: [{ model: chat_model_1.Chat },]
+            });
+            if (!chatGroup) {
+                throw new common_1.NotFoundException('Group chat not found');
+            }
+            return chatGroup;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async getById(group_id) {
+        try {
+            const chatGroup = await this.chatGroupRepository.findAll({
+                where: { group_id },
+                include: [{ model: course_models_1.Course }]
+            });
+            if (!chatGroup) {
+                throw new common_1.NotFoundException('Chat group not found');
+            }
+            return chatGroup;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);

@@ -4,7 +4,9 @@ export declare class ChatGroupController {
     private readonly chatGroupService;
     constructor(chatGroupService: ChatGroupService);
     create(chatGroupDto: ChatGroupDto): Promise<object>;
-    getById(id: number, class_name: number): Promise<object>;
+    getByGroupId(group_id: number): Promise<object>;
+    getMessages(id: number): Promise<object>;
+    getById(id: number): Promise<object>;
     getAll(): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, chatGroupDto: ChatGroupDto): Promise<object>;

@@ -17,6 +17,7 @@ const subscriptions_models_1 = require("../../subscriptions/models/subscriptions
 const category_models_1 = require("../../category/models/category.models");
 const user_models_1 = require("../../user/models/user.models");
 const subscription_activity_models_1 = require("../../subscription_activity/models/subscription_activity.models");
+const chat_group_models_1 = require("../../chat_group/models/chat_group.models");
 let Course = class Course extends sequelize_typescript_1.Model {
 };
 exports.Course = Course;
@@ -115,6 +116,13 @@ __decorate([
     }),
     __metadata("design:type", subscription_activity_models_1.SubscriptionActivity)
 ], Course.prototype, "subscriptionActivity", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => chat_group_models_1.ChatGroup, {
+        onDelete: 'CASCADE',
+        hooks: true,
+    }),
+    __metadata("design:type", chat_group_models_1.ChatGroup)
+], Course.prototype, "chatGroup", void 0);
 exports.Course = Course = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'course' })
 ], Course);

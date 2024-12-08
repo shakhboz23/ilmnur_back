@@ -5,22 +5,19 @@ import { ChatDto } from './dto/chat.dto';
 import { ChatService } from './chat.service';
 import { UserService } from '../user/user.service';
 import { RoleService } from '../role/role.service';
+import { JwtService } from '@nestjs/jwt';
 export declare class ChatController implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly chatService;
     private readonly roleService;
     private readonly userService;
+    private readonly jwtService;
     server: Server;
-    constructor(chatService: ChatService, roleService: RoleService, userService: UserService);
+    constructor(chatService: ChatService, roleService: RoleService, userService: UserService, jwtService: JwtService);
     handleConnection(client: Socket): Promise<void>;
     handleDisconnect(client: Socket): Promise<void>;
-    create(chatDto: ChatDto, file: Express.Multer.File, client: Socket, req: any): Promise<{
-        status: import("@nestjs/common").HttpStatus;
-        data: import("./models/chat.model").Chat;
-        error?: undefined;
-    } | {
+    create(chatDto: ChatDto, file: Express.Multer.File, client: Socket, headers: string): Promise<import("./models/chat.model").Chat | {
         status: import("@nestjs/common").HttpStatus;
         error: any;
-        data?: undefined;
     }>;
     created({ page }: {
         page: number;

@@ -24,11 +24,14 @@ const platform_express_1 = require("@nestjs/platform-express");
 const image_validation_pipe_1 = require("../pipes/image-validation.pipe");
 const user_service_1 = require("../user/user.service");
 const role_service_1 = require("../role/role.service");
+const token_1 = require("../utils/token");
+const jwt_1 = require("@nestjs/jwt");
 let ChatController = class ChatController {
-    constructor(chatService, roleService, userService) {
+    constructor(chatService, roleService, userService, jwtService) {
         this.chatService = chatService;
         this.roleService = roleService;
         this.userService = userService;
+        this.jwtService = jwtService;
     }
     async handleConnection(client) {
         try {
@@ -46,8 +49,9 @@ let ChatController = class ChatController {
         }
         catch (_) { }
     }
-    create(chatDto, file, client, req) {
-        const chat = this.chatService.create(chatDto, file, req.headers);
+    create(chatDto, file, client, headers) {
+        const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
+        const chat = this.chatService.create(chatDto, file, user_id);
         client.emit('getAll/created');
         return chat;
     }
@@ -133,14 +137,14 @@ __decorate([
             },
         },
     }),
-    (0, common_1.Post)(''),
+    (0, common_1.Post)('/create'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)(new image_validation_pipe_1.ImageValidationPipe())),
     __param(2, (0, websockets_1.ConnectedSocket)()),
-    __param(3, (0, common_1.Req)()),
+    __param(3, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [chat_dto_1.ChatDto, Object, socket_io_1.Socket, Object]),
+    __metadata("design:paramtypes", [chat_dto_1.ChatDto, Object, socket_io_1.Socket, String]),
     __metadata("design:returntype", void 0)
 ], ChatController.prototype, "create", null);
 __decorate([
@@ -221,6 +225,7 @@ exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chat'),
     __metadata("design:paramtypes", [chat_service_1.ChatService,
         role_service_1.RoleService,
-        user_service_1.UserService])
+        user_service_1.UserService,
+        jwt_1.JwtService])
 ], ChatController);
 //# sourceMappingURL=chat.controller.js.map

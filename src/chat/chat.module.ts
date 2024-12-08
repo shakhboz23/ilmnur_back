@@ -6,6 +6,7 @@ import { Chat } from './models/chat.model';
 import { FilesModule } from '../files/files.module';
 import { RoleModule } from '../role/role.module';
 import { UserModule } from '../user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from '../user/user.module';
     RoleModule,
     UserModule,
     FilesModule,
+    JwtModule,
   ],
   controllers: [ChatController],
   providers: [ChatService, ChatController],

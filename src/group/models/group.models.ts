@@ -9,6 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { User } from '../../user/models/user.models';
 import { Course } from 'src/course/models/course.models';
+import { ChatGroup } from 'src/chat_group/models/chat_group.models';
 
 interface GroupAttributes {
   title: string;
@@ -64,4 +65,10 @@ export class Group extends Model<Group, GroupAttributes> {
     hooks: true,
   })
   course: Course[];
+
+  @HasMany(() => ChatGroup, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  chatGroup: ChatGroup[];
 }

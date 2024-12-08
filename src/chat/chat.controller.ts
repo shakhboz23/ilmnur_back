@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Headers,
   Param,
   Post,
   Put,
@@ -28,20 +29,22 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageValidationPipe } from '../pipes/image-validation.pipe';
 import { UserService } from '../user/user.service';
 import { RoleService } from '../role/role.service';
+import { extractUserIdFromToken } from 'src/utils/token';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('chat')
 @WebSocketGateway({ cors: { origin: '*', credentials: true } }) // cors
 @Controller('chat')
 export class ChatController
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   constructor(
     private readonly chatService: ChatService,
     private readonly roleService: RoleService,
     private readonly userService: UserService,
-  ) {}
+    private readonly jwtService: JwtService,
+  ) { }
 
   async handleConnection(client: Socket) {
     // Handle connection
@@ -60,7 +63,7 @@ export class ChatController
         //   this.server.emit('connected', data);
         // }
       });
-    } catch (_) {}
+    } catch (_) { }
   }
 
   async handleDisconnect(client: Socket) {
@@ -75,7 +78,7 @@ export class ChatController
       // );
       // console.log(id, new Date(), '👎🛵👎👎disconnected');
       // this.server.emit('disconnected', data);
-    } catch (_) {}
+    } catch (_) { }
   }
 
   @ApiOperation({ summary: 'Create a new chat' })
@@ -118,15 +121,16 @@ export class ChatController
     },
   })
   // @UseGuards(AuthGuard)
-  @Post('')
+  @Post('/create')
   @UseInterceptors(FileInterceptor('image'))
   create(
     @Body() chatDto: ChatDto,
     @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
     @ConnectedSocket() client: Socket,
-    @Req() req: any,
+    @Headers() headers: string,
   ) {
-    const chat = this.chatService.create(chatDto, file, req.headers);
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    const chat = this.chatService.create(chatDto,  file, user_id);
     client.emit('getAll/created');
     return chat;
   }

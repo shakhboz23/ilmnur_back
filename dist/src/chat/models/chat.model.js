@@ -26,22 +26,11 @@ __decorate([
 ], Chat.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: true,
-    }),
-    __metadata("design:type", Number)
-], Chat.prototype, "icon", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
         allowNull: true,
     }),
     __metadata("design:type", String)
 ], Chat.prototype, "text", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.JSON }),
-    __metadata("design:type", Object)
-], Chat.prototype, "file_type", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => user_models_1.User),
     (0, sequelize_typescript_1.Column)({

@@ -6,16 +6,9 @@ export declare class ChatService {
     private readonly ChatRepository;
     private readonly fileService;
     constructor(ChatRepository: typeof Chat, fileService: FilesService);
-    create(chatDto: ChatDto, file: any, headers: {
-        'user-agent': string;
-    }): Promise<{
-        status: HttpStatus;
-        data: Chat;
-        error?: undefined;
-    } | {
+    create(chatDto: ChatDto, file: any, user_id: number): Promise<Chat | {
         status: HttpStatus;
         error: any;
-        data?: undefined;
     }>;
     findAll(page: number): Promise<{
         status: HttpStatus;
