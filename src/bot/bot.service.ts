@@ -12,72 +12,189 @@ import {
   Hears,
 } from 'nestjs-telegraf';
 import { Context, Telegraf, Markup } from 'telegraf';
-import { FilesService } from '../files/files.service';
-
+import { Message } from 'telegraf/typings/core/types/typegram';
+import { UserService } from 'src/user/user.service';
+import { hash } from 'bcryptjs';
+import { RoleName } from 'src/activity/models/activity.models';
 @Injectable()
 export class BotService {
   constructor(
     @InjectModel(Bot) private botRepo: typeof Bot,
     @InjectBot(BOT_NAME) private readonly bot: Telegraf<Context>,
-    private readonly fileService: FilesService,
-  ) {}
+    private readonly userService: UserService,
+  ) { }
 
-  private bot_id: any = process.env.BOT_ID;
+  commands() {
+    return {
+      parse_mode: 'HTML',
+      ...Markup.keyboard([
+        ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+      ])
+        .oneTime()
+        .resize()
+    }
+  };
 
-  private initialize() {
-    this.bot.start((ctx) => this.handleStart(ctx));
-    // Add other command handlers or middleware as needed
-    this.bot.launch().then(() => {
-      console.log('Telegram Bot has been started.');
+  async start(ctx: Context) {
+    const bot_id = ctx.from.id;
+    const user = await this.botRepo.findOne({ where: { bot_id } });
+    if (!user?.user_id) {
+      await this.botRepo.create({
+        bot_id: bot_id,
+        name: ctx.from.first_name,
+        surname: ctx.from.last_name,
+        username: ctx.from.username,
+      });
+      await ctx.reply(
+        `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
+        {
+          parse_mode: 'HTML',
+          ...Markup.keyboard([
+            [Markup.button.contactRequest('Telefon raqamni yuborish')],
+          ])
+            .oneTime()
+            .resize(),
+        },
+      );
+    } else if (!user.dataValues.status) {
+      await ctx.reply(
+        `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
+        {
+          parse_mode: 'HTML',
+          ...Markup.keyboard([
+            [Markup.button.contactRequest('Telefon raqamni yuborish')],
+          ])
+            .oneTime()
+            .resize(),
+        },
+      );
+    } else {
+      await this.bot.telegram.sendChatAction(bot_id, 'typing');
+      await ctx.reply(
+        "Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan",
+        {
+          parse_mode: 'HTML',
+          ...Markup.keyboard([
+            ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+          ])
+            .oneTime()
+            .resize()
+        }
+      );
+    }
+  }
+
+  async handlePhone(ctx: Context) {
+    const bot_id = ctx.from.id;
+    const user = await this.botRepo.findOne({ where: { bot_id } });
+    await ctx.reply(
+      `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
+      {
+        parse_mode: 'HTML',
+        ...Markup.keyboard([
+          [Markup.button.contactRequest('Telefon raqamni yuborish')],
+        ])
+          .oneTime()
+          .resize(),
+      },
+    );
+  }
+
+  async handlePassword(ctx: Context) {
+    const bot_id = ctx.from.id;
+    const user = await this.botRepo.findOne({ where: { bot_id } });
+    await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", {
+      parse_mode: 'HTML',
+      ...Markup.removeKeyboard(),
     });
   }
 
-  private async handleStart(ctx: any) {
-    // Handle the /start command
-    // const chatId = ctx.chat.id;
-    const welcomeMessage = `Welcome!`;
-    await ctx.reply(welcomeMessage);
-  }
-
-  async start(ctx: Context) {
-    // const user_id = ctx.from.id;
-    await ctx.reply(`Welcome to our bot!`);
-  }
-
-  async onStop(ctx: Context) {
-    process.exit();
-  }
-
-  async sendAudio(file_name: any, full_name: string, part1: any, part2: any) {
-    const options: any = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Tashkent',
-    };
-
-    const currentDate = new Date().toLocaleString('uz-UZ', options);
-    console.log(part2.data?.part2?.part3[0]?.part3);
-    // const source: any = 'static/' + file_name;
-    const caption: any = `
-finished time: ${currentDate}
-full name: ${full_name}\n 
-part1: ${'\n' + part1.data?.part1?.part1?.join('\n')}
-part2: ${'\n' + part2.data?.part2?.part2?.join('\n')}
-part3: ${'\n' + part2.data?.part2?.part3[0]?.part3?.join('\n')}
-`;
-    try {
-      await this.bot.telegram.sendAudio(
-        this.bot_id,
-        { source: file_name.buffer },
-        { caption },
-      );
-      console.log('Audio sent successfully');
-    } catch (error) {
-      console.error('Error sending audio:', error);
+  async onContact(ctx: Context) {
+    if ('contact' in ctx.message) {
+      const bot_id = ctx.from.id;
+      let is_phone = false;
+      const user = await this.botRepo.findOne({ where: { bot_id } });
+      if (!user) {
+        await ctx.reply(`Iltimos, <b>Start</b> tugmasini bosing!`, {
+          parse_mode: 'HTML',
+          ...Markup.keyboard([['/start']])
+            .oneTime()
+            .resize(),
+        });
+      } else if (ctx.message.contact.user_id != bot_id) {
+        await ctx.reply("Iltimos, o'zingizni telefon raqamingizni kiriting!", {
+          parse_mode: 'HTML',
+          ...Markup.keyboard([
+            [Markup.button.contactRequest('Telefon raqamni yuborish')],
+          ])
+            .oneTime()
+            .resize(),
+        });
+      } else {
+        if (user.phone) {
+          is_phone = true;
+        }
+        let phone: string;
+        ctx.message.contact.phone_number[0] == '+'
+          ? (phone = ctx.message.contact.phone_number)
+          : (phone = '+' + ctx.message.contact.phone_number);
+        if (user.phone) {
+          await this.userService.updatePhone(user.phone, phone);
+        }
+        const bot_user = await this.botRepo.update(
+          { phone, status: true },
+          {
+            where: { bot_id },
+            returning: true
+          },
+        );
+        if (is_phone) {
+          await ctx.reply("Telefon raqamingiz muvaffaqiyatli o'zgartirildi", {
+            parse_mode: 'HTML',
+            ...Markup.removeKeyboard(),
+          });
+        } else {
+          await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", {
+            parse_mode: 'HTML',
+            ...Markup.removeKeyboard(),
+          });
+        }
+      }
     }
+  }
+
+  async setPassword(@Ctx() ctx: Context) {
+    const bot_id = ctx.from.id;
+    console.log(ctx);
+    const message = ctx.message as Message.TextMessage;
+    const password = message.text.split(':')[1]
+    const user = await this.botRepo.findOne({ where: { bot_id } });
+    let bot_user: any;
+    if (!user?.user_id) {
+      bot_user = await this.userService.register({ password, role: RoleName.student, name: user.name, surname: user.surname, phone: user.phone });
+      console.log(bot_user);
+      console.log(bot_user.data.user.get('id'));
+      await this.botRepo.update({ user_id: bot_user.data.user.get('id') }, {
+        where: { bot_id: user.bot_id },
+        returning: true
+      })
+      // await ctx.reply("Siz ro'yhatdan muvaffaqiyatli o'tdingiz!")
+      const url = `https://www.ilmnur.online/login?token=${bot_user.token}`;
+      await ctx.reply(`[IlmNur online saytiga kirish uchun shu yerga bosing](${url})`, { parse_mode: 'MarkdownV2' });
+    } else {
+      bot_user = await this.userService.updatePassword(password, user.phone);
+      await ctx.reply(`Parolingiz muvaffaqiyatli o'zgartirildi`);
+    }
+    console.log(bot_user);
+  }
+
+  async onStop(ctx: Context) { }
+
+  async sendOTP(phone: string, OTP: string): Promise<boolean> {
+    const user = await this.botRepo.findOne({ where: { phone } });
+    if (!user) return false;
+    await this.bot.telegram.sendChatAction(user.bot_id, 'typing');
+    await this.bot.telegram.sendMessage(user.bot_id, 'Verify code:' + OTP);
+    return true;
   }
 }

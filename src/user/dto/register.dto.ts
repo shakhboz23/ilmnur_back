@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
   IsString,
   Min,
   MinLength,
@@ -29,9 +31,17 @@ export class RegisterUserDto extends RoleDto {
     example: 'shahbozmamatkarimov2303@gmail.com',
     description: 'Email of user',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
+
+  @ApiProperty({
+    example: 'shahbozmamatkarimov2303@gmail.com',
+    description: 'Email of user',
+  })
+  @IsOptional()
+  @IsPhoneNumber()
+  phone?: string;
 
   @ApiProperty({
     example: 'shahbozmamatkarimov2303@gmail.com',

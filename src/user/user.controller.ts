@@ -43,6 +43,12 @@ export class UserController {
     return data;
   }
 
+  @Post('register/users')
+  async createUsers(@Body() names: any[]) {
+    const result = await this.userService.createUsers(names);
+    return result;
+  }
+
   @Get('activation_link/:activation_link')
   activate(@Param('activation_link') activation_link: string) {
     return this.userService.activateLink(activation_link);
@@ -64,7 +70,7 @@ export class UserController {
     // console.log(`Browser: ${browser}, Version: ${version}, OS: ${os.name}`);
     return this.userService.login(loginUserDto);
   }
-
+ 
   // @ApiOperation({ summary: 'Login user with send OTP' })
   // @Post('/addchild')
   // addChild(@Body() addChildDto: AddChildDto) {

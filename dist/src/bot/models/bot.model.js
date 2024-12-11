@@ -12,14 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bot = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const sequelize_typescript_1 = require("sequelize-typescript");
+const user_models_1 = require("../../user/models/user.models");
 let Bot = class Bot extends sequelize_typescript_1.Model {
 };
 exports.Bot = Bot;
 __decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => user_models_1.User),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+    }),
+    __metadata("design:type", Number)
+], Bot.prototype, "user_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_models_1.User),
+    __metadata("design:type", Array)
+], Bot.prototype, "user", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: 123456789, description: 'user_id' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.BIGINT, primaryKey: true, allowNull: false }),
     __metadata("design:type", Number)
-], Bot.prototype, "user_id", void 0);
+], Bot.prototype, "bot_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: "johndoe", description: 'username' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.STRING }),
@@ -29,17 +41,17 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: "John", description: 'first name' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.STRING }),
     __metadata("design:type", String)
-], Bot.prototype, "first_name", void 0);
+], Bot.prototype, "name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: "Doe", description: 'last name' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.STRING }),
     __metadata("design:type", String)
-], Bot.prototype, "last_name", void 0);
+], Bot.prototype, "surname", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: "+998901234567", description: 'phone number' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.STRING }),
     __metadata("design:type", String)
-], Bot.prototype, "phone_number", void 0);
+], Bot.prototype, "phone", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: "user active", description: 'status' }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.BOOLEAN, defaultValue: false }),

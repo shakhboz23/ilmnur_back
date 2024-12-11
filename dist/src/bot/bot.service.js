@@ -19,65 +19,155 @@ const bot_model_1 = require("./models/bot.model");
 const app_constants_1 = require("../app.constants");
 const nestjs_telegraf_1 = require("nestjs-telegraf");
 const telegraf_1 = require("telegraf");
-const files_service_1 = require("../files/files.service");
+const user_service_1 = require("../user/user.service");
+const activity_models_1 = require("../activity/models/activity.models");
 let BotService = class BotService {
-    constructor(botRepo, bot, fileService) {
+    constructor(botRepo, bot, userService) {
         this.botRepo = botRepo;
         this.bot = bot;
-        this.fileService = fileService;
-        this.bot_id = process.env.BOT_ID;
+        this.userService = userService;
     }
-    initialize() {
-        this.bot.start((ctx) => this.handleStart(ctx));
-        this.bot.launch().then(() => {
-            console.log('Telegram Bot has been started.');
-        });
+    commands() {
+        return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+            ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+        ])
+            .oneTime()
+            .resize());
     }
-    async handleStart(ctx) {
-        const welcomeMessage = `Welcome!`;
-        await ctx.reply(welcomeMessage);
-    }
+    ;
     async start(ctx) {
-        await ctx.reply(`Welcome to our bot!`);
-    }
-    async onStop(ctx) {
-        process.exit();
-    }
-    async sendAudio(file_name, full_name, part1, part2) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-        const options = {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            timeZone: 'Asia/Tashkent',
-        };
-        const currentDate = new Date().toLocaleString('uz-UZ', options);
-        console.log((_c = (_b = (_a = part2.data) === null || _a === void 0 ? void 0 : _a.part2) === null || _b === void 0 ? void 0 : _b.part3[0]) === null || _c === void 0 ? void 0 : _c.part3);
-        const caption = `
-finished time: ${currentDate}
-full name: ${full_name}\n 
-part1: ${'\n' + ((_f = (_e = (_d = part1.data) === null || _d === void 0 ? void 0 : _d.part1) === null || _e === void 0 ? void 0 : _e.part1) === null || _f === void 0 ? void 0 : _f.join('\n'))}
-part2: ${'\n' + ((_j = (_h = (_g = part2.data) === null || _g === void 0 ? void 0 : _g.part2) === null || _h === void 0 ? void 0 : _h.part2) === null || _j === void 0 ? void 0 : _j.join('\n'))}
-part3: ${'\n' + ((_o = (_m = (_l = (_k = part2.data) === null || _k === void 0 ? void 0 : _k.part2) === null || _l === void 0 ? void 0 : _l.part3[0]) === null || _m === void 0 ? void 0 : _m.part3) === null || _o === void 0 ? void 0 : _o.join('\n'))}
-`;
-        try {
-            await this.bot.telegram.sendAudio(this.bot_id, { source: file_name.buffer }, { caption });
-            console.log('Audio sent successfully');
+        const bot_id = ctx.from.id;
+        const user = await this.botRepo.findOne({ where: { bot_id } });
+        if (!(user === null || user === void 0 ? void 0 : user.user_id)) {
+            await this.botRepo.create({
+                bot_id: bot_id,
+                name: ctx.from.first_name,
+                surname: ctx.from.last_name,
+                username: ctx.from.username,
+            });
+            await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+                [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+            ])
+                .oneTime()
+                .resize()));
         }
-        catch (error) {
-            console.error('Error sending audio:', error);
+        else if (!user.dataValues.status) {
+            await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+                [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+            ])
+                .oneTime()
+                .resize()));
         }
+        else {
+            await this.bot.telegram.sendChatAction(bot_id, 'typing');
+            await ctx.reply("Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+                ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+            ])
+                .oneTime()
+                .resize()));
+        }
+    }
+    async handlePhone(ctx) {
+        const bot_id = ctx.from.id;
+        const user = await this.botRepo.findOne({ where: { bot_id } });
+        await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+            [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+        ])
+            .oneTime()
+            .resize()));
+    }
+    async handlePassword(ctx) {
+        const bot_id = ctx.from.id;
+        const user = await this.botRepo.findOne({ where: { bot_id } });
+        await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+    }
+    async onContact(ctx) {
+        if ('contact' in ctx.message) {
+            const bot_id = ctx.from.id;
+            let is_phone = false;
+            const user = await this.botRepo.findOne({ where: { bot_id } });
+            if (!user) {
+                await ctx.reply(`Iltimos, <b>Start</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([['/start']])
+                    .oneTime()
+                    .resize()));
+            }
+            else if (ctx.message.contact.user_id != bot_id) {
+                await ctx.reply("Iltimos, o'zingizni telefon raqamingizni kiriting!", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
+                    [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+                ])
+                    .oneTime()
+                    .resize()));
+            }
+            else {
+                if (user.phone) {
+                    is_phone = true;
+                }
+                let phone;
+                ctx.message.contact.phone_number[0] == '+'
+                    ? (phone = ctx.message.contact.phone_number)
+                    : (phone = '+' + ctx.message.contact.phone_number);
+                if (user.phone) {
+                    await this.userService.updatePhone(user.phone, phone);
+                }
+                const bot_user = await this.botRepo.update({ phone, status: true }, {
+                    where: { bot_id },
+                    returning: true
+                });
+                if (is_phone) {
+                    await ctx.reply("Telefon raqamingiz muvaffaqiyatli o'zgartirildi", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+                }
+                else {
+                    await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+                }
+            }
+        }
+    }
+    async setPassword(ctx) {
+        const bot_id = ctx.from.id;
+        console.log(ctx);
+        const message = ctx.message;
+        const password = message.text.split(':')[1];
+        const user = await this.botRepo.findOne({ where: { bot_id } });
+        let bot_user;
+        if (!(user === null || user === void 0 ? void 0 : user.user_id)) {
+            bot_user = await this.userService.register({ password, role: activity_models_1.RoleName.student, name: user.name, surname: user.surname, phone: user.phone });
+            console.log(bot_user);
+            console.log(bot_user.data.user.get('id'));
+            await this.botRepo.update({ user_id: bot_user.data.user.get('id') }, {
+                where: { bot_id: user.bot_id },
+                returning: true
+            });
+            const url = `https://www.ilmnur.online/login?token=${bot_user.token}`;
+            await ctx.reply(`[IlmNur online saytiga kirish uchun shu yerga bosing](${url})`, { parse_mode: 'MarkdownV2' });
+        }
+        else {
+            bot_user = await this.userService.updatePassword(password, user.phone);
+            await ctx.reply(`Parolingiz muvaffaqiyatli o'zgartirildi`);
+        }
+        console.log(bot_user);
+    }
+    async onStop(ctx) { }
+    async sendOTP(phone, OTP) {
+        const user = await this.botRepo.findOne({ where: { phone } });
+        if (!user)
+            return false;
+        await this.bot.telegram.sendChatAction(user.bot_id, 'typing');
+        await this.bot.telegram.sendMessage(user.bot_id, 'Verify code:' + OTP);
+        return true;
     }
 };
 exports.BotService = BotService;
+__decorate([
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotService.prototype, "setPassword", null);
 exports.BotService = BotService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, sequelize_1.InjectModel)(bot_model_1.Bot)),
     __param(1, (0, nestjs_telegraf_1.InjectBot)(app_constants_1.BOT_NAME)),
     __metadata("design:paramtypes", [Object, telegraf_1.Telegraf,
-        files_service_1.FilesService])
+        user_service_1.UserService])
 ], BotService);
 //# sourceMappingURL=bot.service.js.map

@@ -19,6 +19,8 @@ export declare class UserService {
     private readonly fileService;
     constructor(userRepository: typeof User, jwtService: JwtService, roleService: RoleService, mailService: MailService, resetpasswordService: ResetpasswordService, fileService: FilesService);
     register(registerUserDto: RegisterUserDto): Promise<object>;
+    createUsers(names: any[]): Promise<Promise<any>[]>;
+    private generateRandomPassword;
     activateLink(activation_link: string): Promise<{
         message: string;
         admin: User;
@@ -37,6 +39,8 @@ export declare class UserService {
     }>;
     updateProfile(id: number, updateDto: UpdateDto, image: any): Promise<object>;
     newPassword(newPasswordDto: NewPasswordDto): Promise<object>;
+    updatePassword(password: string, phone: string): Promise<object>;
+    updatePhone(oldphone: string, phone: string): Promise<object>;
     update(id: number, updateDto: UpdateDto): Promise<object>;
     updateCurrentRole(id: number, current_role: string): Promise<object>;
     deleteUser(id: string): Promise<object>;

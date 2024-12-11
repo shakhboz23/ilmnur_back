@@ -7,4 +7,9 @@ export declare class BotUpdate {
     help(ctx: Context): Promise<void>;
     on(ctx: Context): Promise<void>;
     hears(ctx: Context): Promise<void>;
+    handlePhone(ctx: Context): Promise<void>;
+    handlePassword(ctx: Context): Promise<void>;
+    handlePasswordRegex(ctx: Context): Promise<void>;
+    onContact(ctx: Context): Promise<void>;
+    handleMessages(ctx: Context): Promise<void>;
 }

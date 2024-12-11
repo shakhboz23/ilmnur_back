@@ -1,1 +1,1 @@
-export const BOT_NAME = 'ilmnur_bot'; 
+export const BOT_NAME = 'ilmnuronlinebot'; 

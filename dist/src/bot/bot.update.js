@@ -31,7 +31,22 @@ let BotUpdate = class BotUpdate {
         await ctx.reply('👍');
     }
     async hears(ctx) {
-        await ctx.reply('chunk');
+        await ctx.reply('Hi');
+    }
+    async handlePhone(ctx) {
+        return this.botService.handlePhone(ctx);
+    }
+    async handlePassword(ctx) {
+        return this.botService.handlePassword(ctx);
+    }
+    async handlePasswordRegex(ctx) {
+        return this.botService.setPassword(ctx);
+    }
+    async onContact(ctx) {
+        return this.botService.onContact(ctx);
+    }
+    async handleMessages(ctx) {
+        await ctx.reply(`Noto'g'ri ma'lumot!`);
     }
 };
 exports.BotUpdate = BotUpdate;
@@ -63,6 +78,41 @@ __decorate([
     __metadata("design:paramtypes", [telegraf_1.Context]),
     __metadata("design:returntype", Promise)
 ], BotUpdate.prototype, "hears", null);
+__decorate([
+    (0, nestjs_telegraf_1.Hears)("Telefon raqamni o'zgartirish"),
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotUpdate.prototype, "handlePhone", null);
+__decorate([
+    (0, nestjs_telegraf_1.Hears)("Parolni o'zgaritish"),
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotUpdate.prototype, "handlePassword", null);
+__decorate([
+    (0, nestjs_telegraf_1.Hears)(/pass:\w+/),
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotUpdate.prototype, "handlePasswordRegex", null);
+__decorate([
+    (0, nestjs_telegraf_1.On)('contact'),
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotUpdate.prototype, "onContact", null);
+__decorate([
+    (0, nestjs_telegraf_1.On)('message'),
+    __param(0, (0, nestjs_telegraf_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [telegraf_1.Context]),
+    __metadata("design:returntype", Promise)
+], BotUpdate.prototype, "handleMessages", null);
 exports.BotUpdate = BotUpdate = __decorate([
     (0, nestjs_telegraf_1.Update)(),
     __metadata("design:paramtypes", [bot_service_1.BotService])

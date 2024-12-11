@@ -1,15 +1,20 @@
 import { Bot } from './models/bot.model';
 import { Context, Telegraf } from 'telegraf';
-import { FilesService } from '../files/files.service';
+import { UserService } from 'src/user/user.service';
 export declare class BotService {
     private botRepo;
     private readonly bot;
-    private readonly fileService;
-    constructor(botRepo: typeof Bot, bot: Telegraf<Context>, fileService: FilesService);
-    private bot_id;
-    private initialize;
-    private handleStart;
+    private readonly userService;
+    constructor(botRepo: typeof Bot, bot: Telegraf<Context>, userService: UserService);
+    commands(): {
+        reply_markup: import("@telegraf/types/markup").ReplyKeyboardMarkup;
+        parse_mode: string;
+    };
     start(ctx: Context): Promise<void>;
+    handlePhone(ctx: Context): Promise<void>;
+    handlePassword(ctx: Context): Promise<void>;
+    onContact(ctx: Context): Promise<void>;
+    setPassword(ctx: Context): Promise<void>;
     onStop(ctx: Context): Promise<void>;
-    sendAudio(file_name: any, full_name: string, part1: any, part2: any): Promise<void>;
+    sendOTP(phone: string, OTP: string): Promise<boolean>;
 }

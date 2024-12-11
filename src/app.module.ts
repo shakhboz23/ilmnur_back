@@ -30,9 +30,20 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UserService } from './user/user.service';
 import { Subscription_activityModule } from './subscription_activity/subscription_activity.module';
 import { VideoChatModule } from './video_chat/video_chat.module';
+import { BotModule } from './bot/bot.module';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { BOT_NAME } from './app.constants';
 
 @Module({
   imports: [
+    TelegrafModule.forRootAsync({
+      botName: BOT_NAME,
+      useFactory: () => ({
+        token: process.env.BOT_TOKEN,
+        middlewares: [],
+        includes: [BotModule],
+      })
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -49,11 +60,11 @@ import { VideoChatModule } from './video_chat/video_chat.module';
       dialectOptions:
         process.env.NODE_ENV === 'production'
           ? {
-              ssl: {
-                require: true,
-                rejectUnauthorized: false,
-              },
-            }
+            ssl: {
+              require: true,
+              rejectUnauthorized: false,
+            },
+          }
           : {},
     }),
     ServeStaticModule.forRoot({
@@ -76,7 +87,7 @@ import { VideoChatModule } from './video_chat/video_chat.module';
     NotificationModule,
     MessagesModule,
     RoleModule,
-    ActivityModule, 
+    ActivityModule,
     ReytingModule,
     NewsModule,
     OtpModule,
@@ -86,19 +97,20 @@ import { VideoChatModule } from './video_chat/video_chat.module';
     SubscriptionsModule,
     Subscription_activityModule,
     VideoChatModule,
+    BotModule,
   ],
 })
 // export class AppModule {}
 export class AppModule implements OnApplicationBootstrap {
 
-	constructor(
-		private readonly userService: UserService,
-	) {}
+  constructor(
+    private readonly userService: UserService,
+  ) { }
 
-	async onApplicationBootstrap() {
-		await this.userService.createDefaultUser();
-		// ConsoleUtils.startAutoClear();
-	}
+  async onApplicationBootstrap() {
+    await this.userService.createDefaultUser();
+    // ConsoleUtils.startAutoClear();
+  }
 
 }
 

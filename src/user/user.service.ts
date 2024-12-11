@@ -49,10 +49,12 @@ export class UserService {
   ): Promise<object> {
     try {
       let is_new_role = false;
-      let { email, role, password } = registerUserDto;
+      console.log(registerUserDto);
+      let { email, role, password, phone } = registerUserDto;
+      email = email || null;
       const hashed_password: string = await hash(password, 7);
       let user = await this.userRepository.findOne({
-        where: { email },
+        where: { [Op.or]: { email, phone } },
       });
       let is_role: any;
       if (user) {
@@ -147,6 +149,35 @@ export class UserService {
     }
   }
 
+  async createUsers(names: any[]) {
+    let user_list: any = [];
+    const users = names.map(async (name) => {
+      const password = this.generateRandomPassword();
+      console.log(name);
+      user_list.push([name, password]);
+      await this.register({
+        name: name[0],
+        surname: name[1],
+        email: name[0] + name[1] + '@gmail.com',
+        password,
+        role: RoleName.student,
+      })
+      return user_list;
+    });
+
+    return users;
+  }
+
+  private generateRandomPassword(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      password += chars[randomIndex];
+    }
+    return password;
+  }
+
   async activateLink(activation_link: string) {
     if (!activation_link) {
       throw new BadRequestException('Activation link not found');
@@ -175,7 +206,7 @@ export class UserService {
   ): Promise<object> {
     try {
       const user = await this.userRepository.findOne({
-        where: { email: loginUserDto.email },
+        where: { phone: loginUserDto.phone },
       });
 
       if (!user) {
@@ -517,6 +548,31 @@ export class UserService {
           user: updated_info[1][0],
         },
       };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async updatePassword(password: string, phone: string): Promise<object> {
+    try {
+      const hashed_password = await hash(password, 7);
+      const updated_info = await this.userRepository.update(
+        { hashed_password },
+        { where: { phone }, returning: true },
+      );
+      return updated_info[1][0]
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async updatePhone(oldphone: string, phone: string): Promise<object> {
+    try {
+      const updated_info = await this.userRepository.update(
+        { phone },
+        { where: { phone: oldphone }, returning: true },
+      );
+      return updated_info[1][0]
     } catch (error) {
       throw new BadRequestException(error.message);
     }

@@ -36,6 +36,10 @@ let UserController = class UserController {
         const data = await this.userService.register(registerUserDto);
         return data;
     }
+    async createUsers(names) {
+        const result = await this.userService.createUsers(names);
+        return result;
+    }
     activate(activation_link) {
         return this.userService.activateLink(activation_link);
     }
@@ -87,6 +91,13 @@ __decorate([
     __metadata("design:paramtypes", [register_dto_1.RegisterUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "register", null);
+__decorate([
+    (0, common_1.Post)('register/users'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createUsers", null);
 __decorate([
     (0, common_1.Get)('activation_link/:activation_link'),
     __param(0, (0, common_1.Param)('activation_link')),

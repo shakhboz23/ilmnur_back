@@ -11,11 +11,13 @@ import { Activity } from '../../activity/models/activity.models';
 import { Chat } from '../../chat/models/chat.model';
 import { Role } from '../../role/models/role.models';
 import { Reyting } from 'src/reyting/models/reyting.models';
+import { Bot } from 'src/bot/models/bot.model';
 
 interface UserAttributes {
   name: string;
   surname: string;
   email: string;
+  phone: string;
   current_role: string;
   bio: string;
   is_active: boolean;
@@ -55,10 +57,15 @@ export class User extends Model<User, UserAttributes> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
-    unique: true,
+    // unique: true,
   })
   email: string;
+
+  @Column({
+    type: DataType.STRING,
+    unique: true,
+  })
+  phone: string;
 
   @Column({
     type: DataType.STRING,
@@ -138,6 +145,12 @@ export class User extends Model<User, UserAttributes> {
     hooks: true,
   })
   reyting: Reyting[];
+
+  @HasMany(() => Bot, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
+  bot: Bot[];
 
   // @BelongsToMany(() => Course, {
   //   through: { model: () => Subscriptions }, // Use a function to specify the model type

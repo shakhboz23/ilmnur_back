@@ -1,20 +1,31 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { User } from "src/user/models/user.models";
 
 interface BotAttr {
     user_id: number;
+    bot_id: number;
     username: string;
-    first_name: string;
-    last_name: string;
-    phone_number: string;
+    name: string;
+    surname: string;
+    phone: string;
     status: boolean;
 }
 
 @Table({ tableName: 'bot' })
 export class Bot extends Model<Bot, BotAttr> {
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.INTEGER,
+    })
+    user_id: number;
+
+    @BelongsTo(() => User)
+    user: User[];
+
     @ApiProperty({ example: 123456789, description: 'user_id' })
     @Column({ type: DataType.BIGINT, primaryKey: true, allowNull: false })
-    user_id: number;
+    bot_id: number;
 
     @ApiProperty({ example: "johndoe", description: 'username' })
     @Column({ type: DataType.STRING })
@@ -22,15 +33,15 @@ export class Bot extends Model<Bot, BotAttr> {
 
     @ApiProperty({ example: "John", description: 'first name' })
     @Column({ type: DataType.STRING })
-    first_name: string;
+    name: string;
 
     @ApiProperty({ example: "Doe", description: 'last name' })
     @Column({ type: DataType.STRING })
-    last_name: string;
+    surname: string;
 
     @ApiProperty({ example: "+998901234567", description: 'phone number' })
     @Column({ type: DataType.STRING })
-    phone_number: string;
+    phone: string; 
 
     @ApiProperty({ example: "user active", description: 'status' })
     @Column({ type: DataType.BOOLEAN, defaultValue: false })

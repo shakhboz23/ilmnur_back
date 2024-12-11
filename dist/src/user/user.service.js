@@ -42,10 +42,12 @@ let UserService = class UserService {
         var _a;
         try {
             let is_new_role = false;
-            let { email, role, password } = registerUserDto;
+            console.log(registerUserDto);
+            let { email, role, password, phone } = registerUserDto;
+            email = email || null;
             const hashed_password = await (0, bcryptjs_1.hash)(password, 7);
             let user = await this.userRepository.findOne({
-                where: { email },
+                where: { [sequelize_2.Op.or]: { email, phone } },
             });
             let is_role;
             if (user) {
@@ -105,6 +107,32 @@ let UserService = class UserService {
             throw new common_1.BadRequestException(error.message);
         }
     }
+    async createUsers(names) {
+        let user_list = [];
+        const users = names.map(async (name) => {
+            const password = this.generateRandomPassword();
+            console.log(name);
+            user_list.push([name, password]);
+            await this.register({
+                name: name[0],
+                surname: name[1],
+                email: name[0] + name[1] + '@gmail.com',
+                password,
+                role: user_models_1.RoleName.student,
+            });
+            return user_list;
+        });
+        return users;
+    }
+    generateRandomPassword() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let password = '';
+        for (let i = 0; i < 6; i++) {
+            const randomIndex = Math.floor(Math.random() * chars.length);
+            password += chars[randomIndex];
+        }
+        return password;
+    }
     async activateLink(activation_link) {
         if (!activation_link) {
             throw new common_1.BadRequestException('Activation link not found');
@@ -127,7 +155,7 @@ let UserService = class UserService {
     async login(loginUserDto, type) {
         try {
             const user = await this.userRepository.findOne({
-                where: { email: loginUserDto.email },
+                where: { phone: loginUserDto.phone },
             });
             if (!user) {
                 throw new common_1.NotFoundException('User not found');
@@ -369,6 +397,25 @@ let UserService = class UserService {
                     user: updated_info[1][0],
                 },
             };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async updatePassword(password, phone) {
+        try {
+            const hashed_password = await (0, bcryptjs_1.hash)(password, 7);
+            const updated_info = await this.userRepository.update({ hashed_password }, { where: { phone }, returning: true });
+            return updated_info[1][0];
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async updatePhone(oldphone, phone) {
+        try {
+            const updated_info = await this.userRepository.update({ phone }, { where: { phone: oldphone }, returning: true });
+            return updated_info[1][0];
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
