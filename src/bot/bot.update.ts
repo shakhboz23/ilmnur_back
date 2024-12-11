@@ -12,6 +12,11 @@ export class BotUpdate {
     return this.botService.start(ctx);
   }
 
+  @Post('/webhook')
+  async botLaunch() {
+    console.log("Hi")
+  }
+
   @Help()
   async help(@Ctx() ctx: Context) {
     console.log(ctx);

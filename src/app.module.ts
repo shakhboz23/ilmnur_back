@@ -43,10 +43,10 @@ import { BOT_NAME } from './app.constants';
         middlewares: [],
         includes: [BotModule],
         launchOptions: {
-          webhook: {
-            domain: 'ilmnur.online',
-            hookPath: '/webhook',
-          }
+          // webhook: {
+          //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+          //   hookPath: '/webhook',
+          // }
         }
       }),
     }),
