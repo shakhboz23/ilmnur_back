@@ -28,8 +28,6 @@ let BotService = class BotService {
         this.userService = userService;
     }
     async onModuleInit() {
-        const webhookInfo = await this.bot.telegram.getWebhookInfo();
-        console.log('Webhook Info:', webhookInfo);
     }
     commands() {
         return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
