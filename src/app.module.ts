@@ -42,12 +42,12 @@ import { BOT_NAME } from './app.constants';
         token: process.env.BOT_TOKEN,
         middlewares: [],
         includes: [BotModule],
-        launchOptions: {
-          // webhook: {
-          //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-          //   hookPath: '/webhook',
-          // }
-        }
+        // launchOptions: {
+        //   // webhook: {
+        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+        //   //   hookPath: '/webhook',
+        //   // }
+        // }
       }),
     }),
     ConfigModule.forRoot({
