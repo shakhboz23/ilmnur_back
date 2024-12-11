@@ -27,8 +27,6 @@ let BotService = class BotService {
         this.bot = bot;
         this.userService = userService;
     }
-    async onModuleInit() {
-    }
     commands() {
         return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
             ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],

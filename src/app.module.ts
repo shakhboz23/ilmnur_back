@@ -42,6 +42,12 @@ import { BOT_NAME } from './app.constants';
         token: process.env.BOT_TOKEN,
         middlewares: [],
         includes: [BotModule],
+        launchOptions: {
+          webhook: {
+            domain: 'ilmnur.online',
+            hookPath: '/webhook',
+          }
+        }
       }),
     }),
     ConfigModule.forRoot({
