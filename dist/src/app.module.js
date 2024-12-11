@@ -61,9 +61,7 @@ exports.AppModule = AppModule = __decorate([
                 botName: app_constants_1.BOT_NAME,
                 useFactory: () => ({
                     token: process.env.BOT_TOKEN,
-                    middlewares: [],
                     includes: [bot_module_1.BotModule],
-                    launchOptions: {}
                 }),
             }),
             config_1.ConfigModule.forRoot({

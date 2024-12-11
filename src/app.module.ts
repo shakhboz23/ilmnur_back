@@ -40,7 +40,7 @@ import { BOT_NAME } from './app.constants';
       botName: BOT_NAME,
       useFactory: () => ({
         token: process.env.BOT_TOKEN,
-        middlewares: [],
+        // middlewares: [],
         includes: [BotModule],
         // launchOptions: {
         //   // webhook: {
