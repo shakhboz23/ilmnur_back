@@ -16,13 +16,9 @@ exports.BotUpdate = void 0;
 const nestjs_telegraf_1 = require("nestjs-telegraf");
 const bot_service_1 = require("./bot.service");
 const telegraf_1 = require("telegraf");
-const common_1 = require("@nestjs/common");
 let BotUpdate = class BotUpdate {
     constructor(botService) {
         this.botService = botService;
-    }
-    async handleWebhook(req) {
-        return req.body;
     }
     async onStart(ctx) {
         return this.botService.start(ctx);
@@ -54,13 +50,6 @@ let BotUpdate = class BotUpdate {
     }
 };
 exports.BotUpdate = BotUpdate;
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], BotUpdate.prototype, "handleWebhook", null);
 __decorate([
     (0, nestjs_telegraf_1.Start)(),
     __param(0, (0, nestjs_telegraf_1.Ctx)()),
@@ -104,7 +93,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BotUpdate.prototype, "handlePassword", null);
 __decorate([
-    (0, nestjs_telegraf_1.Hears)(/pass:[a-zA-Z0-9!@#$%^&*()_+]{6,}/),
+    (0, nestjs_telegraf_1.Hears)(/pass:\w+/),
     __param(0, (0, nestjs_telegraf_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [telegraf_1.Context]),

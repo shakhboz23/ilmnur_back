@@ -27,6 +27,8 @@ let BotService = class BotService {
         this.bot = bot;
         this.userService = userService;
     }
+    async onModuleInit() {
+    }
     commands() {
         return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
             ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
@@ -39,9 +41,9 @@ let BotService = class BotService {
         try {
             const bot_id = ctx.from.id;
             const user = await this.botRepo.findOne({ where: { bot_id } });
-            if (!(user === null || user === void 0 ? void 0 : user.user_id)) {
+            if (!user) {
                 await this.botRepo.create({
-                    bot_id,
+                    bot_id: bot_id,
                     name: ctx.from.first_name,
                     surname: ctx.from.last_name,
                     username: ctx.from.username,
@@ -69,8 +71,7 @@ let BotService = class BotService {
             }
         }
         catch (error) {
-            console.error("Error in start method:", error);
-            await ctx.reply("Xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.");
+            console.log(error);
         }
     }
     async handlePhone(ctx) {
@@ -143,7 +144,7 @@ let BotService = class BotService {
                 where: { bot_id: user.bot_id },
                 returning: true
             });
-            const url = encodeURIComponent(`https://www.ilmnur.online/login?token=${bot_user.token}`);
+            const url = `https://www.ilmnur.online/login?token=${bot_user.token}`;
             await ctx.reply(`[IlmNur online saytiga kirish uchun shu yerga bosing](${url})`, { parse_mode: 'MarkdownV2' });
         }
         else {

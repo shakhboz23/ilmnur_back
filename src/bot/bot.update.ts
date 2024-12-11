@@ -7,11 +7,6 @@ import { Post, Req } from '@nestjs/common';
 export class BotUpdate {
   constructor(private readonly botService: BotService) { }
 
-  // @Post()
-  // async handleWebhook(@Req() req: any) {
-  //   return req.body; // Telegraf will handle the webhook data automatically
-  // } 
-
   @Start()
   async onStart(@Ctx() ctx: Context) {
     return this.botService.start(ctx);
@@ -45,7 +40,7 @@ export class BotUpdate {
     return this.botService.handlePassword(ctx);
   }
 
-  @Hears(/pass:[a-zA-Z0-9!@#$%^&*()_+]{6,}/)
+  @Hears(/pass:\w+/)
   async handlePasswordRegex(@Ctx() ctx: Context) {
     return this.botService.setPassword(ctx);
     // const password = ctx.message.text.split(':')[1];

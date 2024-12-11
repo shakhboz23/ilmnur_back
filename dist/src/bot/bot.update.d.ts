@@ -3,7 +3,6 @@ import { Context } from 'telegraf';
 export declare class BotUpdate {
     private readonly botService;
     constructor(botService: BotService);
-    handleWebhook(req: any): Promise<any>;
     onStart(ctx: Context): Promise<void>;
     help(ctx: Context): Promise<void>;
     on(ctx: Context): Promise<void>;
