@@ -1,15 +1,10 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Bot } from './models/bot.model';
 import { BOT_NAME } from '../app.constants';
 import {
   InjectBot,
-  Update,
   Ctx,
-  Start,
-  Help,
-  On,
-  Hears,
 } from 'nestjs-telegraf';
 import { Context, Telegraf, Markup } from 'telegraf';
 import { Message } from 'telegraf/typings/core/types/typegram';
@@ -17,20 +12,13 @@ import { UserService } from 'src/user/user.service';
 import { RoleName } from 'src/activity/models/activity.models';
 
 @Injectable()
-export class BotService implements OnModuleInit {
+export class BotService {
   constructor(
     @InjectModel(Bot) private botRepo: typeof Bot,
     @InjectBot(BOT_NAME) private readonly bot: Telegraf<Context>,
     private readonly userService: UserService,
+    // private readonly logger = new Logger(BotService.name),
   ) { }
-
-  async onModuleInit() {
-    // const webhookInfo = await this.bot.telegram.getWebhookInfo();
-    // console.log('Webhook Info:', webhookInfo);
-    // const webhookUrl = `${process.env.SERVER_URL}/bot`; // Replace SERVER_URL with your public server URL
-    // await this.bot.telegram.setWebhook(webhookUrl);
-    // console.log(`Webhook registered at: ${webhookUrl}`);
-  }
 
   commands() {
     return {
@@ -44,53 +32,60 @@ export class BotService implements OnModuleInit {
   };
 
   async start(ctx: Context) {
-    const bot_id = ctx.from.id;
-    const user = await this.botRepo.findOne({ where: { bot_id } });
-    if (!user?.user_id) {
-      await this.botRepo.create({
-        bot_id: bot_id,
-        name: ctx.from.first_name,
-        surname: ctx.from.last_name,
-        username: ctx.from.username,
-      });
-      await ctx.reply(
-        `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
-        {
-          parse_mode: 'HTML',
-          ...Markup.keyboard([
-            [Markup.button.contactRequest('Telefon raqamni yuborish')],
-          ])
-            .oneTime()
-            .resize(),
-        },
-      );
-    } else if (!user.dataValues.status) {
-      await ctx.reply(
-        `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
-        {
-          parse_mode: 'HTML',
-          ...Markup.keyboard([
-            [Markup.button.contactRequest('Telefon raqamni yuborish')],
-          ])
-            .oneTime()
-            .resize(),
-        },
-      );
-    } else {
-      await this.bot.telegram.sendChatAction(bot_id, 'typing');
-      await ctx.reply(
-        "Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan",
-        {
-          parse_mode: 'HTML',
-          ...Markup.keyboard([
-            ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
-          ])
-            .oneTime()
-            .resize()
-        }
-      );
+    try {
+      const bot_id = ctx.from.id;
+      const user = await this.botRepo.findOne({ where: { bot_id } });
+
+      if (!user?.user_id) {
+        await this.botRepo.create({
+          bot_id,
+          name: ctx.from.first_name,
+          surname: ctx.from.last_name,
+          username: ctx.from.username,
+        });
+        await ctx.reply(
+          `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
+          {
+            parse_mode: 'HTML',
+            ...Markup.keyboard([
+              [Markup.button.contactRequest('Telefon raqamni yuborish')],
+            ])
+              .oneTime()
+              .resize(),
+          },
+        );
+      } else if (!user.dataValues.status) {
+        await ctx.reply(
+          `Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`,
+          {
+            parse_mode: 'HTML',
+            ...Markup.keyboard([
+              [Markup.button.contactRequest('Telefon raqamni yuborish')],
+            ])
+              .oneTime()
+              .resize(),
+          },
+        );
+      } else {
+        await this.bot.telegram.sendChatAction(bot_id, 'typing');
+        await ctx.reply(
+          "Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan",
+          {
+            parse_mode: 'HTML',
+            ...Markup.keyboard([
+              ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+            ])
+              .oneTime()
+              .resize()
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error in start method:", error);
+      await ctx.reply("Xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring.");
     }
   }
+
 
   async handlePhone(ctx: Context) {
     const bot_id = ctx.from.id;
@@ -187,7 +182,7 @@ export class BotService implements OnModuleInit {
         returning: true
       })
       // await ctx.reply("Siz ro'yhatdan muvaffaqiyatli o'tdingiz!")
-      const url = `https://www.ilmnur.online/login?token=${bot_user.token}`;
+      const url = encodeURIComponent(`https://www.ilmnur.online/login?token=${bot_user.token}`);
       await ctx.reply(`[IlmNur online saytiga kirish uchun shu yerga bosing](${url})`, { parse_mode: 'MarkdownV2' });
     } else {
       bot_user = await this.userService.updatePassword(password, user.phone);

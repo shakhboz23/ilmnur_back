@@ -45,7 +45,7 @@ export class BotUpdate {
     return this.botService.handlePassword(ctx);
   }
 
-  @Hears(/pass:\w+/)
+  @Hears(/pass:[a-zA-Z0-9!@#$%^&*()_+]{6,}/)
   async handlePasswordRegex(@Ctx() ctx: Context) {
     return this.botService.setPassword(ctx);
     // const password = ctx.message.text.split(':')[1];

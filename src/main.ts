@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { ExpressPeerServer } from 'peer';
+// import { ExpressPeerServer } from 'peer';
 
 async function bootstrap() {
   try {
@@ -15,9 +15,9 @@ async function bootstrap() {
 
     const server = app.getHttpServer(); // Get the underlying HTTP server
     // const peerServer = ExpressPeerServer(server, { path: '/peerjs' }); // Create the PeerJS server with a custom path
-    const peerServer = ExpressPeerServer(server);
-    console.log(peerServer)
-    app.use('/peerjs', peerServer); 
+    // const peerServer = ExpressPeerServer(server);
+    // console.log(peerServer)
+    // app.use('/peerjs', peerServer); 
 
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     const config = new DocumentBuilder()

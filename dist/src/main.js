@@ -5,7 +5,6 @@ const app_module_1 = require("./app.module");
 const swagger_1 = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const cookieParser = require("cookie-parser");
-const peer_1 = require("peer");
 async function bootstrap() {
     try {
         const app = await core_1.NestFactory.create(app_module_1.AppModule);
@@ -14,9 +13,6 @@ async function bootstrap() {
         app.setGlobalPrefix('api');
         app.use(cookieParser());
         const server = app.getHttpServer();
-        const peerServer = (0, peer_1.ExpressPeerServer)(server);
-        console.log(peerServer);
-        app.use('/peerjs', peerServer);
         app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true }));
         const config = new swagger_1.DocumentBuilder()
             .setTitle('IlmNur')

@@ -104,7 +104,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BotUpdate.prototype, "handlePassword", null);
 __decorate([
-    (0, nestjs_telegraf_1.Hears)(/pass:\w+/),
+    (0, nestjs_telegraf_1.Hears)(/pass:[a-zA-Z0-9!@#$%^&*()_+]{6,}/),
     __param(0, (0, nestjs_telegraf_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [telegraf_1.Context]),
