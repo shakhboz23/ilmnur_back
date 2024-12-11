@@ -1,11 +1,13 @@
+import { OnModuleInit } from '@nestjs/common';
 import { Bot } from './models/bot.model';
 import { Context, Telegraf } from 'telegraf';
 import { UserService } from 'src/user/user.service';
-export declare class BotService {
+export declare class BotService implements OnModuleInit {
     private botRepo;
     private readonly bot;
     private readonly userService;
     constructor(botRepo: typeof Bot, bot: Telegraf<Context>, userService: UserService);
+    onModuleInit(): Promise<void>;
     commands(): {
         reply_markup: import("@telegraf/types/markup").ReplyKeyboardMarkup;
         parse_mode: string;

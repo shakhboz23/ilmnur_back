@@ -27,6 +27,11 @@ let BotService = class BotService {
         this.bot = bot;
         this.userService = userService;
     }
+    async onModuleInit() {
+        const webhookUrl = `${process.env.SERVER_URL}/bot`;
+        await this.bot.telegram.setWebhook(webhookUrl);
+        console.log(`Webhook registered at: ${webhookUrl}`);
+    }
     commands() {
         return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
             ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],

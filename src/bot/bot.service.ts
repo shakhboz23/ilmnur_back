@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Bot } from './models/bot.model';
 import { BOT_NAME } from '../app.constants';
@@ -17,12 +17,18 @@ import { UserService } from 'src/user/user.service';
 import { hash } from 'bcryptjs';
 import { RoleName } from 'src/activity/models/activity.models';
 @Injectable()
-export class BotService {
+export class BotService implements OnModuleInit {
   constructor(
     @InjectModel(Bot) private botRepo: typeof Bot,
     @InjectBot(BOT_NAME) private readonly bot: Telegraf<Context>,
     private readonly userService: UserService,
   ) { }
+
+  async onModuleInit() {
+    const webhookUrl = `${process.env.SERVER_URL}/bot`; // Replace SERVER_URL with your public server URL
+    await this.bot.telegram.setWebhook(webhookUrl);
+    console.log(`Webhook registered at: ${webhookUrl}`);
+  }
 
   commands() {
     return {
