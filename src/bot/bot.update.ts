@@ -1,10 +1,16 @@
 import { Ctx, Start, Update, On, Help, Hears } from 'nestjs-telegraf';
 import { BotService } from './bot.service';
 import { Context } from 'telegraf';
+import { Post, Req } from '@nestjs/common';
 
 @Update()
 export class BotUpdate {
   constructor(private readonly botService: BotService) { }
+
+  @Post()
+  async handleWebhook(@Req() req: any) {
+    return req.body; // Telegraf will handle the webhook data automatically
+  }
 
   @Start()
   async onStart(@Ctx() ctx: Context) {

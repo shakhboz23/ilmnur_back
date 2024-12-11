@@ -25,9 +25,11 @@ export class BotService implements OnModuleInit {
   ) { }
 
   async onModuleInit() {
-    const webhookUrl = `${process.env.SERVER_URL}/bot`; // Replace SERVER_URL with your public server URL
-    await this.bot.telegram.setWebhook(webhookUrl);
-    console.log(`Webhook registered at: ${webhookUrl}`);
+    const webhookInfo = await this.bot.telegram.getWebhookInfo();
+    console.log('Webhook Info:', webhookInfo);
+    // const webhookUrl = `${process.env.SERVER_URL}/bot`; // Replace SERVER_URL with your public server URL
+    // await this.bot.telegram.setWebhook(webhookUrl);
+    // console.log(`Webhook registered at: ${webhookUrl}`);
   }
 
   commands() {

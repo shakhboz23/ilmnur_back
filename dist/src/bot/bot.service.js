@@ -28,9 +28,8 @@ let BotService = class BotService {
         this.userService = userService;
     }
     async onModuleInit() {
-        const webhookUrl = `${process.env.SERVER_URL}/bot`;
-        await this.bot.telegram.setWebhook(webhookUrl);
-        console.log(`Webhook registered at: ${webhookUrl}`);
+        const webhookInfo = await this.bot.telegram.getWebhookInfo();
+        console.log('Webhook Info:', webhookInfo);
     }
     commands() {
         return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
