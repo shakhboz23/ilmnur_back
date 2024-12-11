@@ -42,9 +42,6 @@ import { BOT_NAME } from './app.constants';
         token: process.env.BOT_TOKEN,
         middlewares: [],
         includes: [BotModule],
-        options: {
-          // webhookReply: true, // Enables webhook replies
-        },
       }),
     }),
     ConfigModule.forRoot({
@@ -102,6 +99,9 @@ import { BOT_NAME } from './app.constants';
     VideoChatModule,
     BotModule,
   ],
+  controllers: [],
+  providers: [],
+  exports: []
 })
 // export class AppModule {}
 export class AppModule implements OnApplicationBootstrap {

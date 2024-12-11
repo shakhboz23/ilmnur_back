@@ -19,6 +19,7 @@ exports.BotModule = BotModule;
 exports.BotModule = BotModule = __decorate([
     (0, common_1.Module)({
         imports: [sequelize_1.SequelizeModule.forFeature([bot_model_1.Bot]), user_module_1.UserModule],
+        controllers: [],
         providers: [bot_service_1.BotService, bot_update_1.BotUpdate],
         exports: [bot_service_1.BotService]
     })

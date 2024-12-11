@@ -7,7 +7,7 @@ import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [SequelizeModule.forFeature([Bot]), UserModule],
-  // controllers: [],
+  controllers: [],
   providers: [BotService, BotUpdate],
   exports: [BotService]
 })
