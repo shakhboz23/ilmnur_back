@@ -63,7 +63,6 @@ exports.AppModule = AppModule = __decorate([
                     token: process.env.BOT_TOKEN,
                     middlewares: [],
                     includes: [bot_module_1.BotModule],
-                    options: {},
                 }),
             }),
             config_1.ConfigModule.forRoot({
@@ -119,6 +118,9 @@ exports.AppModule = AppModule = __decorate([
             video_chat_module_1.VideoChatModule,
             bot_module_1.BotModule,
         ],
+        controllers: [],
+        providers: [],
+        exports: []
     }),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], AppModule);
