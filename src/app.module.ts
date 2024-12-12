@@ -30,26 +30,27 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UserService } from './user/user.service';
 import { Subscription_activityModule } from './subscription_activity/subscription_activity.module';
 import { VideoChatModule } from './video_chat/video_chat.module';
-import { BotModule } from './bot/bot.module';
+// import { BotModule } from './bot/bot.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { BOT_NAME } from './app.constants';
+import { TelegramBotService } from './bot/bot.service';
 
 @Module({
   imports: [
-    TelegrafModule.forRootAsync({
-      botName: BOT_NAME,
-      useFactory: () => ({
-        token: process.env.BOT_TOKEN,
-        // middlewares: [],
-        includes: [BotModule],
-        // launchOptions: {
-        //   // webhook: {
-        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-        //   //   hookPath: '/webhook',
-        //   // }
-        // }
-      }),
-    }),
+    // TelegrafModule.forRootAsync({
+    //   botName: BOT_NAME,
+    //   useFactory: () => ({
+    //     token: process.env.BOT_TOKEN,
+    //     middlewares: [],
+    //     includes: [BotModule],
+    //     // launchOptions: {
+    //     //   // webhook: {
+    //     //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+    //     //   //   hookPath: '/webhook',
+    //     //   // }
+    //     // }
+    //   }),
+    // }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -103,10 +104,10 @@ import { BOT_NAME } from './app.constants';
     SubscriptionsModule,
     Subscription_activityModule,
     VideoChatModule,
-    BotModule,
+    // BotModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [TelegramBotService],
   exports: []
 })
 // export class AppModule {}

@@ -15,7 +15,6 @@ const activity_models_1 = require("../../activity/models/activity.models");
 const chat_model_1 = require("../../chat/models/chat.model");
 const role_models_1 = require("../../role/models/role.models");
 const reyting_models_1 = require("../../reyting/models/reyting.models");
-const bot_model_1 = require("../../bot/models/bot.model");
 var RoleName;
 (function (RoleName) {
     RoleName["student"] = "student";
@@ -146,13 +145,6 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], User.prototype, "reyting", void 0);
-__decorate([
-    (0, sequelize_typescript_1.HasMany)(() => bot_model_1.Bot, {
-        onDelete: 'CASCADE',
-        hooks: true,
-    }),
-    __metadata("design:type", Array)
-], User.prototype, "bot", void 0);
 exports.User = User = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'user' })
 ], User);

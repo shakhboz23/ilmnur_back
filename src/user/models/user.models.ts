@@ -11,7 +11,7 @@ import { Activity } from '../../activity/models/activity.models';
 import { Chat } from '../../chat/models/chat.model';
 import { Role } from '../../role/models/role.models';
 import { Reyting } from 'src/reyting/models/reyting.models';
-import { Bot } from 'src/bot/models/bot.model';
+// import { Bot } from 'src/bot/models/bot.model';
 
 interface UserAttributes {
   name: string;
@@ -146,11 +146,11 @@ export class User extends Model<User, UserAttributes> {
   })
   reyting: Reyting[];
 
-  @HasMany(() => Bot, {
-    onDelete: 'CASCADE',
-    hooks: true,
-  })
-  bot: Bot[];
+  // @HasMany(() => Bot, {
+  //   onDelete: 'CASCADE',
+  //   hooks: true,
+  // })
+  // bot: Bot[];
 
   // @BelongsToMany(() => Course, {
   //   through: { model: () => Subscriptions }, // Use a function to specify the model type

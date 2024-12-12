@@ -42,9 +42,7 @@ const subscriptions_module_1 = require("./subscriptions/subscriptions.module");
 const user_service_1 = require("./user/user.service");
 const subscription_activity_module_1 = require("./subscription_activity/subscription_activity.module");
 const video_chat_module_1 = require("./video_chat/video_chat.module");
-const bot_module_1 = require("./bot/bot.module");
-const nestjs_telegraf_1 = require("nestjs-telegraf");
-const app_constants_1 = require("./app.constants");
+const bot_service_1 = require("./bot/bot.service");
 let AppModule = class AppModule {
     constructor(userService) {
         this.userService = userService;
@@ -57,13 +55,6 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            nestjs_telegraf_1.TelegrafModule.forRootAsync({
-                botName: app_constants_1.BOT_NAME,
-                useFactory: () => ({
-                    token: process.env.BOT_TOKEN,
-                    includes: [bot_module_1.BotModule],
-                }),
-            }),
             config_1.ConfigModule.forRoot({
                 envFilePath: '.env',
                 isGlobal: true,
@@ -115,10 +106,9 @@ exports.AppModule = AppModule = __decorate([
             subscriptions_module_1.SubscriptionsModule,
             subscription_activity_module_1.Subscription_activityModule,
             video_chat_module_1.VideoChatModule,
-            bot_module_1.BotModule,
         ],
         controllers: [],
-        providers: [],
+        providers: [bot_service_1.TelegramBotService],
         exports: []
     }),
     __metadata("design:paramtypes", [user_service_1.UserService])
