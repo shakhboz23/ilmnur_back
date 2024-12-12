@@ -57,20 +57,20 @@ import { VideoChat } from './video_chat/models/video_chat.model';
 
 @Module({
   imports: [
-    TelegrafModule.forRootAsync({
-      botName: BOT_NAME,
-      useFactory: () => ({
-        token: process.env.BOT_TOKEN,
-        middlewares: [],
-        includes: [BotModule],
-        // launchOptions: {
-        //   // webhook: {
-        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-        //   //   hookPath: '/webhook',
-        //   // }
-        // }
-      }),
-    }),
+    // TelegrafModule.forRootAsync({
+    //   botName: BOT_NAME,
+    //   useFactory: () => ({
+    //     token: process.env.BOT_TOKEN,
+    //     middlewares: [],
+    //     includes: [BotModule],
+    //     // launchOptions: {
+    //     //   // webhook: {
+    //     //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+    //     //   //   hookPath: '/webhook',
+    //     //   // }
+    //     // }
+    //   }),
+    // }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -82,30 +82,30 @@ import { VideoChat } from './video_chat/models/video_chat.model';
       username: process.env.PG_USER,
       password: String(process.env.PG_PASS),
       database: process.env.PG_DB,
-      models: [
-        Category,
-        Group,
-        Course,
-        Lesson,
-        Like,
-        Chat,
-        Tests,
-        User,
-        ChatGroup,
-        Uploaded,
-        Notification,
+      // models: [
+        // Category,
+        // Group,
+        // Course,
+        // Lesson,
+        // Like,
+        // Chat,
+        // Tests,
+        // User,
+        // ChatGroup,
+        // Uploaded,
+        // Notification,
         // Message,
-        Role,
-        Activity,
-        Reyting,
-        News,
-        Otp,
-        UserStep,
-        Subscriptions,
-        SubscriptionActivity,
-        VideoChat,
-        Bot,
-      ],
+        // Role,
+        // Activity,
+        // Reyting,
+        // News,
+        // Otp,
+        // UserStep,
+        // Subscriptions,
+        // SubscriptionActivity,
+        // VideoChat,
+        // Bot,
+      // ],
       autoLoadModels: true,
       logging: true,
       dialectOptions:
@@ -148,7 +148,7 @@ import { VideoChat } from './video_chat/models/video_chat.model';
     SubscriptionsModule,
     Subscription_activityModule,
     VideoChatModule,
-    BotModule,
+    // BotModule,
   ],
   controllers: [],
   providers: [],
