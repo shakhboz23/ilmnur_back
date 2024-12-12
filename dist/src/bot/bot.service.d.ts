@@ -1,5 +1,4 @@
-import { Telegraf } from 'telegraf';
 export declare class TelegramBotService {
-    bot: Telegraf;
+    private readonly bot;
     constructor();
 }

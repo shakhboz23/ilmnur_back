@@ -216,7 +216,7 @@ import { Telegraf } from 'telegraf';
 
 @Injectable()
 export class TelegramBotService {
-  bot: Telegraf;
+  private readonly bot: Telegraf;
 
   constructor() {
     this.bot = new Telegraf(process.env.BOT_TOKEN);
