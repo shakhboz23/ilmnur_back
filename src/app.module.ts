@@ -30,27 +30,47 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UserService } from './user/user.service';
 import { Subscription_activityModule } from './subscription_activity/subscription_activity.module';
 import { VideoChatModule } from './video_chat/video_chat.module';
-// import { BotModule } from './bot/bot.module';
+import { BotModule } from './bot/bot.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { BOT_NAME } from './app.constants';
-import { TelegramBotService } from './bot/bot.service';
+import { Bot } from './bot/models/bot.model';
+import { User } from './user/models/user.models';
+import { Chat } from './chat/models/chat.model';
+import { Category } from './category/models/category.models';
+import { Group } from './group/models/group.models';
+import { Course } from './course/models/course.models';
+import { Lesson } from './lesson/models/lesson.models';
+import { Like } from './likes/models/like.models';
+import { Tests } from './test/models/test.models';
+import { ChatGroup } from './chat_group/models/chat_group.models';
+import { Uploaded } from './uploaded/models/uploaded.models';
+import { Notification } from './notification/models/notification.model';
+import { Role } from './role/models/role.models';
+import { Activity } from './activity/models/activity.models';
+import { Reyting } from './reyting/models/reyting.models';
+import { News } from './news/models/news.model';
+import { Otp } from './otp/models/otp.model';
+import { UserStep } from './user_step/models/class.models';
+import { Subscriptions } from './subscriptions/models/subscriptions.models';
+import { SubscriptionActivity } from './subscription_activity/models/subscription_activity.models';
+import { VideoChat } from './video_chat/models/video_chat.model';
 
 @Module({
   imports: [
-    // TelegrafModule.forRootAsync({
-    //   botName: BOT_NAME,
-    //   useFactory: () => ({
-    //     token: process.env.BOT_TOKEN,
-    //     middlewares: [],
-    //     includes: [BotModule],
-    //     // launchOptions: {
-    //     //   // webhook: {
-    //     //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-    //     //   //   hookPath: '/webhook',
-    //     //   // }
-    //     // }
-    //   }),
-    // }),
+    TelegrafModule.forRootAsync({
+      botName: BOT_NAME,
+      useFactory: () => ({
+        token: process.env.BOT_TOKEN,
+        middlewares: [],
+        includes: [BotModule],
+        // launchOptions: {
+        //   // webhook: {
+        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+        //   //   hookPath: '/webhook',
+        //   // }
+        // }
+      }),
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -62,6 +82,30 @@ import { TelegramBotService } from './bot/bot.service';
       username: process.env.PG_USER,
       password: String(process.env.PG_PASS),
       database: process.env.PG_DB,
+      models: [
+        Category,
+        Group,
+        Course,
+        Lesson,
+        Like,
+        Chat,
+        Tests,
+        User,
+        ChatGroup,
+        Uploaded,
+        Notification,
+        // Message,
+        Role,
+        Activity,
+        Reyting,
+        News,
+        Otp,
+        UserStep,
+        Subscriptions,
+        SubscriptionActivity,
+        VideoChat,
+        Bot,
+      ],
       autoLoadModels: true,
       logging: true,
       dialectOptions:
@@ -104,10 +148,10 @@ import { TelegramBotService } from './bot/bot.service';
     SubscriptionsModule,
     Subscription_activityModule,
     VideoChatModule,
-    // BotModule,
+    BotModule,
   ],
   controllers: [],
-  providers: [TelegramBotService],
+  providers: [],
   exports: []
 })
 // export class AppModule {}
