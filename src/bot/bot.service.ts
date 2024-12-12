@@ -17,24 +17,24 @@ import { UserService } from 'src/user/user.service';
 import { hash } from 'bcryptjs';
 import { RoleName } from 'src/activity/models/activity.models';
 @Injectable()
-export class BotService implements OnModuleInit {
+export class BotService {
   constructor(
     @InjectModel(Bot) private botRepo: typeof Bot,
     @InjectBot(BOT_NAME) private readonly bot: Telegraf<Context>,
     private readonly userService: UserService,
   ) { }
 
-  async onModuleInit() {
-    try {
-      // const webhookInfo = await this.bot.telegram.getWebhookInfo();
-      // console.log('Webhook Info:', webhookInfo);
-      // const webhookUrl = `https://jellyfish-app-9syay.ondigitalocean.app/bot`; // Replace SERVER_URL with your public server URL
-      // console.log(`Webhook registered at: ${webhookUrl}`);
-      // await this.bot.telegram.setWebhook(webhookUrl);
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // async onModuleInit() {
+  //   try {
+  //     // const webhookInfo = await this.bot.telegram.getWebhookInfo();
+  //     // console.log('Webhook Info:', webhookInfo);
+  //     // const webhookUrl = `https://jellyfish-app-9syay.ondigitalocean.app/bot`; // Replace SERVER_URL with your public server URL
+  //     // console.log(`Webhook registered at: ${webhookUrl}`);
+  //     // await this.bot.telegram.setWebhook(webhookUrl);
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   commands() {
     return {
