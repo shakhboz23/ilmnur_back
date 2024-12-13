@@ -17,7 +17,7 @@ interface UserAttributes {
   name: string;
   surname: string;
   email: string;
-  phone: string;
+  // phone: string;
   current_role: string;
   bio: string;
   is_active: boolean;
@@ -45,13 +45,13 @@ export class User extends Model<User, UserAttributes> {
 
   @Column({
     type: DataType.STRING,
-    unique: true,
+    // unique: true,
   })
   name: string;
 
   @Column({
     type: DataType.STRING,
-    unique: true,
+    // unique: true,
   })
   surname: string;
 
@@ -61,11 +61,11 @@ export class User extends Model<User, UserAttributes> {
   })
   email: string;
 
-  @Column({
-    type: DataType.STRING,
-    unique: true,
-  })
-  phone: string;
+  // @Column({
+  //   type: DataType.STRING,
+  //   unique: true,
+  // })
+  // phone: string;
 
   @Column({
     type: DataType.STRING,

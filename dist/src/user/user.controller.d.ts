@@ -13,7 +13,7 @@ export declare class UserController {
     private readonly jwtService;
     constructor(userService: UserService, roleService: RoleService, jwtService: JwtService);
     register(registerUserDto: RegisterUserDto): Promise<object>;
-    createUsers(names: any[]): Promise<Promise<any>[]>;
+    createUsers(names: any[]): Promise<any>;
     activate(activation_link: string): Promise<{
         message: string;
         admin: import("./models/user.models").User;

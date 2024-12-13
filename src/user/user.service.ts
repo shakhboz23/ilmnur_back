@@ -50,11 +50,11 @@ export class UserService {
     try {
       let is_new_role = false;
       console.log(registerUserDto);
-      let { email, role, password, phone } = registerUserDto;
+      let { email, role, password } = registerUserDto;
       email = email || null;
       const hashed_password: string = await hash(password, 7);
       let user = await this.userRepository.findOne({
-        where: { [Op.or]: { email, phone } },
+        where: { [Op.or]: { email } },
       });
       let is_role: any;
       if (user) {
@@ -154,22 +154,21 @@ export class UserService {
     const users = names.map(async (name) => {
       const password = this.generateRandomPassword();
       console.log(name);
-      user_list.push([name, password]);
+      name = name.split(' ');
+      user_list.push({ login: name[0] + password.slice(0, 2) + '@gmail.com', password, user: name.join(' ') });
       await this.register({
         name: name[0],
         surname: name[1],
-        email: name[0] + name[1] + '@gmail.com',
+        email: name[0] + password.slice(0, 2) + '@gmail.com',
         password,
-        role: RoleName.student,
+        role: RoleName.student, 
       })
-      return user_list;
     });
-
-    return users;
+    return user_list;
   }
 
   private generateRandomPassword(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars = '0123456789';
     let password = '';
     for (let i = 0; i < 6; i++) {
       const randomIndex = Math.floor(Math.random() * chars.length);
@@ -206,7 +205,7 @@ export class UserService {
   ): Promise<object> {
     try {
       const user = await this.userRepository.findOne({
-        where: { phone: loginUserDto.phone },
+        where: { email: loginUserDto.email },
       });
 
       if (!user) {
@@ -553,12 +552,12 @@ export class UserService {
     }
   }
 
-  async updatePassword(password: string, phone: string): Promise<object> {
+  async updatePassword(password: string, email: string): Promise<object> {
     try {
       const hashed_password = await hash(password, 7);
       const updated_info = await this.userRepository.update(
         { hashed_password },
-        { where: { phone }, returning: true },
+        { where: { email }, returning: true },
       );
       return updated_info[1][0]
     } catch (error) {
@@ -566,11 +565,11 @@ export class UserService {
     }
   }
 
-  async updatePhone(oldphone: string, phone: string): Promise<object> {
+  async updateEmail(oldemail: string, email: string): Promise<object> {
     try {
       const updated_info = await this.userRepository.update(
-        { phone },
-        { where: { phone: oldphone }, returning: true },
+        { email },
+        { where: { email: oldemail }, returning: true },
       );
       return updated_info[1][0]
     } catch (error) {

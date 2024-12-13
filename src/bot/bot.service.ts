@@ -155,7 +155,7 @@ export class BotService {
           ? (phone = ctx.message.contact.phone_number)
           : (phone = '+' + ctx.message.contact.phone_number);
         if (user.phone) {
-          await this.userService.updatePhone(user.phone, phone);
+          // await this.userService.updatePhone(user.phone, phone);
         }
         const bot_user = await this.botRepo.update(
           { phone, status: true },
@@ -187,7 +187,7 @@ export class BotService {
     const user = await this.botRepo.findOne({ where: { bot_id } });
     let bot_user: any;
     if (!user?.user_id) {
-      bot_user = await this.userService.register({ password, role: RoleName.student, name: user.name, surname: user.surname, phone: user.phone });
+      // bot_user = await this.userService.register({ password, role: RoleName.student, name: user.name, surname: user.surname, phone: user.phone });
       console.log(bot_user);
       console.log(bot_user.data.user.get('id'));
       await this.botRepo.update({ user_id: bot_user.data.user.get('id') }, {

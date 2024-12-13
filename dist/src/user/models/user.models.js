@@ -35,14 +35,12 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
-        unique: true,
     }),
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
-        unique: true,
     }),
     __metadata("design:type", String)
 ], User.prototype, "surname", void 0);
@@ -52,13 +50,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-        unique: true,
-    }),
-    __metadata("design:type", String)
-], User.prototype, "phone", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,

@@ -20,7 +20,6 @@ const app_constants_1 = require("../app.constants");
 const nestjs_telegraf_1 = require("nestjs-telegraf");
 const telegraf_1 = require("telegraf");
 const user_service_1 = require("../user/user.service");
-const activity_models_1 = require("../activity/models/activity.models");
 let BotService = class BotService {
     constructor(botRepo, bot, userService) {
         this.botRepo = botRepo;
@@ -112,7 +111,6 @@ let BotService = class BotService {
                     ? (phone = ctx.message.contact.phone_number)
                     : (phone = '+' + ctx.message.contact.phone_number);
                 if (user.phone) {
-                    await this.userService.updatePhone(user.phone, phone);
                 }
                 const bot_user = await this.botRepo.update({ phone, status: true }, {
                     where: { bot_id },
@@ -135,7 +133,6 @@ let BotService = class BotService {
         const user = await this.botRepo.findOne({ where: { bot_id } });
         let bot_user;
         if (!(user === null || user === void 0 ? void 0 : user.user_id)) {
-            bot_user = await this.userService.register({ password, role: activity_models_1.RoleName.student, name: user.name, surname: user.surname, phone: user.phone });
             console.log(bot_user);
             console.log(bot_user.data.user.get('id'));
             await this.botRepo.update({ user_id: bot_user.data.user.get('id') }, {

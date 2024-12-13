@@ -43,11 +43,11 @@ let UserService = class UserService {
         try {
             let is_new_role = false;
             console.log(registerUserDto);
-            let { email, role, password, phone } = registerUserDto;
+            let { email, role, password } = registerUserDto;
             email = email || null;
             const hashed_password = await (0, bcryptjs_1.hash)(password, 7);
             let user = await this.userRepository.findOne({
-                where: { [sequelize_2.Op.or]: { email, phone } },
+                where: { [sequelize_2.Op.or]: { email } },
             });
             let is_role;
             if (user) {
@@ -112,20 +112,20 @@ let UserService = class UserService {
         const users = names.map(async (name) => {
             const password = this.generateRandomPassword();
             console.log(name);
-            user_list.push([name, password]);
+            name = name.split(' ');
+            user_list.push({ login: name[0] + password.slice(0, 2) + '@gmail.com', password, user: name.join(' ') });
             await this.register({
                 name: name[0],
                 surname: name[1],
-                email: name[0] + name[1] + '@gmail.com',
+                email: name[0] + password.slice(0, 2) + '@gmail.com',
                 password,
                 role: user_models_1.RoleName.student,
             });
-            return user_list;
         });
-        return users;
+        return user_list;
     }
     generateRandomPassword() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const chars = '0123456789';
         let password = '';
         for (let i = 0; i < 6; i++) {
             const randomIndex = Math.floor(Math.random() * chars.length);
@@ -155,7 +155,7 @@ let UserService = class UserService {
     async login(loginUserDto, type) {
         try {
             const user = await this.userRepository.findOne({
-                where: { phone: loginUserDto.phone },
+                where: { email: loginUserDto.email },
             });
             if (!user) {
                 throw new common_1.NotFoundException('User not found');
@@ -402,19 +402,19 @@ let UserService = class UserService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async updatePassword(password, phone) {
+    async updatePassword(password, email) {
         try {
             const hashed_password = await (0, bcryptjs_1.hash)(password, 7);
-            const updated_info = await this.userRepository.update({ hashed_password }, { where: { phone }, returning: true });
+            const updated_info = await this.userRepository.update({ hashed_password }, { where: { email }, returning: true });
             return updated_info[1][0];
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async updatePhone(oldphone, phone) {
+    async updateEmail(oldemail, email) {
         try {
-            const updated_info = await this.userRepository.update({ phone }, { where: { phone: oldphone }, returning: true });
+            const updated_info = await this.userRepository.update({ email }, { where: { email: oldemail }, returning: true });
             return updated_info[1][0];
         }
         catch (error) {

@@ -21,15 +21,6 @@ __decorate([
         description: 'Phone number of student',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsPhoneNumber)(),
-    __metadata("design:type", String)
-], LoginUserDto.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: '+998901234567',
-        description: 'Phone number of student',
-    }),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "email", void 0);
 __decorate([

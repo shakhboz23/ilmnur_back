@@ -35,13 +35,13 @@ export class RegisterUserDto extends RoleDto {
   @IsEmail()
   email?: string;
 
-  @ApiProperty({
-    example: 'shahbozmamatkarimov2303@gmail.com',
-    description: 'Email of user',
-  })
-  @IsOptional()
-  @IsPhoneNumber()
-  phone?: string;
+  // @ApiProperty({
+  //   example: 'shahbozmamatkarimov2303@gmail.com',
+  //   description: 'Email of user',
+  // })
+  // @IsOptional()
+  // @IsPhoneNumber()
+  // phone?: string;
 
   @ApiProperty({
     example: 'shahbozmamatkarimov2303@gmail.com',

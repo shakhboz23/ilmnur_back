@@ -48,15 +48,6 @@ __decorate([
         example: 'shahbozmamatkarimov2303@gmail.com',
         description: 'Email of user',
     }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsPhoneNumber)(),
-    __metadata("design:type", String)
-], RegisterUserDto.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: 'shahbozmamatkarimov2303@gmail.com',
-        description: 'Email of user',
-    }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
