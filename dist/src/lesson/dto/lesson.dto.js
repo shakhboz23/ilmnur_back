@@ -62,6 +62,14 @@ __decorate([
 ], LessonDto.prototype, "content", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
+        example: '<p>Content</p>',
+        description: 'Video content',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], LessonDto.prototype, "youtube", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
         example: 'Title',
         description: 'Lesson title',
     }),

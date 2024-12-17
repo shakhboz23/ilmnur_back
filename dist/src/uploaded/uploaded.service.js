@@ -25,19 +25,22 @@ let UploadedService = class UploadedService {
         this.jwtService = jwtService;
         this.fileService = fileService;
     }
-    async getVideoDuration() {
+    async getVideoDuration(youtube) {
         const apiKey = process.env.Youtube_key;
+        const youtube_id = this.extractYoutubeId(youtube);
         try {
-            const videoId = '3zJ8navNJAs';
-            const response = await axios_1.default.get(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${apiKey}`);
-            console.log(response);
-            const duration = response.data.items[0].contentDetails.duration;
-            console.log(duration);
-            console.log('Duration:', this.parseDuration(duration));
+            const response = await axios_1.default.get(`https://www.googleapis.com/youtube/v3/videos?id=${youtube_id}&part=contentDetails&key=${apiKey}`);
+            let duration = response.data.items[0].contentDetails.duration;
+            return this.parseDuration(duration);
         }
         catch (error) {
             console.error('Error fetching video details:', error);
         }
+    }
+    extractYoutubeId(url) {
+        const regex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/|.+\?v=)?([a-zA-Z0-9_-]{11})|youtu\.be\/([a-zA-Z0-9_-]{11})/;
+        const matches = url.match(regex);
+        return matches ? matches[1] || matches[2] : null;
     }
     parseDuration(duration) {
         const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);

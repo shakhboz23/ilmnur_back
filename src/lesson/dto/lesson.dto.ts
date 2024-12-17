@@ -54,6 +54,14 @@ export class LessonDto {
   content: string;
 
   @ApiProperty({
+    example: '<p>Content</p>',
+    description: 'Video content',
+  })
+  @IsOptional()
+  // @IsString()
+  youtube?: string;
+
+  @ApiProperty({
     example: 'Title',
     description: 'Lesson title',
   })

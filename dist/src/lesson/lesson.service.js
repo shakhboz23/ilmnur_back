@@ -31,14 +31,20 @@ let LessonService = class LessonService {
         try {
             console.log(lessonDto);
             console.log(video);
-            const { title, content } = lessonDto;
+            const { title, content, youtube } = lessonDto;
             if (lessonDto.type == 'lesson') {
                 let file_type;
                 let file_data;
                 if (!content) {
                     throw new common_1.BadRequestException('Please enter a content');
                 }
-                if (video) {
+                console.log(youtube, '23033');
+                if (youtube) {
+                    let ydata = await this.uploadedService.getVideoDuration(youtube);
+                    console.log(ydata, '23033');
+                    video = youtube;
+                }
+                else if (video) {
                     file_type = 'video';
                     file_data = await this.uploadedService.create({ file_type }, video);
                     console.log(file_data);

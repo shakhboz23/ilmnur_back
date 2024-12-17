@@ -9,7 +9,8 @@ export declare class UploadedService {
     private readonly jwtService;
     private readonly fileService;
     constructor(uploadedRepository: typeof Uploaded, jwtService: JwtService, fileService: FilesService);
-    getVideoDuration(): Promise<void>;
+    getVideoDuration(youtube: string): Promise<number>;
+    extractYoutubeId(url: string): string | null;
     parseDuration(duration: any): number;
     create(uploadedDto: UploadedDto, file: any): Promise<{
         statusCode: HttpStatus;

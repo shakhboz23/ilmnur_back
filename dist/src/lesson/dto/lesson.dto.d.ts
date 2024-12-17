@@ -5,5 +5,6 @@ export declare class LessonDto {
     lesson_id: number;
     published: boolean;
     content: string;
+    youtube?: string;
     type: lessonType;
 }
