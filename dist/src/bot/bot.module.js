@@ -13,13 +13,14 @@ const sequelize_1 = require("@nestjs/sequelize");
 const bot_model_1 = require("./models/bot.model");
 const bot_update_1 = require("./bot.update");
 const user_module_1 = require("../user/user.module");
+const bot_controller_1 = require("./bot.controller");
 let BotModule = class BotModule {
 };
 exports.BotModule = BotModule;
 exports.BotModule = BotModule = __decorate([
     (0, common_1.Module)({
         imports: [sequelize_1.SequelizeModule.forFeature([bot_model_1.Bot]), user_module_1.UserModule],
-        controllers: [],
+        controllers: [bot_controller_1.WebhookController],
         providers: [bot_service_1.BotService, bot_update_1.BotUpdate],
         exports: [bot_service_1.BotService]
     })

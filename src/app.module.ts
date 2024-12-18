@@ -63,12 +63,12 @@ import { VideoChat } from './video_chat/models/video_chat.model';
         token: process.env.BOT_TOKEN,
         middlewares: [],
         includes: [BotModule],
-        // launchOptions: {
-        //   // webhook: {
-        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-        //   //   hookPath: '/webhook',
-        //   // }
-        // }
+        launchOptions: {
+          webhook: {
+            domain: 'https://starfish-app-ueywh.ondigitalocean.app',
+            hookPath: '/webhook',
+          }
+        }
       }),
     }),
     ConfigModule.forRoot({

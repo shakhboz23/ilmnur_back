@@ -63,6 +63,12 @@ exports.AppModule = AppModule = __decorate([
                     token: process.env.BOT_TOKEN,
                     middlewares: [],
                     includes: [bot_module_1.BotModule],
+                    launchOptions: {
+                        webhook: {
+                            domain: 'https://starfish-app-ueywh.ondigitalocean.app',
+                            hookPath: '/webhook',
+                        }
+                    }
                 }),
             }),
             config_1.ConfigModule.forRoot({
