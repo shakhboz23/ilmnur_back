@@ -61,6 +61,7 @@ exports.AppModule = AppModule = __decorate([
                 botName: app_constants_1.BOT_NAME,
                 useFactory: () => ({
                     token: process.env.BOT_TOKEN,
+                    useWebhook: process.env.NODE_ENV === 'production',
                     middlewares: [],
                     includes: [bot_module_1.BotModule],
                 }),

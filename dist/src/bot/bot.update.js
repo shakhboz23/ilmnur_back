@@ -21,7 +21,13 @@ let BotUpdate = class BotUpdate {
         this.botService = botService;
     }
     async onStart(ctx) {
-        return this.botService.start(ctx);
+        try {
+            return await this.botService.start(ctx);
+        }
+        catch (error) {
+            console.error('Error in onStart:', error);
+            await ctx.reply('An error occurred. Please try again later.');
+        }
     }
     async help(ctx) {
         console.log(ctx);

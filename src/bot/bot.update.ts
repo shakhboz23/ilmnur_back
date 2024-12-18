@@ -8,7 +8,12 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    return this.botService.start(ctx);
+    try {
+      return await this.botService.start(ctx);
+    } catch (error) {
+      console.error('Error in onStart:', error);
+      await ctx.reply('An error occurred. Please try again later.');
+    }
   }
 
   @Help()

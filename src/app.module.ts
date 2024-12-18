@@ -61,6 +61,7 @@ import { VideoChat } from './video_chat/models/video_chat.model';
       botName: BOT_NAME,
       useFactory: () => ({
         token: process.env.BOT_TOKEN,
+        useWebhook: process.env.NODE_ENV === 'production',
         middlewares: [],
         includes: [BotModule],
         // launchOptions: {
