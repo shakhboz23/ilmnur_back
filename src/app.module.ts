@@ -57,21 +57,20 @@ import { VideoChat } from './video_chat/models/video_chat.model';
 
 @Module({
   imports: [
-    TelegrafModule.forRootAsync({
-      botName: BOT_NAME,
-      useFactory: () => ({
-        token: process.env.BOT_TOKEN,
-        useWebhook: process.env.NODE_ENV === 'production',
-        middlewares: [],
-        includes: [BotModule],
-        // launchOptions: {
-        //   // webhook: {
-        //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
-        //   //   hookPath: '/webhook',
-        //   // }
-        // }
-      }),
-    }),
+    // TelegrafModule.forRootAsync({
+    //   botName: BOT_NAME,
+    //   useFactory: () => ({
+    //     token: process.env.BOT_TOKEN,
+    //     middlewares: [],
+    //     includes: [BotModule],
+    //     // launchOptions: {
+    //     //   // webhook: {
+    //     //   //   domain: 'https://jellyfish-app-9syay.ondigitalocean.app',
+    //     //   //   hookPath: '/webhook',
+    //     //   // }
+    //     // }
+    //   }),
+    // }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -149,7 +148,7 @@ import { VideoChat } from './video_chat/models/video_chat.model';
     SubscriptionsModule,
     Subscription_activityModule,
     VideoChatModule,
-    BotModule,
+    // BotModule,
   ],
   controllers: [],
   providers: [],
