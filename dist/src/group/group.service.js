@@ -67,6 +67,10 @@ let GroupService = class GroupService {
                             'courses_count',
                         ],
                         [
+                            sequelize_typescript_1.Sequelize.literal(`(SELECT COUNT(*) FROM "subscriptions" WHERE "course"."group_id" = "Group"."id" AND "course"."id" = "subscriptions"."course_id")::int`),
+                            'users_count',
+                        ],
+                        [
                             sequelize_typescript_1.Sequelize.literal(`COALESCE((SELECT MIN("course"."price") FROM "course" WHERE "course"."group_id" = "Group"."id")::int, 0)`),
                             'low_price',
                         ],
