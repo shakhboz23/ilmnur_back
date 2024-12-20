@@ -225,6 +225,7 @@ let UserService = class UserService {
                     ],
                 },
                 replacements: { group_id },
+                order: [['totalReyting', 'DESC']],
             });
             return users;
         }

@@ -84,6 +84,7 @@ let ReytingService = class ReytingService {
                         },
                     ],
                 },
+                order: [['ball', 'ASC']],
                 replacements: { group_id },
                 include: [{ model: user_models_1.User }],
             });
