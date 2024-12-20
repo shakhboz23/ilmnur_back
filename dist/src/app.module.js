@@ -65,7 +65,7 @@ exports.AppModule = AppModule = __decorate([
                     includes: [bot_module_1.BotModule],
                     launchOptions: {
                         webhook: {
-                            domain: 'https://starfish-app-ueywh.ondigitalocean.app',
+                            domain: 'https://starfish-app-ueywh.ondigitalocean.app/api',
                             hookPath: '/webhook',
                         }
                     }

@@ -113,7 +113,7 @@ let LessonService = class LessonService {
                         attributes: {
                             include: [
                                 [
-                                    sequelize_typescript_1.Sequelize.literal(`(CASE WHEN EXISTS (SELECT 1 FROM "reyting" WHERE "reyting"."lesson_id" = "Lesson"."id" AND "reyting"."user_id" = :user_id AND "reyting"."ball" > 70) THEN true ELSE false END)`),
+                                    sequelize_typescript_1.Sequelize.literal(`(CASE WHEN EXISTS (SELECT 1 FROM "reyting" WHERE "reyting"."lesson_id" = "Lesson"."id" AND "reyting"."user_id" = :user_id AND "reyting"."ball" > (SELECT COUNT(*) FROM "tests" WHERE "tests"."lesson_id" = "Lesson"."id") * 1 / 100) THEN true ELSE false END)`),
                                     'is_finished',
                                 ],
                             ],
@@ -124,7 +124,7 @@ let LessonService = class LessonService {
                 attributes: {
                     include: [
                         [
-                            sequelize_typescript_1.Sequelize.literal(`(CASE WHEN EXISTS (SELECT 1 FROM "reyting" WHERE "reyting"."lesson_id" = "Lesson"."id" AND "reyting"."user_id" = :user_id AND "reyting"."ball" > 70) THEN true ELSE false END)`),
+                            sequelize_typescript_1.Sequelize.literal(`(CASE WHEN EXISTS (SELECT 1 FROM "reyting" WHERE "reyting"."lesson_id" = "Lesson"."id" AND "reyting"."user_id" = :user_id AND "reyting"."ball" >= (SELECT COUNT(*) FROM "tests" WHERE "tests"."lesson_id" = "Lesson"."id") * 70 / 100) THEN true ELSE false END)`),
                             'is_finished',
                         ],
                     ],
