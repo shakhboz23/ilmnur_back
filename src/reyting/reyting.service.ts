@@ -104,6 +104,7 @@ export class ReytingService {
             },
           ],
         },
+        order: [['ball', 'ASC']],
         replacements: { group_id },
         include: [{ model: User }],
       });
