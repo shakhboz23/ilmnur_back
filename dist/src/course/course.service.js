@@ -105,7 +105,7 @@ let CourseService = class CourseService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getUsersByGroupId(group_id, date, user_id, course_id) {
+    async getUsersByGroupId(group_id, date, user_id, course_id, page) {
         try {
             course_id = +course_id || null;
             let id;
@@ -131,7 +131,7 @@ let CourseService = class CourseService {
                 order: [[{ model: subscriptions_models_1.Subscriptions, as: 'subscriptions' }, { model: user_models_1.User, as: 'user' }, 'name', 'ASC']],
             });
             console.log(users, '23033');
-            let user = await this.courseRepository.findOne({
+            let user = await this.courseRepository.findAll({
                 where: { group_id },
                 include: [{
                         model: subscriptions_models_1.Subscriptions, where: { user_id }
@@ -142,8 +142,35 @@ let CourseService = class CourseService {
             if (!users) {
                 throw new common_1.NotFoundException('Users not found');
             }
-            users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
-            return { users, user: user === null || user === void 0 ? void 0 : user.subscriptions[0] };
+            if (page == 'activity') {
+                users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
+            }
+            else {
+                const groupedUsers = users.reduce((acc, courseItem) => {
+                    courseItem.subscriptions.forEach((subscription) => {
+                        const userId = subscription.user_id;
+                        if (!acc[userId]) {
+                            acc[userId] = {
+                                user: subscription.user,
+                                courses: [],
+                            };
+                        }
+                        acc[userId].courses.push({
+                            course: subscription.course,
+                            subscription: {
+                                id: subscription.id,
+                                role: subscription.role,
+                                is_active: subscription.is_active,
+                                createdAt: subscription.createdAt,
+                                updatedAt: subscription.updatedAt,
+                            },
+                        });
+                    });
+                    return acc;
+                }, {});
+                users = Object.values(groupedUsers);
+            }
+            return { users, user };
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);

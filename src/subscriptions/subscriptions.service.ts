@@ -30,12 +30,12 @@ export class SubscriptionsService {
   ): Promise<object> {
     try {
       const { course_id } = subscriptionsDto;
-      // const exist = await this.subscriptionsRepository.findOne({
-      //   where: { user_id, course_ids },
-      // });
-      // if (exist) {
-      //   throw new BadRequestException('Already created');
-      // }
+      const exist = await this.subscriptionsRepository.findOne({
+        where: { user_id, course_id },
+      });
+      if (exist) {
+        throw new BadRequestException('Already created');
+      }
       return this.subscriptionsRepository.create({ course_id, user_id, is_active: SubscribeActive.requested });
     } catch (error) {
       throw new BadRequestException(error.message);

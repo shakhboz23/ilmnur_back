@@ -8,9 +8,10 @@ export declare class CourseController {
     constructor(courseService: CourseService, jwtService: JwtService);
     create(courseDto: CourseDto, image: Express.Multer.File, headers: string): Promise<object>;
     getById(id: number, headers: string): Promise<object>;
-    getUsersByGroupId(group_id: number, { date, course_id }: {
+    getUsersByGroupId(group_id: number, { date, course_id, page }: {
         date: Date;
         course_id: number;
+        page: string;
     }, headers: string): Promise<object>;
     getAll(category_id: number): Promise<object>;
     getByCourse({ id, category_id }: {

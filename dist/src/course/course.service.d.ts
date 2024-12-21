@@ -12,7 +12,7 @@ export declare class CourseService {
     create(courseDto: CourseDto, cover: any, user_id: number): Promise<object>;
     getAll(category_id: number): Promise<object>;
     getByCourse(group_id: number, category_id: number): Promise<Object>;
-    getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number): Promise<object>;
+    getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number, page: string): Promise<object>;
     getById(id: number, user_id: number): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, courseDto: CourseDto): Promise<object>;

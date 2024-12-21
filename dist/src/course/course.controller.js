@@ -37,9 +37,9 @@ let CourseController = class CourseController {
         console.log(user_id);
         return this.courseService.getById(id, user_id);
     }
-    getUsersByGroupId(group_id, { date, course_id }, headers) {
+    getUsersByGroupId(group_id, { date, course_id, page }, headers) {
         const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
-        return this.courseService.getUsersByGroupId(group_id, date, user_id, course_id);
+        return this.courseService.getUsersByGroupId(group_id, date, user_id, course_id, page);
     }
     getAll(category_id) {
         return this.courseService.getAll(category_id);

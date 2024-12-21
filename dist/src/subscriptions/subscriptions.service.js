@@ -28,6 +28,12 @@ let SubscriptionsService = class SubscriptionsService {
     async create(subscriptionsDto, user_id) {
         try {
             const { course_id } = subscriptionsDto;
+            const exist = await this.subscriptionsRepository.findOne({
+                where: { user_id, course_id },
+            });
+            if (exist) {
+                throw new common_1.BadRequestException('Already created');
+            }
             return this.subscriptionsRepository.create({ course_id, user_id, is_active: subscriptions_models_1.SubscribeActive.requested });
         }
         catch (error) {

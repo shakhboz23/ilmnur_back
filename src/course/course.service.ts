@@ -115,7 +115,7 @@ export class CourseService {
     }
   }
 
-  async getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number): Promise<object> {
+  async getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number, page: string): Promise<object> {
     try {
       course_id = +course_id || null;
       let id: any;
@@ -142,7 +142,7 @@ export class CourseService {
         order: [[{ model: Subscriptions, as: 'subscriptions' }, { model: User, as: 'user' }, 'name', 'ASC']],
       });
       console.log(users, '23033')
-      let user: any = await this.courseRepository.findOne({
+      let user: any = await this.courseRepository.findAll({
         where: { group_id },
         include: [{
           model: Subscriptions, where: { user_id }
@@ -153,10 +153,40 @@ export class CourseService {
       if (!users) {
         throw new NotFoundException('Users not found');
       }
-      users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
-      // console.log(users);
+      if (page == 'activity') {
+        users = users.reduce((acc, item) => acc.concat(item.subscriptions), []);
+      } else {
 
-      return { users, user: user?.subscriptions[0] };
+        const groupedUsers = users.reduce((acc: any, courseItem: any) => {
+          courseItem.subscriptions.forEach((subscription: any) => {
+            const userId = subscription.user_id;
+  
+            if (!acc[userId]) {
+              acc[userId] = {
+                user: subscription.user,
+                courses: [],
+              };
+            }
+  
+            acc[userId].courses.push({
+              course: subscription.course,
+              subscription: {
+                id: subscription.id,
+                role: subscription.role,
+                is_active: subscription.is_active,
+                createdAt: subscription.createdAt,
+                updatedAt: subscription.updatedAt,
+              },
+            });
+          });
+          return acc;
+        }, {});
+  
+        // Objectni massivga aylantirish
+        users = Object.values(groupedUsers);
+      }
+
+      return { users, user };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
