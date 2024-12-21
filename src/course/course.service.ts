@@ -97,7 +97,7 @@ export class CourseService {
       }
       const courses: any = await this.courseRepository.findAll({
         ...category,
-        order: [['id', 'ASC']],
+        order: [['title', 'ASC']],
         include: [
           {
             model: Subscriptions,

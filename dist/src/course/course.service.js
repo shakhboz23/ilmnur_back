@@ -92,7 +92,7 @@ let CourseService = class CourseService {
                     }
                 };
             }
-            const courses = await this.courseRepository.findAll(Object.assign(Object.assign({}, category), { order: [['id', 'ASC']], include: [
+            const courses = await this.courseRepository.findAll(Object.assign(Object.assign({}, category), { order: [['title', 'ASC']], include: [
                     {
                         model: subscriptions_models_1.Subscriptions,
                         attributes: ['user_id'],
