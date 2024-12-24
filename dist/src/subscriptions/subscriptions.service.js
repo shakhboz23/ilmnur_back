@@ -32,7 +32,7 @@ let SubscriptionsService = class SubscriptionsService {
                 where: { user_id, course_id },
             });
             if (exist) {
-                throw new common_1.BadRequestException('Already created');
+                return this.delete(user_id, subscriptionsDto.course_id);
             }
             return this.subscriptionsRepository.create({ course_id, user_id, is_active: subscriptions_models_1.SubscribeActive.requested });
         }
@@ -136,9 +136,11 @@ let SubscriptionsService = class SubscriptionsService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async delete(id) {
+    async delete(user_id, course_id) {
         try {
-            const subscriptions = await this.subscriptionsRepository.findByPk(id);
+            const subscriptions = await this.subscriptionsRepository.findOne({
+                where: { user_id, course_id }
+            });
             if (!subscriptions) {
                 throw new common_1.NotFoundException('Subscriptions not found');
             }

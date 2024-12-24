@@ -12,5 +12,5 @@ export declare class SubscriptionsController {
     getAll(headers?: string): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, subscriptionsDto: SubscriptionsDto): Promise<object>;
-    deleteSubscriptions(id: number): Promise<object>;
+    deleteSubscriptions(id: number): void;
 }

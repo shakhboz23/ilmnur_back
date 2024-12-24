@@ -14,5 +14,5 @@ export declare class SubscriptionsService {
     getById(id: number): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, subscriptionsDto: SubscriptionsDto): Promise<object>;
-    delete(id: number): Promise<object>;
+    delete(user_id: number, course_id: number): Promise<object>;
 }

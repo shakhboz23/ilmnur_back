@@ -56,7 +56,6 @@ let SubscriptionsController = class SubscriptionsController {
         return this.subscriptionsService.update(id, subscriptionsDto);
     }
     deleteSubscriptions(id) {
-        return this.subscriptionsService.delete(id);
     }
 };
 exports.SubscriptionsController = SubscriptionsController;

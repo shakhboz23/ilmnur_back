@@ -94,6 +94,6 @@ export class SubscriptionsController {
   // @UseGuards(AuthGuard)
   @Delete(':id')
   deleteSubscriptions(@Param('id') id: number) {
-    return this.subscriptionsService.delete(id);
+    // return this.subscriptionsService.delete(id);
   }
 }
