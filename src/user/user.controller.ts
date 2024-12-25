@@ -85,9 +85,9 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get user reytings' })
-  @Get('/reyting/:group_id')
-  getReyting(@Param('group_id') group_id: number) {
-    return this.userService.getReyting(group_id);
+  @Get('/reyting/:group_id/:course_id')
+  getReyting(@Param() { group_id, course_id }: { group_id: number, course_id: number }) {
+    return this.userService.getReyting(group_id, course_id);
   }
 
   @ApiOperation({ summary: 'Get user by ID' })

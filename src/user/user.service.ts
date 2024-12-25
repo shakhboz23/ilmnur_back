@@ -161,7 +161,7 @@ export class UserService {
         surname: name[1],
         email: name[0] + password.slice(0, 2) + '@gmail.com',
         password,
-        role: RoleName.student, 
+        role: RoleName.student,
       })
     });
     return user_list;
@@ -307,7 +307,9 @@ export class UserService {
   //   }
   // }
 
-  async getReyting(group_id: number): Promise<object> {
+  async getReyting(group_id: number, course_id: number): Promise<object> {
+    console.log(+course_id)
+    course_id = +course_id;
     try {
       const users = await this.userRepository.findAll({
         where: {
@@ -317,7 +319,7 @@ export class UserService {
               FROM "reyting" AS "Reyting"
               INNER JOIN "lesson" AS "Lesson" ON "Lesson"."id" = "Reyting"."lesson_id"
               INNER JOIN "course" AS "Course" ON "Course"."id" = "Lesson"."course_id"
-              WHERE "Course"."group_id" = :group_id
+              WHERE "Course"."group_id" = :group_id ${course_id ? 'AND "Course"."id" = :course_id':''}
             )`),
           },
         },
@@ -330,13 +332,13 @@ export class UserService {
                 INNER JOIN "lesson" ON "lesson"."id" = "reyting"."lesson_id"
                 INNER JOIN "course" ON "course"."id" = "lesson"."course_id"
                 INNER JOIN "group" ON "group"."id" = "course"."group_id"
-                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id"
+                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id" ${course_id ? 'AND "course"."id" = :course_id':''}
               )::int`),
               'totalReyting',
             ],
           ],
         },
-        replacements: { group_id },
+        replacements: { group_id, course_id },
         order: [['totalReyting', 'DESC']],
       });
       return users;
@@ -344,6 +346,7 @@ export class UserService {
       throw new BadRequestException(error.message);
     }
   }
+
 
   async getById(id: number): Promise<object> {
     console.log('getById', id);

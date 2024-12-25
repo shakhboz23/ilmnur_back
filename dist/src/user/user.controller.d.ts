@@ -20,7 +20,10 @@ export declare class UserController {
     }>;
     login(loginUserDto: LoginUserDto): Promise<object>;
     getAll(role: string): Promise<object>;
-    getReyting(group_id: number): Promise<object>;
+    getReyting({ group_id, course_id }: {
+        group_id: number;
+        course_id: number;
+    }): Promise<object>;
     getById(id: number): Promise<object>;
     pagination(page: number, limit: number): Promise<object>;
     searchUsers(page: number, search: string): Promise<object>;

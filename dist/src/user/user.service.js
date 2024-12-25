@@ -195,7 +195,9 @@ let UserService = class UserService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getReyting(group_id) {
+    async getReyting(group_id, course_id) {
+        console.log(+course_id);
+        course_id = +course_id;
         try {
             const users = await this.userRepository.findAll({
                 where: {
@@ -205,7 +207,7 @@ let UserService = class UserService {
               FROM "reyting" AS "Reyting"
               INNER JOIN "lesson" AS "Lesson" ON "Lesson"."id" = "Reyting"."lesson_id"
               INNER JOIN "course" AS "Course" ON "Course"."id" = "Lesson"."course_id"
-              WHERE "Course"."group_id" = :group_id
+              WHERE "Course"."group_id" = :group_id ${course_id ? 'AND "Course"."id" = :course_id' : ''}
             )`),
                     },
                 },
@@ -218,13 +220,13 @@ let UserService = class UserService {
                 INNER JOIN "lesson" ON "lesson"."id" = "reyting"."lesson_id"
                 INNER JOIN "course" ON "course"."id" = "lesson"."course_id"
                 INNER JOIN "group" ON "group"."id" = "course"."group_id"
-                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id"
+                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id" ${course_id ? 'AND "course"."id" = :course_id' : ''}
               )::int`),
                             'totalReyting',
                         ],
                     ],
                 },
-                replacements: { group_id },
+                replacements: { group_id, course_id },
                 order: [['totalReyting', 'DESC']],
             });
             return users;

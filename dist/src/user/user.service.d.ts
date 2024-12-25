@@ -27,7 +27,7 @@ export declare class UserService {
     }>;
     login(loginUserDto: LoginUserDto, type?: string): Promise<object>;
     getAll(role: string): Promise<object>;
-    getReyting(group_id: number): Promise<object>;
+    getReyting(group_id: number, course_id: number): Promise<object>;
     getById(id: number): Promise<object>;
     searchUsers(page: number, search: string): Promise<object>;
     checkEmail(email: string): Promise<object>;

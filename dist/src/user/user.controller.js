@@ -49,8 +49,8 @@ let UserController = class UserController {
     getAll(role) {
         return this.userService.getAll(role);
     }
-    getReyting(group_id) {
-        return this.userService.getReyting(group_id);
+    getReyting({ group_id, course_id }) {
+        return this.userService.getReyting(group_id, course_id);
     }
     getById(id) {
         return this.userService.getById(id);
@@ -123,10 +123,10 @@ __decorate([
 ], UserController.prototype, "getAll", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get user reytings' }),
-    (0, common_1.Get)('/reyting/:group_id'),
-    __param(0, (0, common_1.Param)('group_id')),
+    (0, common_1.Get)('/reyting/:group_id/:course_id'),
+    __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getReyting", null);
 __decorate([
