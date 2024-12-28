@@ -235,6 +235,12 @@ export class LessonService {
                   ),
                   'is_subscribed',
                 ],
+                [
+                  Sequelize.literal(
+                    `(SELECT COUNT(*) FROM "tests" WHERE "tests"."lesson_id" = "Lesson"."id")::int`,
+                  ),
+                  'test_count',
+                ],
               ],
             },
           },

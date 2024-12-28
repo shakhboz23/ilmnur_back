@@ -169,6 +169,10 @@ let LessonService = class LessonService {
                                     sequelize_typescript_1.Sequelize.literal(`(CASE WHEN EXISTS (SELECT 1 FROM "subscriptions" WHERE "subscriptions"."course_id" = "Lesson"."course_id" AND "subscriptions"."user_id" = :user_id) THEN true ELSE false END)`),
                                     'is_subscribed',
                                 ],
+                                [
+                                    sequelize_typescript_1.Sequelize.literal(`(SELECT COUNT(*) FROM "tests" WHERE "tests"."lesson_id" = "Lesson"."id")::int`),
+                                    'test_count',
+                                ],
                             ],
                         },
                     },
