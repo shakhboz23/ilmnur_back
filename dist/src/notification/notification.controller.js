@@ -32,12 +32,7 @@ let NotificationController = class NotificationController {
     }
     create(notificationDto) {
         const notification = this.notificationService.create(notificationDto);
-        this.server.emit('getAll/created');
         return notification;
-    }
-    async created({ page }) {
-        const notifications = await this.notificationService.findAll(page);
-        this.server.emit('notifications', notifications);
     }
     async findById(id, client) {
         const notification = await this.notificationService.findById(id);
@@ -67,14 +62,6 @@ __decorate([
     __metadata("design:paramtypes", [notification_dto_1.NotificationDto]),
     __metadata("design:returntype", void 0)
 ], NotificationController.prototype, "create", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({ summary: 'Get all notifications' }),
-    (0, websockets_1.SubscribeMessage)('getAll/created'),
-    __param(0, (0, websockets_1.MessageBody)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], NotificationController.prototype, "created", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get notification by ID' }),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

@@ -85,7 +85,14 @@ let ChatGroupService = class ChatGroupService {
         try {
             const chatGroup = await this.chatGroupRepository.findAll({
                 where: { group_id },
-                include: [{ model: course_models_1.Course }]
+                include: [
+                    { model: course_models_1.Course }, {
+                        model: chat_model_1.Chat,
+                        limit: 1,
+                        required: false,
+                        order: [['createdAt', 'DESC']],
+                    },
+                ],
             });
             if (!chatGroup) {
                 throw new common_1.NotFoundException('Chat group not found');

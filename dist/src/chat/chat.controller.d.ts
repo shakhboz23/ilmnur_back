@@ -19,7 +19,8 @@ export declare class ChatController implements OnGatewayConnection, OnGatewayDis
         status: import("@nestjs/common").HttpStatus;
         error: any;
     }>;
-    created({ page }: {
+    created({ chatgroup_id, page }: {
+        chatgroup_id: number;
         page: number;
     }): Promise<void>;
     handleMessage({ roomId, userId }: {

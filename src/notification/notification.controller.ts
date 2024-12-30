@@ -63,17 +63,17 @@ export class NotificationController
   @Post('')
   create(@Body() notificationDto: NotificationDto) {
     const notification = this.notificationService.create(notificationDto);
-    this.server.emit('getAll/created');
+    // this.server.emit('getAll/created');
     return notification;
   }
 
-  @ApiOperation({ summary: 'Get all notifications' })
-  // @UseGuards(AuthGuard)
-  @SubscribeMessage('getAll/created')
-  async created(@MessageBody() { page }: { page: number }) {
-    const notifications = await this.notificationService.findAll(page);
-    this.server.emit('notifications', notifications);
-  }
+  // @ApiOperation({ summary: 'Get all notifications' })
+  // // @UseGuards(AuthGuard)
+  // @SubscribeMessage('getAll/created')
+  // async created(@MessageBody() { page }: { page: number }) {
+  //   const notifications = await this.notificationService.findAll(page);
+  //   this.server.emit('notifications', notifications);
+  // }
 
   // @ApiOperation({ summary: 'Get all notifications' })
   // // @UseGuards(AuthGuard)

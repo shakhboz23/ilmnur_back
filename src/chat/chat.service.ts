@@ -41,12 +41,12 @@ export class ChatService {
     }
   }
 
-  async findAll(page: number) {
+  async findAll(page: number, chatgroup_id?: number) {
     const limit = 10;
     const offset = (page - 1) * limit;
-    console.log(offset);
     try {
       const chats = await this.ChatRepository.findAll({
+        where: { chatgroup_id },
         order: [['updatedAt', 'DESC']],
         include: [
           {
@@ -79,7 +79,6 @@ export class ChatService {
   async getGroupChats(chatgroup_id: number, page: number) {
     const limit = 10;
     const offset = (page - 1) * limit;
-    console.log(offset);
     try {
       const chats = await this.ChatRepository.findAll({
         where: {
@@ -136,7 +135,6 @@ export class ChatService {
   //   if (!search) {
   //     where = filter ? where : null;
   //   } else if (searchType == 'id') {
-  //     console.log(search);
   //     where['id'] = Sequelize.literal(
   //       `CAST("Chat"."id" AS TEXT) ILIKE '%${search}%'`,
   //     );
@@ -145,7 +143,6 @@ export class ChatService {
   //   }
   //   const limit = 10;
   //   const offset = (page - 1) * limit;
-  //   console.log(where);
   //   try {
   //     const chats = await this.ChatRepository.findAll({
   //       where,

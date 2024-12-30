@@ -125,17 +125,17 @@ export class VideoChatController
     @Req() req: any,
   ) {
     const chat = this.videoChatService.create(VideoChatDto, req.headers);
-    client.emit('getAll/created');
+    // client.emit('getAll/created');
     return chat;
   }
 
-  @ApiOperation({ summary: 'Get all chats' })
-  // @UseGuards(AuthGuard)
-  @SubscribeMessage('getAll/created')
-  async created(@MessageBody() { page }: { page: number }) {
-    const chats = await this.videoChatService.findAll(page);
-    this.server.emit('chats', chats);
-  }
+  // @ApiOperation({ summary: 'Get all chats' })
+  // // @UseGuards(AuthGuard)
+  // @SubscribeMessage('getAll/created')
+  // async created(@MessageBody() { page }: { page: number }) {
+  //   const chats = await this.videoChatService.findAll(page);
+  //   this.server.emit('chats', chats);
+  // }
 
   @ApiOperation({ summary: 'Get all chats' })
   // @UseGuards(AuthGuard)

@@ -10,7 +10,7 @@ export declare class ChatService {
         status: HttpStatus;
         error: any;
     }>;
-    findAll(page: number): Promise<{
+    findAll(page: number, chatgroup_id?: number): Promise<{
         status: HttpStatus;
         data: {
             records: Chat[];

@@ -53,7 +53,6 @@ export class ChatController
         const id: number = +socket.handshake.query.id;
         console.log(id, 'connection');
         // const user: any = await this.userService.getById(id);
-        // console.log(user);
         // if (user) {
         //   const data: any = await this.roleService.userAvailable(
         //     id,
@@ -76,7 +75,6 @@ export class ChatController
       //   false,
       //   user.data.current_role,
       // );
-      // console.log(id, new Date(), '👎🛵👎👎disconnected');
       // this.server.emit('disconnected', data);
     } catch (_) { }
   }
@@ -131,15 +129,16 @@ export class ChatController
   ) {
     const user_id = extractUserIdFromToken(headers, this.jwtService, true);
     const chat = this.chatService.create(chatDto,  file, user_id);
-    client.emit('getAll/created');
+    // client.emit('getAll/created');
     return chat;
   }
 
   @ApiOperation({ summary: 'Get all chats' })
   // @UseGuards(AuthGuard)
   @SubscribeMessage('getAll/created')
-  async created(@MessageBody() { page }: { page: number }) {
-    const chats = await this.chatService.findAll(page);
+  async created(@MessageBody() { chatgroup_id, page }: { chatgroup_id: number, page: number }) {
+    console.log(chatgroup_id, page)
+    const chats = await this.chatService.findAll(page, chatgroup_id);
     this.server.emit('chats', chats);
   }
 
@@ -150,7 +149,6 @@ export class ChatController
     @MessageBody() { roomId, userId }: { roomId: string; userId: string },
     @ConnectedSocket() client: Socket,
   ) {
-    console.log(roomId, userId);
     client.join(roomId);
     // client.to(roomId).broadcast.emit("user-connected", userId);
     this.server.emit('user-connected', userId);
@@ -166,7 +164,6 @@ export class ChatController
     @MessageBody() { message }: { message: string },
     @ConnectedSocket() client: Socket,
   ) {
-    console.log(message);
     // client.join(roomId);
     // client.to(roomId).broadcast.emit("user-connected", userId);
     // this.server.emit("user-connected", userId);
@@ -201,7 +198,6 @@ export class ChatController
     @MessageBody() { roomId, userId }: { roomId: string; userId: string },
     client: Socket,
   ) {
-    console.log(roomId, userId);
     client.join(roomId);
     client.broadcast.to(roomId).emit('user-connected', userId);
   }

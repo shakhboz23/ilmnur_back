@@ -52,20 +52,18 @@ let ChatController = class ChatController {
     create(chatDto, file, client, headers) {
         const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
         const chat = this.chatService.create(chatDto, file, user_id);
-        client.emit('getAll/created');
         return chat;
     }
-    async created({ page }) {
-        const chats = await this.chatService.findAll(page);
+    async created({ chatgroup_id, page }) {
+        console.log(chatgroup_id, page);
+        const chats = await this.chatService.findAll(page, chatgroup_id);
         this.server.emit('chats', chats);
     }
     async handleMessage({ roomId, userId }, client) {
-        console.log(roomId, userId);
         client.join(roomId);
         this.server.emit('user-connected', userId);
     }
     async sendMessage({ message }, client) {
-        console.log(message);
         this.server.emit('createMessage', message);
     }
     async getGroupChats({ chatgroup_id, page }, client) {
@@ -77,7 +75,6 @@ let ChatController = class ChatController {
         client.emit('getById', chat);
     }
     async handleJoinRoom({ roomId, userId }, client) {
-        console.log(roomId, userId);
         client.join(roomId);
         client.broadcast.to(roomId).emit('user-connected', userId);
     }

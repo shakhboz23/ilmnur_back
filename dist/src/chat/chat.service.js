@@ -46,12 +46,12 @@ let ChatService = class ChatService {
             return { status: common_1.HttpStatus.BAD_REQUEST, error: error.message };
         }
     }
-    async findAll(page) {
+    async findAll(page, chatgroup_id) {
         const limit = 10;
         const offset = (page - 1) * limit;
-        console.log(offset);
         try {
             const chats = await this.ChatRepository.findAll({
+                where: { chatgroup_id },
                 order: [['updatedAt', 'DESC']],
                 include: [
                     {
@@ -84,7 +84,6 @@ let ChatService = class ChatService {
     async getGroupChats(chatgroup_id, page) {
         const limit = 10;
         const offset = (page - 1) * limit;
-        console.log(offset);
         try {
             const chats = await this.ChatRepository.findAll({
                 where: {

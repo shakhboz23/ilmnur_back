@@ -17,9 +17,6 @@ export declare class NotificationController implements OnGatewayConnection, OnGa
         error: any;
         data?: undefined;
     }>;
-    created({ page }: {
-        page: number;
-    }): Promise<void>;
     findById(id: string, client: Socket): Promise<void>;
     update(id: string, notificationDto: NotificationDto, client: Socket): Promise<{
         status: import("@nestjs/common").HttpStatus;
