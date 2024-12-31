@@ -183,7 +183,7 @@ let CourseService = class CourseService {
                 attributes: {
                     include: [
                         [
-                            sequelize_typescript_1.Sequelize.literal(`(SELECT "user"."id" FROM "user" JOIN "group" ON "group"."id" = "Course"."group_id" LIMIT 1)::int`),
+                            sequelize_typescript_1.Sequelize.literal(`(SELECT "group"."user_id" FROM "group" WHERE "group"."id" = "Course"."group_id" AND "Course"."id" = :id)::int`),
                             'user_id',
                         ],
                         [
