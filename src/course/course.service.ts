@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -51,7 +52,7 @@ export class CourseService {
         user_id,
         cover,
       });
-      await this.chatGroupService.create({ title, chat_type: ChatGroupType.group, group_id: courseDto.group_id })
+      await this.chatGroupService.create({ course_id: course.id, chat_type: ChatGroupType.group, group_id: courseDto.group_id })
       return {
         statusCode: HttpStatus.OK,
         message: 'Created successfully',
@@ -160,14 +161,14 @@ export class CourseService {
         const groupedUsers = users.reduce((acc: any, courseItem: any) => {
           courseItem.subscriptions.forEach((subscription: any) => {
             const userId = subscription.user_id;
-  
+
             if (!acc[userId]) {
               acc[userId] = {
                 user: subscription.user,
                 courses: [],
               };
             }
-  
+
             acc[userId].courses.push({
               course: subscription.course,
               subscription: {
@@ -181,7 +182,7 @@ export class CourseService {
           });
           return acc;
         }, {});
-  
+
         // Objectni massivga aylantirish
         users = Object.values(groupedUsers);
       }
@@ -262,13 +263,24 @@ export class CourseService {
     }
   }
 
-  async update(id: number, courseDto: CourseDto): Promise<object> {
+  async update(id: number, courseDto: CourseDto, cover: any, user_id: number): Promise<object> {
     try {
+      console.log(courseDto.price)
       const course = await this.courseRepository.findByPk(id);
       if (!course) {
         throw new NotFoundException('Course not found');
+      } 
+      if (course.user_id != user_id) {
+        throw new ForbiddenException("You don't have an access");
       }
-      const update = await this.courseRepository.update(courseDto, {
+      const file_type: string = 'image';
+      let file_data: any;
+      let image_url: string;
+      if (cover) {
+        file_data = await this.uploadedService.create({ file_type }, cover);
+        cover = file_data.data.url;
+      }
+      const update = await this.courseRepository.update({ ...courseDto, cover: cover || course.cover }, {
         where: { id },
         returning: true,
       });
@@ -286,17 +298,19 @@ export class CourseService {
 
   async delete(id: number): Promise<object> {
     try {
+      console.log(id);
       const course = await this.courseRepository.findByPk(id);
       if (!course) {
         throw new NotFoundException('Course not found');
-      }
+      } 
       course.destroy();
       return {
         statusCode: HttpStatus.OK,
         message: 'Deleted successfully',
-      };
+      }; 
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 }
+ 

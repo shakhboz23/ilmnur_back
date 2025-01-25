@@ -95,7 +95,10 @@ export class Course extends Model<Course, CourseAttributes> {
   @BelongsTo(() => Category)
   category: Category[];
 
-  @HasMany(() => Lesson)
+  @HasMany(() => Lesson, {
+    onDelete: 'CASCADE',
+    hooks: true,
+  })
   lessons: Lesson[];
 
   @HasMany(() => Subscriptions, {
@@ -114,7 +117,7 @@ export class Course extends Model<Course, CourseAttributes> {
     onDelete: 'CASCADE',
     hooks: true,
   })
-  chatGroup: ChatGroup;
+  chatGroup: ChatGroup[];
 
   // @BelongsToMany(() => User, {
   // through: { model: () => Subscriptions }, // Use a function to specify the model type

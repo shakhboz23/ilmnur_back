@@ -72,6 +72,23 @@ let SubscriptionsService = class SubscriptionsService {
             throw new common_1.BadRequestException(error.message);
         }
     }
+    async getByUserId(user_id) {
+        try {
+            const subscriptionss = await this.subscriptionsRepository.findAll({
+                where: {
+                    user_id,
+                },
+                include: [{ model: course_models_1.Course }],
+            });
+            if (!subscriptionss.length) {
+                throw new common_1.NotFoundException('Subscriptionss not found');
+            }
+            return subscriptionss;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
     async getById(id) {
         try {
             const subscriptions = await this.subscriptionsRepository.findOne({

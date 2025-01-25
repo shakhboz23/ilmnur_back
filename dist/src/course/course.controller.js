@@ -50,8 +50,9 @@ let CourseController = class CourseController {
     pagination(page) {
         return this.courseService.pagination(page);
     }
-    update(id, courseDto) {
-        return this.courseService.update(id, courseDto);
+    update(id, courseDto, image, headers) {
+        const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
+        return this.courseService.update(id, courseDto, image, user_id);
     }
     deleteCourse(id) {
         return this.courseService.delete(id);
@@ -145,11 +146,44 @@ __decorate([
 ], CourseController.prototype, "pagination", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Update course profile by ID' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                title: {
+                    type: 'string',
+                },
+                description: {
+                    type: 'string',
+                },
+                price: {
+                    type: 'integer',
+                },
+                discount: {
+                    type: 'integer',
+                },
+                group_id: {
+                    type: 'integer',
+                },
+                category_id: {
+                    type: 'integer',
+                },
+                image: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
     (0, common_1.Put)('/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)(new image_validation_pipe_1.ImageValidationPipe())),
+    __param(3, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, course_dto_1.CourseDto]),
+    __metadata("design:paramtypes", [Number, course_dto_1.CourseDto, Object, String]),
     __metadata("design:returntype", void 0)
 ], CourseController.prototype, "update", null);
 __decorate([

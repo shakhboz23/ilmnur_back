@@ -15,6 +15,6 @@ export declare class CourseService {
     getUsersByGroupId(group_id: number, date: Date, user_id: number, course_id: number, page: string): Promise<object>;
     getById(id: number, user_id: number): Promise<object>;
     pagination(page: number): Promise<object>;
-    update(id: number, courseDto: CourseDto): Promise<object>;
+    update(id: number, courseDto: CourseDto, cover: any, user_id: number): Promise<object>;
     delete(id: number): Promise<object>;
 }

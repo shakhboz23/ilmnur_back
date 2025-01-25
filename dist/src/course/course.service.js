@@ -51,7 +51,7 @@ let CourseService = class CourseService {
             }
             const course = await this.courseRepository.create(Object.assign(Object.assign({}, courseDto), { group_id: +courseDto.group_id, user_id,
                 cover }));
-            await this.chatGroupService.create({ title, chat_type: chat_group_dto_1.ChatGroupType.group, group_id: courseDto.group_id });
+            await this.chatGroupService.create({ course_id: course.id, chat_type: chat_group_dto_1.ChatGroupType.group, group_id: courseDto.group_id });
             return {
                 statusCode: common_1.HttpStatus.OK,
                 message: 'Created successfully',
@@ -235,13 +235,24 @@ let CourseService = class CourseService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async update(id, courseDto) {
+    async update(id, courseDto, cover, user_id) {
         try {
+            console.log(courseDto.price);
             const course = await this.courseRepository.findByPk(id);
             if (!course) {
                 throw new common_1.NotFoundException('Course not found');
             }
-            const update = await this.courseRepository.update(courseDto, {
+            if (course.user_id != user_id) {
+                throw new common_1.ForbiddenException("You don't have an access");
+            }
+            const file_type = 'image';
+            let file_data;
+            let image_url;
+            if (cover) {
+                file_data = await this.uploadedService.create({ file_type }, cover);
+                cover = file_data.data.url;
+            }
+            const update = await this.courseRepository.update(Object.assign(Object.assign({}, courseDto), { cover: cover || course.cover }), {
                 where: { id },
                 returning: true,
             });
@@ -259,6 +270,7 @@ let CourseService = class CourseService {
     }
     async delete(id) {
         try {
+            console.log(id);
             const course = await this.courseRepository.findByPk(id);
             if (!course) {
                 throw new common_1.NotFoundException('Course not found');

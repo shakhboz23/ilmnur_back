@@ -215,7 +215,7 @@ let LessonService = class LessonService {
     async update(id, lessonDto, video) {
         try {
             console.log(lesson_dto_1.LessonDto);
-            const { title, content } = lessonDto;
+            const { title, content, youtube } = lessonDto;
             const lesson = await this.lessonRepository.findByPk(id);
             if (!lesson) {
                 throw new common_1.NotFoundException('Lesson not found');
@@ -224,17 +224,25 @@ let LessonService = class LessonService {
             if (lesson.type == 'lesson') {
                 let file_type;
                 let file_data;
-                if (!content || !video) {
-                    throw new common_1.BadRequestException('Please enter a video, content and lesson_id');
+                if (!content) {
+                    throw new common_1.BadRequestException('Please enter a content');
                 }
-                if (video) {
+                ;
+                if (youtube) {
+                    let ydata = await this.uploadedService.getVideoDuration(youtube);
+                    console.log(ydata, '23033');
+                    video = youtube;
+                }
+                else if (video) {
                     file_type = 'video';
                     file_data = await this.uploadedService.create({ file_type }, video);
                     console.log(file_data);
                     video = file_data.data.url;
                 }
                 lessonDto.lesson_id = +lessonDto.lesson_id || null;
-                update = await this.lessonRepository.update(Object.assign(Object.assign({}, lessonDto), { video }), {
+                lessonDto.course_id = lesson.course_id;
+                console.log(lessonDto, '=========');
+                update = await this.lessonRepository.update(Object.assign(Object.assign({}, lessonDto), { video, course_id: lesson.course_id }), {
                     where: { id },
                     returning: true,
                 });
@@ -249,7 +257,6 @@ let LessonService = class LessonService {
                 update = await this.lessonRepository.update({
                     title: lessonDto.title,
                     published: lessonDto.published,
-                    course_id: lessonDto.course_id,
                     type: lessonDto.type,
                 }, {
                     where: { id },

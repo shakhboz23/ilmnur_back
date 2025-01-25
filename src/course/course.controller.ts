@@ -132,10 +132,46 @@ export class CourseController {
   }
 
   @ApiOperation({ summary: 'Update course profile by ID' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        price: {
+          type: 'integer',
+        },
+        discount: {
+          type: 'integer',
+        },
+        group_id: {
+          type: 'integer',
+        },
+        category_id: {
+          type: 'integer',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   // @UseGuards(AuthGuard)
   @Put('/:id')
-  update(@Param('id') id: number, @Body() courseDto: CourseDto) {
-    return this.courseService.update(id, courseDto);
+  @UseInterceptors(FileInterceptor('image'))
+  update(@Param('id') id: number, @Body() courseDto: CourseDto,
+  @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File,
+  @Headers() headers: string,
+) {
+  const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+
+    return this.courseService.update(id, courseDto, image, user_id);
   }
 
   @ApiOperation({ summary: 'Delete course' })

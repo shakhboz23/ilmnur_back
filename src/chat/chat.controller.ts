@@ -137,7 +137,7 @@ export class ChatController
   // @UseGuards(AuthGuard)
   @SubscribeMessage('getAll/created')
   async created(@MessageBody() { chatgroup_id, page }: { chatgroup_id: number, page: number }) {
-    console.log(chatgroup_id, page)
+    console.log(chatgroup_id, page, '2303')
     const chats = await this.chatService.findAll(page, chatgroup_id);
     this.server.emit('chats', chats);
   }

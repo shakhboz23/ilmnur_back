@@ -26,9 +26,9 @@ let ChatGroupService = class ChatGroupService {
     }
     async create(chatGroupDto) {
         try {
-            const { title, group_id, chat_type } = chatGroupDto;
+            const { course_id, group_id, chat_type } = chatGroupDto;
             const exist = await this.chatGroupRepository.findOne({
-                where: { title, chat_type, group_id },
+                where: { course_id, chat_type, group_id },
             });
             if (exist) {
                 throw new common_1.BadRequestException('Already created');
@@ -70,7 +70,7 @@ let ChatGroupService = class ChatGroupService {
         try {
             const chatGroup = await this.chatGroupRepository.findOne({
                 where: { id },
-                include: [{ model: chat_model_1.Chat },]
+                include: [{ model: chat_model_1.Chat }, { model: course_models_1.Course }]
             });
             if (!chatGroup) {
                 throw new common_1.NotFoundException('Group chat not found');

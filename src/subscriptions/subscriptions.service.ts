@@ -90,6 +90,23 @@ export class SubscriptionsService {
     }
   }
 
+  async getByUserId(user_id): Promise<object> {
+    try {
+      const subscriptionss: any = await this.subscriptionsRepository.findAll({
+        where: {
+          user_id,
+        },
+        include: [{ model: Course }],
+      });
+      if (!subscriptionss.length) {
+        throw new NotFoundException('Subscriptionss not found');
+      }
+      return subscriptionss;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async getById(id: number): Promise<object> {
     try {
       const subscriptions = await this.subscriptionsRepository.findOne({

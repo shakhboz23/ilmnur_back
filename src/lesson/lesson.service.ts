@@ -283,7 +283,7 @@ export class LessonService {
   async update(id: number, lessonDto: LessonDto, video: any): Promise<object> {
     try {
       console.log(LessonDto);
-      const { title, content } = lessonDto;
+      const { title, content, youtube } = lessonDto;
       const lesson = await this.lessonRepository.findByPk(id);
       if (!lesson) {
         throw new NotFoundException('Lesson not found');
@@ -292,22 +292,30 @@ export class LessonService {
       if (lesson.type == 'lesson') {
         let file_type: string;
         let file_data: any;
-        if (!content || !video) {
+        if (!content) {
           throw new BadRequestException(
-            'Please enter a video, content and lesson_id',
+            'Please enter a content',
           );
-        }
-        if (video) {
+        };
+        if (youtube) {
+          let ydata = await this.uploadedService.getVideoDuration(youtube);
+          console.log(ydata, '23033')
+          video = youtube;
+        } else if (video) {
           file_type = 'video';
           file_data = await this.uploadedService.create({ file_type }, video);
           console.log(file_data);
           video = file_data.data.url;
         }
         lessonDto.lesson_id = +lessonDto.lesson_id || null;
+        lessonDto.course_id = lesson.course_id;
+        console.log(lessonDto, '=========')
+
         update = await this.lessonRepository.update(
           {
             ...lessonDto,
             video,
+            course_id: lesson.course_id,
           },
           {
             where: { id },
@@ -325,7 +333,7 @@ export class LessonService {
           {
             title: lessonDto.title,
             published: lessonDto.published,
-            course_id: lessonDto.course_id,
+            // course_id: lesson.course_id,
             type: lessonDto.type,
           },
           {

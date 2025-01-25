@@ -145,7 +145,7 @@ export class User extends Model<User, UserAttributes> {
     hooks: true,
   })
   reyting: Reyting[];
-
+ 
   // @HasMany(() => Bot, {
   //   onDelete: 'CASCADE',
   //   hooks: true,

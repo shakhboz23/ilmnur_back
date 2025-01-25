@@ -99,7 +99,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Course.prototype, "category", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => lesson_models_1.Lesson),
+    (0, sequelize_typescript_1.HasMany)(() => lesson_models_1.Lesson, {
+        onDelete: 'CASCADE',
+        hooks: true,
+    }),
     __metadata("design:type", Array)
 ], Course.prototype, "lessons", void 0);
 __decorate([
@@ -121,7 +124,7 @@ __decorate([
         onDelete: 'CASCADE',
         hooks: true,
     }),
-    __metadata("design:type", chat_group_models_1.ChatGroup)
+    __metadata("design:type", Array)
 ], Course.prototype, "chatGroup", void 0);
 exports.Course = Course = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'course' })

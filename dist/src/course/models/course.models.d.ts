@@ -32,6 +32,6 @@ export declare class Course extends Model<Course, CourseAttributes> {
     lessons: Lesson[];
     subscriptions: Subscriptions[];
     subscriptionActivity: SubscriptionActivity;
-    chatGroup: ChatGroup;
+    chatGroup: ChatGroup[];
 }
 export {};

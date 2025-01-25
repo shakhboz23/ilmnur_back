@@ -13,7 +13,7 @@ import { Group } from 'src/group/models/group.models';
 import { Course } from 'src/course/models/course.models';
 
 interface ChatGroupAttributes {
-  title: string;
+  course_id: number;
   group_id: number;
   chat_type: ChatGroupType;
 }
@@ -34,14 +34,11 @@ export class ChatGroup extends Model<ChatGroup, ChatGroupAttributes> {
   // title: string;
 
   @ForeignKey(() => Course)
-  @Column({
-    type: DataType.STRING,
-  })
-  title: string;
+  course_id: number;
 
   // @BelongsTo(() => Course)
-  @BelongsTo(() => Course, { foreignKey: 'title', targetKey: 'title' })
-  course: Course[];
+  @BelongsTo(() => Course)
+  course: Course;
 
   @Column(
     DataType.ENUM({

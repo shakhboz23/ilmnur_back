@@ -27,9 +27,9 @@ __decorate([
         description: 'chat group title',
     }),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], ChatGroupDto.prototype, "title", void 0);
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ChatGroupDto.prototype, "course_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 1,

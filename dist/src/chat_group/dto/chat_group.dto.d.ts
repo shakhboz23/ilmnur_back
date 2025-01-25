@@ -4,7 +4,7 @@ export declare enum ChatGroupType {
     channel = "channel"
 }
 export declare class ChatGroupDto {
-    title: string;
+    course_id: number;
     group_id: number;
     chat_type: ChatGroupType;
 }

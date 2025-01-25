@@ -11,6 +11,7 @@ export declare class SubscriptionsService {
     create(subscriptionsDto: SubscriptionsDto, user_id: number): Promise<object>;
     createSubscription(creaetSubscriptionsDto: CreateSubscriptionsDto, user_id: number): Promise<object>;
     getAll(): Promise<object>;
+    getByUserId(user_id: any): Promise<object>;
     getById(id: number): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, subscriptionsDto: SubscriptionsDto): Promise<object>;

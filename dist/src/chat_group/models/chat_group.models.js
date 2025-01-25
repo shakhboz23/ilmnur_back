@@ -28,14 +28,11 @@ __decorate([
 ], ChatGroup.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => course_models_1.Course),
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-    }),
-    __metadata("design:type", String)
-], ChatGroup.prototype, "title", void 0);
+    __metadata("design:type", Number)
+], ChatGroup.prototype, "course_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => course_models_1.Course, { foreignKey: 'title', targetKey: 'title' }),
-    __metadata("design:type", Array)
+    (0, sequelize_typescript_1.BelongsTo)(() => course_models_1.Course),
+    __metadata("design:type", course_models_1.Course)
 ], ChatGroup.prototype, "course", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.ENUM({

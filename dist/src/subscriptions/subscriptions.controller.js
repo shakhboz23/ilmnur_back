@@ -39,15 +39,11 @@ let SubscriptionsController = class SubscriptionsController {
         return this.subscriptionsService.getById(id);
     }
     getAll(headers) {
-        const auth_header = headers['authorization'];
-        const token = auth_header === null || auth_header === void 0 ? void 0 : auth_header.split(' ')[1];
-        console.log(token, 'token2303');
-        const user = token
-            ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
-            : null;
-        const user_id = user === null || user === void 0 ? void 0 : user.id;
-        console.log(user_id, '565456');
         return this.subscriptionsService.getAll();
+    }
+    getByUserId(headers) {
+        const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
+        return this.subscriptionsService.getByUserId(user_id);
     }
     pagination(page) {
         return this.subscriptionsService.pagination(page);
@@ -93,6 +89,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SubscriptionsController.prototype, "getAll", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Get all subscriptionss' }),
+    (0, common_1.Get)('/getByUserId'),
+    __param(0, (0, common_1.Headers)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], SubscriptionsController.prototype, "getByUserId", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get subscriptionss with pagination' }),
     (0, common_1.Get)('pagination/:page'),

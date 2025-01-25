@@ -19,6 +19,6 @@ export declare class CourseController {
         category_id: number;
     }): Promise<Object>;
     pagination(page: number): Promise<object>;
-    update(id: number, courseDto: CourseDto): Promise<object>;
+    update(id: number, courseDto: CourseDto, image: Express.Multer.File, headers: string): Promise<object>;
     deleteCourse(id: number): Promise<object>;
 }

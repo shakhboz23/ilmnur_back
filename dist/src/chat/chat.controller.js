@@ -55,7 +55,7 @@ let ChatController = class ChatController {
         return chat;
     }
     async created({ chatgroup_id, page }) {
-        console.log(chatgroup_id, page);
+        console.log(chatgroup_id, page, '2303');
         const chats = await this.chatService.findAll(page, chatgroup_id);
         this.server.emit('chats', chats);
     }

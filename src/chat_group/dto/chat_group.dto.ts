@@ -20,8 +20,8 @@ export class ChatGroupDto {
     description: 'chat group title',
   })
   @IsNotEmpty()
-  @IsString()
-  title: string;
+  @IsNumber()
+  course_id: number;
 
   @ApiProperty({
     example: 1,

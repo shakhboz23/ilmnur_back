@@ -10,6 +10,7 @@ export declare class SubscriptionsController {
     CreateSubscription(createSubscriptionDto: CreateSubscriptionsDto, headers?: string): Promise<object>;
     getById(id: number): Promise<object>;
     getAll(headers?: string): Promise<object>;
+    getByUserId(headers?: string): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, subscriptionsDto: SubscriptionsDto): Promise<object>;
     deleteSubscriptions(id: number): void;

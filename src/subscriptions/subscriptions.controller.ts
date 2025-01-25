@@ -65,15 +65,15 @@ export class SubscriptionsController {
   // @UseGuards(AuthGuard)
   @Get('/')
   getAll(@Headers() headers?: string) {
-    const auth_header = headers['authorization'];
-    const token = auth_header?.split(' ')[1];
-    console.log(token, 'token2303');
-    const user = token
-      ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
-      : null;
-    const user_id = user?.id;
-    console.log(user_id, '565456');
     return this.subscriptionsService.getAll();
+  }
+
+  @ApiOperation({ summary: 'Get all subscriptionss' })
+  // @UseGuards(AuthGuard)
+  @Get('/getByUserId')
+  getByUserId(@Headers() headers?: string) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.subscriptionsService.getByUserId(user_id);
   }
 
   @ApiOperation({ summary: 'Get subscriptionss with pagination' })
