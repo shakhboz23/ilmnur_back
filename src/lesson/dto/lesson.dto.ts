@@ -41,9 +41,9 @@ export class LessonDto {
     example: false,
     description: 'Lesson type',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBooleanString()
-  published: boolean;
+  published?: boolean;
 
   @ApiProperty({
     example: '<p>Content</p>',
