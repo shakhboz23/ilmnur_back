@@ -75,11 +75,11 @@ export class Test_settingsService {
       const test_settings = await this.test_settingsRepository.findOne({
         where: { lesson_id: id },
       });
-      if (!test_settings) {
-        return {
-          message: "Test settings not found"
-        }
-      }
+      // if (!test_settings) {
+      //   return {
+      //     message: "Test settings not found"
+      //   }
+      // }
       return test_settings;
     } catch (error) {
       throw new BadRequestException(error.message);
