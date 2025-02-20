@@ -80,10 +80,7 @@ export class Test_settingsService {
           message: "Test settings not found"
         }
       }
-      return {
-        statusCode: HttpStatus.OK,
-        data: test_settings,
-      };
+      return test_settings;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

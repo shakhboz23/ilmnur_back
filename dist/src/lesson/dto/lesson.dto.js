@@ -47,7 +47,7 @@ __decorate([
         example: false,
         description: 'Lesson type',
     }),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBooleanString)(),
     __metadata("design:type", Boolean)
 ], LessonDto.prototype, "published", void 0);

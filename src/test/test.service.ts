@@ -17,6 +17,7 @@ import { Lesson } from 'src/lesson/models/lesson.models';
 import { Course } from 'src/course/models/course.models';
 import { Category } from 'src/category/models/category.models';
 import { FilesService } from 'src/files/files.service';
+import { Test_settings } from 'src/test_settings/models/test_settings.models';
 
 @Injectable()
 export class TestsService {
@@ -29,8 +30,6 @@ export class TestsService {
   ) { }
 
   async create(testsDto: TestsDto): Promise<object> {
-    // console.log(testsDto);
-    console.log(testsDto.files, '2303');
     try {
       const {
         test,
@@ -41,7 +40,6 @@ export class TestsService {
         period,
         mix,
       } = testsDto;
-      console.log(test);
       let variants: string[];
       if (start_date || end_date || sort_level || period) {
         await this.test_settingsService.create({
@@ -54,7 +52,6 @@ export class TestsService {
         });
       }
       for (let i = 0; i < test.length; i++) {
-        console.log(test[i], 'testi');
         variants = Object.values(test[i].variants);
         await this.testsRepository.create({
           lesson_id,
@@ -178,6 +175,7 @@ export class TestsService {
         },
         include: [{ model: Lesson, attributes: ['course_id', 'id'], include: [{ model: Course, attributes: ['category_id'], include: [{ model: Category, attributes: ['id'] }] }] }]
       });
+      const test_settings: any = await this.test_settingsService.getByLessonId(lesson_id);
 
       const randomizedVariants = this.shuffle(tests).map((variant) => {
         const randomizedOptions = this.shuffle(variant.get('variants'));
@@ -192,6 +190,7 @@ export class TestsService {
         category_id: category?.lesson?.course?.category?.id,
         lesson_id: category?.lesson?.id,
         test: randomizedVariants,
+        test_settings,
       };
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -240,30 +239,28 @@ export class TestsService {
       }
       const percentage = (ball / Object.keys(results)?.length) * 100;
       console.log(percentage);
-      if (percentage >= 70) {
-        const data: ReytingDto = {
-          // role_id,
-          ball,
-          lesson_id,
-        };
-        const reyting_data: any = await this.reytingService.create(
-          data,
-          user_id,
-        );
-        // await this.userStepService.create({ lesson_id, role_id });
-        if (reyting_data.message == 'Already added!') {
-          message = 'Already added!';
-        }
+      // if (percentage >= 70) {
+      const data: ReytingDto = {
+        // role_id,
+        ball,
+        lesson_id,
+      };
+      const reyting_data: any = await this.reytingService.create(
+        data,
+        user_id,
+      );
+      // await this.userStepService.create({ lesson_id, role_id });
+      message = 'Your reyting has been created!'
+      if (reyting_data.message == 'Already added!') {
+        message = 'Already added!';
       }
+      // }
 
       return {
-        statusCode: HttpStatus.OK,
-        data: {
-          results,
-          ball: [percentage, ball],
-          student,
-          message,
-        },
+        results,
+        ball: [percentage, ball],
+        student,
+        message,
       };
     } catch (error) {
       throw new BadRequestException(error.message);

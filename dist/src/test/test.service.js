@@ -33,10 +33,8 @@ let TestsService = class TestsService {
         this.fileService = fileService;
     }
     async create(testsDto) {
-        console.log(testsDto.files, '2303');
         try {
             const { test, lesson_id, start_date, end_date, sort_level, period, mix, } = testsDto;
-            console.log(test);
             let variants;
             if (start_date || end_date || sort_level || period) {
                 await this.test_settingsService.create({
@@ -49,7 +47,6 @@ let TestsService = class TestsService {
                 });
             }
             for (let i = 0; i < test.length; i++) {
-                console.log(test[i], 'testi');
                 variants = Object.values(test[i].variants);
                 await this.testsRepository.create({
                     lesson_id,
@@ -157,6 +154,7 @@ let TestsService = class TestsService {
                 },
                 include: [{ model: lesson_models_1.Lesson, attributes: ['course_id', 'id'], include: [{ model: course_models_1.Course, attributes: ['category_id'], include: [{ model: category_models_1.Category, attributes: ['id'] }] }] }]
             });
+            const test_settings = await this.test_settingsService.getByLessonId(lesson_id);
             const randomizedVariants = this.shuffle(tests).map((variant) => {
                 const randomizedOptions = this.shuffle(variant.get('variants'));
                 return Object.assign(Object.assign({}, variant.toJSON()), { variants: randomizedOptions });
@@ -167,6 +165,7 @@ let TestsService = class TestsService {
                 category_id: (_c = (_b = (_a = category === null || category === void 0 ? void 0 : category.lesson) === null || _a === void 0 ? void 0 : _a.course) === null || _b === void 0 ? void 0 : _b.category) === null || _c === void 0 ? void 0 : _c.id,
                 lesson_id: (_d = category === null || category === void 0 ? void 0 : category.lesson) === null || _d === void 0 ? void 0 : _d.id,
                 test: randomizedVariants,
+                test_settings,
             };
         }
         catch (error) {
@@ -212,24 +211,20 @@ let TestsService = class TestsService {
             }
             const percentage = (ball / ((_a = Object.keys(results)) === null || _a === void 0 ? void 0 : _a.length)) * 100;
             console.log(percentage);
-            if (percentage >= 70) {
-                const data = {
-                    ball,
-                    lesson_id,
-                };
-                const reyting_data = await this.reytingService.create(data, user_id);
-                if (reyting_data.message == 'Already added!') {
-                    message = 'Already added!';
-                }
+            const data = {
+                ball,
+                lesson_id,
+            };
+            const reyting_data = await this.reytingService.create(data, user_id);
+            message = 'Your reyting has been created!';
+            if (reyting_data.message == 'Already added!') {
+                message = 'Already added!';
             }
             return {
-                statusCode: common_1.HttpStatus.OK,
-                data: {
-                    results,
-                    ball: [percentage, ball],
-                    student,
-                    message,
-                },
+                results,
+                ball: [percentage, ball],
+                student,
+                message,
             };
         }
         catch (error) {

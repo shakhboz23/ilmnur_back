@@ -78,10 +78,7 @@ let Test_settingsService = class Test_settingsService {
                     message: "Test settings not found"
                 };
             }
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                data: test_settings,
-            };
+            return test_settings;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
