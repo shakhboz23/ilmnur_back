@@ -46,8 +46,8 @@ let CourseService = class CourseService {
             let file_data;
             let image_url;
             if (cover) {
-                file_data = await this.uploadedService.create({ file_type }, cover);
-                cover = file_data.data.url;
+                file_data = await this.uploadedService.create(cover, file_type);
+                cover = file_data;
             }
             const course = await this.courseRepository.create(Object.assign(Object.assign({}, courseDto), { group_id: +courseDto.group_id, user_id,
                 cover }));

@@ -31,8 +31,6 @@ let GroupController = class GroupController {
     }
     async create(groupDto, file, headers) {
         const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
-        console.log(file);
-        console.log(file, 'djskd');
         return this.groupService.create(groupDto, user_id, file);
     }
     getById(id) {

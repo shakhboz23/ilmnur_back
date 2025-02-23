@@ -43,8 +43,8 @@ export class CourseService {
       let file_data: any;
       let image_url: string;
       if (cover) {
-        file_data = await this.uploadedService.create({ file_type }, cover);
-        cover = file_data.data.url;
+        file_data = await this.uploadedService.create(cover, file_type);
+        cover = file_data;
       }
       const course: any = await this.courseRepository.create({
         ...courseDto,
@@ -269,7 +269,7 @@ export class CourseService {
       const course = await this.courseRepository.findByPk(id);
       if (!course) {
         throw new NotFoundException('Course not found');
-      } 
+      }
       if (course.user_id != user_id) {
         throw new ForbiddenException("You don't have an access");
       }
@@ -302,15 +302,14 @@ export class CourseService {
       const course = await this.courseRepository.findByPk(id);
       if (!course) {
         throw new NotFoundException('Course not found');
-      } 
+      }
       course.destroy();
       return {
         statusCode: HttpStatus.OK,
         message: 'Deleted successfully',
-      }; 
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 }
- 

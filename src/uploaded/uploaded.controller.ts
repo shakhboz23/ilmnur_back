@@ -43,6 +43,7 @@ export class UploadedController {
     @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
     @Body() body: { file_type: string },
   ) {
+    console.log(file, '2323232');
     return this.uploadedService.create(file, body.file_type);
   }
 

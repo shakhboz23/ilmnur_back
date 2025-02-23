@@ -36,12 +36,9 @@ export class GroupService {
         throw new BadRequestException('Already created');
       }
       const file_type: string = 'image';
-      let file_data: any;
-      let image_url: string;
+      let image_url: any;
       if (cover) {
-        file_data = await this.uploadedService.create({ file_type }, cover);
-        console.log(file_data.data);
-        image_url = file_data.data.url;
+        image_url = await this.uploadedService.create(cover, file_type);
       }
       const group = await this.groupRepository.create({
         ...groupDto,

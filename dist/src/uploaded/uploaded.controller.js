@@ -24,6 +24,7 @@ let UploadedController = class UploadedController {
         this.uploadedService = uploadedService;
     }
     create(file, body) {
+        console.log(file, '2323232');
         return this.uploadedService.create(file, body.file_type);
     }
     getById(id) {

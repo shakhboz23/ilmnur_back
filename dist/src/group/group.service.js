@@ -37,12 +37,9 @@ let GroupService = class GroupService {
                 throw new common_1.BadRequestException('Already created');
             }
             const file_type = 'image';
-            let file_data;
             let image_url;
             if (cover) {
-                file_data = await this.uploadedService.create({ file_type }, cover);
-                console.log(file_data.data);
-                image_url = file_data.data.url;
+                image_url = await this.uploadedService.create(cover, file_type);
             }
             const group = await this.groupRepository.create(Object.assign(Object.assign({}, groupDto), { user_id, cover: image_url }));
             return group;

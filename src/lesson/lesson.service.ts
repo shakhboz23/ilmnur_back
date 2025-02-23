@@ -50,9 +50,8 @@ export class LessonService {
           video = youtube;
         } else if (video) {
           file_type = 'video';
-          file_data = await this.uploadedService.create({ file_type }, video);
-          console.log(file_data);
-          video = file_data.data.url;
+          file_data = await this.uploadedService.create(video, file_type);
+          video = file_data;
         }
         lessonDto.lesson_id = +lessonDto.lesson_id || null;
         let video_lesson: any = await this.lessonRepository.create({

@@ -15,8 +15,8 @@ const cloudinary_config_1 = require("../../cloudinary.config");
 let FilesService = class FilesService {
     async createFile(file, file_type) {
         try {
+            console.log(file);
             console.log(file.mimetype.split('/')[0]);
-            console.log(file_type);
             const fileTypeIndex = file === null || file === void 0 ? void 0 : file.originalname.lastIndexOf('.');
             const fileType = file === null || file === void 0 ? void 0 : file.originalname.slice(fileTypeIndex);
             const file_name = (0, uuid_1.v4)() + fileType;

@@ -56,14 +56,16 @@ export class UploadedService {
       if (file_type != 'youtube') {
         file_data = await this.fileService.createFile(
           file,
-          'file'
+          file_type,
         );
       }
+      console.log(file_data);
       let data = await this.uploadedRepository.create({
         duration: Math.floor(file_data.duration) || null,
         file_type,
         url: file_data.url,
       });
+      console.log(data);
       return data.url;
     } catch (error) {
       console.log(error.message);

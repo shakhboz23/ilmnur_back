@@ -53,13 +53,15 @@ let UploadedService = class UploadedService {
         try {
             let file_data;
             if (file_type != 'youtube') {
-                file_data = await this.fileService.createFile(file, 'file');
+                file_data = await this.fileService.createFile(file, file_type);
             }
+            console.log(file_data);
             let data = await this.uploadedRepository.create({
                 duration: Math.floor(file_data.duration) || null,
                 file_type,
                 url: file_data.url,
             });
+            console.log(data);
             return data.url;
         }
         catch (error) {

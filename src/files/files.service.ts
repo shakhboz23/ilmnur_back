@@ -8,8 +8,8 @@ import cloudinary from '../../cloudinary.config';
 export class FilesService {
   async createFile(file: any, file_type: string): Promise<string> {
     try {
+      console.log(file);
       console.log(file.mimetype.split('/')[0]);
-      console.log(file_type);
       // if (
       //   file.mimetype.split('/')[0] != file_type &&
       //   file_type != 'any' &&

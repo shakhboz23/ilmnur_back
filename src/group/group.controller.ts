@@ -69,8 +69,6 @@ export class GroupController {
     @Headers() headers: Record<string, string>,
   ) {
     const user_id = extractUserIdFromToken(headers, this.jwtService, true);
-    console.log(file);
-    console.log(file, 'djskd');
     return this.groupService.create(groupDto, user_id, file);
   }
 
