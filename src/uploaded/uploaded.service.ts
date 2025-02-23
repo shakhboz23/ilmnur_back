@@ -66,7 +66,7 @@ export class UploadedService {
         url: file_data.url,
       });
       console.log(data);
-      return data.url;
+      return file_data.url;
     } catch (error) {
       console.log(error.message);
       return { statusCode: HttpStatus.BAD_REQUEST, error: error.message };

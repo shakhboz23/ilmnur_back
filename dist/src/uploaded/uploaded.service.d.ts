@@ -1,4 +1,3 @@
-import { HttpStatus } from '@nestjs/common';
 import { Uploaded } from './models/uploaded.models';
 import { JwtService } from '@nestjs/jwt';
 import { UploadedDto } from './dto/uploaded.dto';
@@ -12,10 +11,7 @@ export declare class UploadedService {
     getVideoDuration(youtube: string): Promise<number>;
     extractYoutubeId(url: string): string | null;
     parseDuration(duration: any): number;
-    create(file: any, file_type: string): Promise<string | {
-        statusCode: HttpStatus;
-        error: any;
-    }>;
+    create(file: any, file_type: string): Promise<any>;
     upload(uploadedDto: UploadedDto, file: any): Promise<void>;
     getAll(): Promise<object>;
     getById(public_id: number): Promise<void>;

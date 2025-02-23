@@ -6,10 +6,7 @@ export declare class UploadedController {
     constructor(uploadedService: UploadedService);
     create(file: Express.Multer.File, body: {
         file_type: string;
-    }): Promise<string | {
-        statusCode: import("@nestjs/common").HttpStatus;
-        error: any;
-    }>;
+    }): Promise<any>;
     getById(id: number): Promise<void>;
     getAll(): Promise<object>;
     pagination(page: number): Promise<object>;
