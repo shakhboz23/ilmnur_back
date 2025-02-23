@@ -62,13 +62,7 @@ export class Test_settingsController {
     @Body() test_settingsDto: Test_settingsDto,
     @Headers('authorization') authHeader: string,
   ) {
-    const token = authHeader ? authHeader.split(' ')[1] : null;
-    console.log(token, 'token2303');
-
-    let user = null;
-    const user_id = user?.id;
-    console.log(user_id, 'user_id');
-    return this.test_settingsService.update(id, test_settingsDto, user_id);
+    return this.test_settingsService.update(id, test_settingsDto);
   }
 
   @ApiOperation({ summary: 'Delete test_settings' })

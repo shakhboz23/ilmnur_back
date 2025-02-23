@@ -32,9 +32,14 @@ let TestsService = class TestsService {
         this.test_settingsService = test_settingsService;
         this.fileService = fileService;
     }
-    async create(testsDto) {
+    async create(testsDto, user_id) {
+        var _a;
         try {
             const { test, lesson_id, start_date, end_date, sort_level, period, mix, } = testsDto;
+            const lesson = await this.lessonService.getById(lesson_id);
+            if (((_a = lesson.course) === null || _a === void 0 ? void 0 : _a.user_id) != user_id) {
+                throw new common_1.BadRequestException("You have not access");
+            }
             let variants;
             if (start_date || end_date || sort_level || period) {
                 await this.test_settingsService.create({
@@ -48,11 +53,19 @@ let TestsService = class TestsService {
             }
             for (let i = 0; i < test.length; i++) {
                 variants = Object.values(test[i].variants);
-                await this.testsRepository.create({
-                    lesson_id,
-                    question: test[i].question,
-                    variants: [...variants],
-                });
+                console.log(test[i].is_action, '2303');
+                if (test[i].is_action == test_models_1.ActionType.edited && test[i].id) {
+                    await this.update(test[i].id, test[i]);
+                }
+                else if (test[i].is_action != test_models_1.ActionType.old) {
+                    await this.testsRepository.create({
+                        lesson_id,
+                        question: test[i].question,
+                        variants,
+                        type: test[i].type,
+                        true_answer: test[i].true_answer,
+                    });
+                }
             }
             return {
                 statusCode: common_1.HttpStatus.OK,
@@ -129,8 +142,9 @@ let TestsService = class TestsService {
         }
     }
     async getById(lesson_id, user_id) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         console.log(user_id);
+        const lesson = this.lessonService.getById(lesson_id);
         try {
             if (false) {
                 throw new common_1.BadRequestException('start date is invalid');
@@ -147,7 +161,7 @@ let TestsService = class TestsService {
             if (!tests) {
                 throw new common_1.NotFoundException('Tests not found');
             }
-            const lesson = await this.lessonService.getById(lesson_id, user_id);
+            const lesson = await this.lessonService.getById(lesson_id);
             const category = await this.testsRepository.findOne({
                 where: {
                     lesson_id,
@@ -155,16 +169,19 @@ let TestsService = class TestsService {
                 include: [{ model: lesson_models_1.Lesson, attributes: ['course_id', 'id'], include: [{ model: course_models_1.Course, attributes: ['category_id'], include: [{ model: category_models_1.Category, attributes: ['id'] }] }] }]
             });
             const test_settings = await this.test_settingsService.getByLessonId(lesson_id);
-            const randomizedVariants = this.shuffle(tests).map((variant) => {
-                const randomizedOptions = this.shuffle(variant.get('variants'));
-                return Object.assign(Object.assign({}, variant.toJSON()), { variants: randomizedOptions });
-            });
-            console.log(lesson.course);
+            let randomizedVariants;
+            console.log((_a = lesson.course) === null || _a === void 0 ? void 0 : _a.user_id, user_id);
+            if (lesson.course.user_id != user_id) {
+                randomizedVariants = this.shuffle(tests).map((variant) => {
+                    const randomizedOptions = this.shuffle(variant.get('variants'));
+                    return Object.assign(Object.assign({}, variant.toJSON()), { variants: randomizedOptions });
+                });
+            }
             return {
                 user_id: lesson === null || lesson === void 0 ? void 0 : lesson.course.get('user_id'),
-                category_id: (_c = (_b = (_a = category === null || category === void 0 ? void 0 : category.lesson) === null || _a === void 0 ? void 0 : _a.course) === null || _b === void 0 ? void 0 : _b.category) === null || _c === void 0 ? void 0 : _c.id,
-                lesson_id: (_d = category === null || category === void 0 ? void 0 : category.lesson) === null || _d === void 0 ? void 0 : _d.id,
-                test: randomizedVariants,
+                category_id: (_d = (_c = (_b = category === null || category === void 0 ? void 0 : category.lesson) === null || _b === void 0 ? void 0 : _b.course) === null || _c === void 0 ? void 0 : _c.category) === null || _d === void 0 ? void 0 : _d.id,
+                lesson_id: (_e = category === null || category === void 0 ? void 0 : category.lesson) === null || _e === void 0 ? void 0 : _e.id,
+                test: randomizedVariants || tests,
                 test_settings,
             };
         }
@@ -179,8 +196,8 @@ let TestsService = class TestsService {
                 throw new common_1.NotFoundException('Tests not found');
             }
             console.log(answer);
-            console.log(test.variants[0]);
-            if (test.variants[0] == answer) {
+            console.log(test.variants[test.true_answer[0]]);
+            if (test.variants[test.true_answer[0]] == answer) {
                 return [id, true];
             }
             return [id, false];
@@ -255,13 +272,13 @@ let TestsService = class TestsService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async update(id, testsDto) {
+    async update(id, questionDto) {
         try {
             const tests = await this.testsRepository.findByPk(id);
             if (!tests) {
                 throw new common_1.NotFoundException('Tests not found');
             }
-            const update = await this.testsRepository.update(testsDto, {
+            const update = await this.testsRepository.update(questionDto, {
                 where: { id },
                 returning: true,
             });

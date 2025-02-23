@@ -1,6 +1,5 @@
 export declare class UploadedDto {
-    file_type: string;
-    file?: any;
-    file1?: any;
+    file_type?: string;
+    file_url?: string;
     duration?: number;
 }

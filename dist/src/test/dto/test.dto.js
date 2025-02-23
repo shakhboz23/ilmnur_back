@@ -9,13 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestsDto = void 0;
+exports.TestsDto = exports.QuestionDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const test_settings_dto_1 = require("../../test_settings/dto/test_settings.dto");
+const test_models_1 = require("../models/test.models");
 class QuestionDto {
 }
+exports.QuestionDto = QuestionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: 1,
+        description: 'id of the test',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], QuestionDto.prototype, "id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 'Quyidagi izotopda nechta proton, elektron va neytron bor? 18^F-',
@@ -38,6 +49,35 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ each: true }),
     __metadata("design:type", Array)
 ], QuestionDto.prototype, "variants", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: [1],
+        description: 'True answer',
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], QuestionDto.prototype, "true_answer", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: 1,
+        description: 'Test type',
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(test_models_1.TestType),
+    __metadata("design:type", String)
+], QuestionDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: 1,
+        description: 'Test type',
+        default: test_models_1.ActionType.new,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(test_models_1.ActionType),
+    (0, class_transformer_1.Transform)(({ value }) => (value === undefined ? test_models_1.ActionType.new : value)),
+    __metadata("design:type", String)
+], QuestionDto.prototype, "is_action", void 0);
 class TestsDto extends test_settings_dto_1.Test_settingsDto {
 }
 exports.TestsDto = TestsDto;

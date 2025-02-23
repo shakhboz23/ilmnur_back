@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tests = exports.TestType = void 0;
+exports.Tests = exports.ActionType = exports.TestType = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const lesson_models_1 = require("../../lesson/models/lesson.models");
 var TestType;
@@ -19,6 +19,13 @@ var TestType;
     TestType["fill"] = "fill";
     TestType["customizable"] = "customizable";
 })(TestType || (exports.TestType = TestType = {}));
+var ActionType;
+(function (ActionType) {
+    ActionType["old"] = "old";
+    ActionType["new"] = "new";
+    ActionType["deleted"] = "deleted";
+    ActionType["edited"] = "edited";
+})(ActionType || (exports.ActionType = ActionType = {}));
 let Tests = class Tests extends sequelize_typescript_1.Model {
 };
 exports.Tests = Tests;
@@ -55,6 +62,13 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Tests.prototype, "variants", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.ARRAY(sequelize_typescript_1.DataType.INTEGER),
+        allowNull: false,
+    }),
+    __metadata("design:type", Array)
+], Tests.prototype, "true_answer", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.ENUM({

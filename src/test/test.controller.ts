@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TestsService } from './test.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { TestsDto } from './dto/test.dto';
+import { QuestionDto, TestsDto } from './dto/test.dto';
 import { CheckDto } from './dto/check.dto';
 import { extractUserIdFromToken } from 'src/utils/token';
 import { JwtService } from '@nestjs/jwt';
@@ -25,12 +25,16 @@ export class TestsController {
   constructor(
     private readonly testsService: TestsService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Create a new tests' })
   @Post('/create')
-  create(@Body() testsDto: TestsDto) {
-    return this.testsService.create(testsDto);
+  create(
+    @Body() testsDto: TestsDto,
+    @Headers() headers: Record<string, string>,
+  ) {
+    const user_id = extractUserIdFromToken(headers, this.jwtService, true);
+    return this.testsService.create(testsDto, user_id);
   }
 
   @ApiOperation({ summary: 'Get all testss' })
@@ -114,8 +118,8 @@ export class TestsController {
   @ApiOperation({ summary: 'Update tests profile by ID' })
   // @UseGuards(AuthGuard)
   @Put('/:id')
-  update(@Param('id') id: number, @Body() testsDto: TestsDto) {
-    return this.testsService.update(id, testsDto);
+  update(@Param('id') id: number, @Body() questionDto: QuestionDto) {
+    return this.testsService.update(id, questionDto);
   }
 
   @ApiOperation({ summary: 'Delete tests' })

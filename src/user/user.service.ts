@@ -78,10 +78,12 @@ export class UserService {
           { id: user.id },
           this.jwtService,
         );
+
         // await writeToCookie(refresh_token, res);
         const user_data: any = await this.userRepository.findByPk(user.id, {
           include: { model: Role },
         });
+        await this.mailService.sendUserConfirmation(user_data, access_token);
 
         return {
           statusCode: HttpStatus.OK,
@@ -89,7 +91,7 @@ export class UserService {
           data: {
             user: user_data,
           },
-          token: access_token,
+          // token: access_token,
         };
       } else {
         user = await this.userRepository.create({
@@ -112,8 +114,7 @@ export class UserService {
           { where: { id: user.id }, returning: true },
         );
 
-        // await this.mailService.sendUserConfirmation(updateuser[1][0]);
-        // await writeToCookie(refresh_token, res);
+        await this.mailService.sendUserConfirmation(updateuser[1][0], access_token);
 
         const roleData: RoleDto = {
           ...registerUserDto,
@@ -319,7 +320,7 @@ export class UserService {
               FROM "reyting" AS "Reyting"
               INNER JOIN "lesson" AS "Lesson" ON "Lesson"."id" = "Reyting"."lesson_id"
               INNER JOIN "course" AS "Course" ON "Course"."id" = "Lesson"."course_id"
-              WHERE "Course"."group_id" = :group_id ${course_id ? 'AND "Course"."id" = :course_id':''}
+              WHERE "Course"."group_id" = :group_id ${course_id ? 'AND "Course"."id" = :course_id' : ''}
             )`),
           },
         },
@@ -332,7 +333,7 @@ export class UserService {
                 INNER JOIN "lesson" ON "lesson"."id" = "reyting"."lesson_id"
                 INNER JOIN "course" ON "course"."id" = "lesson"."course_id"
                 INNER JOIN "group" ON "group"."id" = "course"."group_id"
-                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id" ${course_id ? 'AND "course"."id" = :course_id':''}
+                WHERE "group"."id" = :group_id AND "reyting"."user_id" = "User"."id" ${course_id ? 'AND "course"."id" = :course_id' : ''}
               )::int`),
               'totalReyting',
             ],

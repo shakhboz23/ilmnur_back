@@ -17,8 +17,8 @@ let MailService = class MailService {
         this.mailerService = mailerService;
     }
     ;
-    async sendUserConfirmation(user) {
-        const url = `${process.env.API_HOST}/verify-email?activation_link=${user.activation_link}`;
+    async sendUserConfirmation(user, token) {
+        const url = `${process.env.API_HOST}/login?token=${token}`;
         const data = await this.mailerService.sendMail({
             to: user.email,
             subject: "Welcome to IlmNur App! Confirm your email!",

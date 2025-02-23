@@ -50,36 +50,21 @@ export class UploadedService {
     return hours * 3600 + minutes * 60 + seconds;
   }
 
-  async create(uploadedDto: UploadedDto, file: any) {
+  async create(file: any, file_type: string) {
     try {
-      // this.getVideoDuration();
-      let data: any;
-      if (uploadedDto.file_type != 'youtube') {
-        const file_data: any = await this.fileService.createFile(
+      let file_data: any;
+      if (file_type != 'youtube') {
+        file_data = await this.fileService.createFile(
           file,
-          uploadedDto.file_type,
+          'file'
         );
-        console.log(file_data.url);
-        data = await this.uploadedRepository.create({
-          public_id: file_data.public_id,
-          duration: uploadedDto.duration ? Math.floor(file_data.duration) : null,
-          url: file_data.url,
-          file_type: uploadedDto.file_type,
-        });
-        console.log(data)
-      } else {
-        data = await this.uploadedRepository.create({
-          public_id: '1',
-          duration: 0,
-          url: uploadedDto.file1,
-          file_type: 'youtube',
-        });
       }
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Created successfully',
-        data,
-      };
+      let data = await this.uploadedRepository.create({
+        duration: Math.floor(file_data.duration) || null,
+        file_type,
+        url: file_data.url,
+      });
+      return data.url;
     } catch (error) {
       console.log(error.message);
       return { statusCode: HttpStatus.BAD_REQUEST, error: error.message };
@@ -87,25 +72,25 @@ export class UploadedService {
   }
 
   async upload(uploadedDto: UploadedDto, file: any) {
-    try {
-      const file_data: any = await this.fileService.createFile(
-        file,
-        uploadedDto.file_type,
-      );
-      const data = await this.uploadedRepository.create({
-        public_id: '1',
-        duration: file_data.duration,
-        url: file_data.url,
-        file_type: uploadedDto.file_type,
-      });
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Created successfully',
-        data,
-      };
-    } catch (error) {
-      return { statusCode: HttpStatus.BAD_REQUEST, error: error.message };
-    }
+    // try {
+    //   const file_data: any = await this.fileService.createFile(
+    //     file,
+    //     uploadedDto.file_type,
+    //   );
+    //   const data = await this.uploadedRepository.create({
+    //     public_id: '1',
+    //     duration: file_data.duration,
+    //     url: file_data.url,
+    //     file_type: uploadedDto.file_type,
+    //   });
+    //   return {
+    //     statusCode: HttpStatus.OK,
+    //     message: 'Created successfully',
+    //     data,
+    //   };
+    // } catch (error) {
+    //   return { statusCode: HttpStatus.BAD_REQUEST, error: error.message };
+    // }
   }
 
   async getAll(): Promise<object> {
@@ -120,21 +105,21 @@ export class UploadedService {
     }
   }
 
-  async getById(public_id: number): Promise<object> {
-    try {
-      const uploaded = await this.uploadedRepository.findOne({
-        where: { public_id },
-      });
-      if (!uploaded) {
-        throw new NotFoundException('Uploaded not found');
-      }
-      return {
-        statusCode: HttpStatus.OK,
-        data: uploaded,
-      };
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+  async getById(public_id: number) {
+    // try {
+    //   const uploaded = await this.uploadedRepository.findOne({
+    //     where: { public_id },
+    //   });
+    //   if (!uploaded) {
+    //     throw new NotFoundException('Uploaded not found');
+    //   }
+    //   return {
+    //     statusCode: HttpStatus.OK,
+    //     data: uploaded,
+    //   };
+    // } catch (error) {
+    //   throw new BadRequestException(error.message);
+    // }
   }
 
   async pagination(page: number): Promise<object> {

@@ -6,6 +6,7 @@ interface TestsAttributes {
   lesson_id: number;
   question: string;
   variants: string[];
+  true_answer: number[];
   type: TestType;
 }
 
@@ -14,6 +15,13 @@ export enum TestType {
   multiple = 'multiple',
   fill = 'fill',
   customizable = 'customizable',
+}
+
+export enum ActionType {
+  old = 'old',
+  new = 'new',
+  deleted = 'deleted',
+  edited = 'edited',
 }
 
 @Table({ tableName: 'tests' })
@@ -45,6 +53,12 @@ export class Tests extends Model<Tests, TestsAttributes> {
     allowNull: false,
   })
   variants: string[];
+
+  @Column({
+    type: DataType.ARRAY(DataType.INTEGER),
+    allowNull: false,
+  })
+  true_answer: number[];
 
   @Column({
     type: DataType.ENUM({

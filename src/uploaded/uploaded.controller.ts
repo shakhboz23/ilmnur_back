@@ -19,7 +19,7 @@ import { UpdateDto } from './dto/update';
 @ApiTags('Uploaded')
 @Controller('uploaded')
 export class UploadedController {
-  constructor(private readonly uploadedService: UploadedService) {}
+  constructor(private readonly uploadedService: UploadedService) { }
 
   @ApiOperation({ summary: 'Create a new video_lesson' })
   @ApiConsumes('multipart/form-data')
@@ -27,16 +27,7 @@ export class UploadedController {
     schema: {
       type: 'object',
       properties: {
-        is_active: {
-          type: 'boolean',
-        },
         file_type: {
-          type: 'string',
-        },
-        duration: {
-          type: 'number',
-        },
-        file1: {
           type: 'string',
         },
         file: {
@@ -49,10 +40,10 @@ export class UploadedController {
   @Post('/create')
   @UseInterceptors(FileInterceptor('file'))
   create(
-    @Body() uploadedDto: UploadedDto,
     @UploadedFile(new ImageValidationPipe()) file: Express.Multer.File,
+    @Body() body: { file_type: string },
   ) {
-    return this.uploadedService.create(uploadedDto, file);
+    return this.uploadedService.create(file, body.file_type);
   }
 
   // @ApiOperation({ summary: 'Create a new video_lesson' })

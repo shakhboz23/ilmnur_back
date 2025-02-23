@@ -8,6 +8,6 @@ export declare class Test_settingsService {
     getById(id: number): Promise<object>;
     getByLessonId(id: number): Promise<object>;
     pagination(page: number): Promise<object>;
-    update(id: number, test_settingsDto: Test_settingsDto, user_id: number): Promise<object>;
+    update(id: number, test_settingsDto: Test_settingsDto): Promise<object>;
     delete(id: number): Promise<object>;
 }

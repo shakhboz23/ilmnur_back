@@ -16,7 +16,6 @@ exports.UploadedController = void 0;
 const common_1 = require("@nestjs/common");
 const uploaded_service_1 = require("./uploaded.service");
 const swagger_1 = require("@nestjs/swagger");
-const uploaded_dto_1 = require("./dto/uploaded.dto");
 const platform_express_1 = require("@nestjs/platform-express");
 const image_validation_pipe_1 = require("../pipes/image-validation.pipe");
 const update_1 = require("./dto/update");
@@ -24,8 +23,8 @@ let UploadedController = class UploadedController {
     constructor(uploadedService) {
         this.uploadedService = uploadedService;
     }
-    create(uploadedDto, file) {
-        return this.uploadedService.create(uploadedDto, file);
+    create(file, body) {
+        return this.uploadedService.create(file, body.file_type);
     }
     getById(id) {
         return this.uploadedService.getById(id);
@@ -51,16 +50,7 @@ __decorate([
         schema: {
             type: 'object',
             properties: {
-                is_active: {
-                    type: 'boolean',
-                },
                 file_type: {
-                    type: 'string',
-                },
-                duration: {
-                    type: 'number',
-                },
-                file1: {
                     type: 'string',
                 },
                 file: {
@@ -72,10 +62,10 @@ __decorate([
     }),
     (0, common_1.Post)('/create'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.UploadedFile)(new image_validation_pipe_1.ImageValidationPipe())),
+    __param(0, (0, common_1.UploadedFile)(new image_validation_pipe_1.ImageValidationPipe())),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [uploaded_dto_1.UploadedDto, Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], UploadedController.prototype, "create", null);
 __decorate([

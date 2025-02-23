@@ -6,9 +6,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Tests } from './models/test.models';
+import { ActionType, Tests } from './models/test.models';
 import { InjectModel } from '@nestjs/sequelize';
-import { TestsDto } from './dto/test.dto';
+import { QuestionDto, TestsDto } from './dto/test.dto';
 import { Sequelize } from 'sequelize-typescript';
 import { CheckDto } from './dto/check.dto';
 import { ReytingService } from '../reyting/reyting.service';
@@ -29,7 +29,7 @@ export class TestsService {
     private readonly fileService: FilesService,
   ) { }
 
-  async create(testsDto: TestsDto): Promise<object> {
+  async create(testsDto: TestsDto, user_id: number): Promise<object> {
     try {
       const {
         test,
@@ -40,6 +40,10 @@ export class TestsService {
         period,
         mix,
       } = testsDto;
+      const lesson: any = await this.lessonService.getById(lesson_id);
+      if (lesson.course?.user_id != user_id) {
+        throw new BadRequestException("You have not access");
+      }
       let variants: string[];
       if (start_date || end_date || sort_level || period) {
         await this.test_settingsService.create({
@@ -53,11 +57,18 @@ export class TestsService {
       }
       for (let i = 0; i < test.length; i++) {
         variants = Object.values(test[i].variants);
-        await this.testsRepository.create({
-          lesson_id,
-          question: test[i].question,
-          variants: [...variants],
-        });
+        console.log(test[i].is_action, '2303');
+        if (test[i].is_action == ActionType.edited && test[i].id) {
+          await this.update(test[i].id, test[i])
+        } else if(test[i].is_action != ActionType.old) {
+          await this.testsRepository.create({
+            lesson_id,
+            question: test[i].question,
+            variants,
+            type: test[i].type,
+            true_answer: test[i].true_answer,
+          });
+        }
       }
       return {
         statusCode: HttpStatus.OK,
@@ -136,6 +147,8 @@ export class TestsService {
 
   async getById(lesson_id: number, user_id: number): Promise<object> {
     console.log(user_id);
+    const lesson: any = this.lessonService.getById(lesson_id);
+
     try {
       // const test_settings: any =
       //   await this.test_settingsService.getByLessonId(id);
@@ -168,7 +181,7 @@ export class TestsService {
         throw new NotFoundException('Tests not found');
       }
 
-      const lesson: any = await this.lessonService.getById(lesson_id, user_id);
+      const lesson: any = await this.lessonService.getById(lesson_id);
       const category: any = await this.testsRepository.findOne({
         where: {
           lesson_id,
@@ -176,20 +189,22 @@ export class TestsService {
         include: [{ model: Lesson, attributes: ['course_id', 'id'], include: [{ model: Course, attributes: ['category_id'], include: [{ model: Category, attributes: ['id'] }] }] }]
       });
       const test_settings: any = await this.test_settingsService.getByLessonId(lesson_id);
-
-      const randomizedVariants = this.shuffle(tests).map((variant) => {
-        const randomizedOptions = this.shuffle(variant.get('variants'));
-        return {
-          ...variant.toJSON(),
-          variants: randomizedOptions,
-        };
-      });
-      console.log(lesson.course);
+      let randomizedVariants: any;
+      console.log(lesson.course?.user_id, user_id)
+      if (lesson.course.user_id != user_id) {
+        randomizedVariants = this.shuffle(tests).map((variant) => {
+          const randomizedOptions = this.shuffle(variant.get('variants'));
+          return {
+            ...variant.toJSON(),
+            variants: randomizedOptions,
+          };
+        });
+      }
       return {
         user_id: lesson?.course.get('user_id'),
         category_id: category?.lesson?.course?.category?.id,
         lesson_id: category?.lesson?.id,
-        test: randomizedVariants,
+        test: randomizedVariants || tests,
         test_settings,
       };
     } catch (error) {
@@ -204,8 +219,8 @@ export class TestsService {
         throw new NotFoundException('Tests not found');
       }
       console.log(answer);
-      console.log(test.variants[0]);
-      if (test.variants[0] == answer) {
+      console.log(test.variants[test.true_answer[0]]);
+      if (test.variants[test.true_answer[0]] == answer) {
         return [id, true];
       }
       return [id, false];
@@ -308,13 +323,13 @@ export class TestsService {
     }
   }
 
-  async update(id: number, testsDto: TestsDto): Promise<object> {
+  async update(id: number, questionDto: QuestionDto): Promise<object> {
     try {
       const tests = await this.testsRepository.findByPk(id);
       if (!tests) {
         throw new NotFoundException('Tests not found');
       }
-      const update = await this.testsRepository.update(testsDto, {
+      const update = await this.testsRepository.update(questionDto, {
         where: { id },
         returning: true,
       });

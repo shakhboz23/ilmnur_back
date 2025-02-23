@@ -69,13 +69,13 @@ let UserService = class UserService {
                 const user_data = await this.userRepository.findByPk(user.id, {
                     include: { model: role_models_1.Role },
                 });
+                await this.mailService.sendUserConfirmation(user_data, access_token);
                 return {
                     statusCode: common_1.HttpStatus.OK,
                     message: 'Successfully registered1!',
                     data: {
                         user: user_data,
                     },
-                    token: access_token,
                 };
             }
             else {
@@ -87,6 +87,7 @@ let UserService = class UserService {
                     hashed_refresh_token: hashed_refresh_token,
                     activation_link: uniqueKey,
                 }, { where: { id: user.id }, returning: true });
+                await this.mailService.sendUserConfirmation(updateuser[1][0], access_token);
                 const roleData = Object.assign(Object.assign({}, registerUserDto), { user_id: user.id });
                 await this.roleService.create(roleData);
                 await this.updateCurrentRole(user.id, current_role);

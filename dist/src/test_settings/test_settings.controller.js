@@ -34,12 +34,7 @@ let Test_settingsController = class Test_settingsController {
         return this.test_settingsService.pagination(page);
     }
     update(id, test_settingsDto, authHeader) {
-        const token = authHeader ? authHeader.split(' ')[1] : null;
-        console.log(token, 'token2303');
-        let user = null;
-        const user_id = user === null || user === void 0 ? void 0 : user.id;
-        console.log(user_id, 'user_id');
-        return this.test_settingsService.update(id, test_settingsDto, user_id);
+        return this.test_settingsService.update(id, test_settingsDto);
     }
     deleteTest_settings(id) {
         return this.test_settingsService.delete(id);

@@ -1,13 +1,13 @@
 /// <reference types="multer" />
 import { TestsService } from './test.service';
-import { TestsDto } from './dto/test.dto';
+import { QuestionDto, TestsDto } from './dto/test.dto';
 import { CheckDto } from './dto/check.dto';
 import { JwtService } from '@nestjs/jwt';
 export declare class TestsController {
     private readonly testsService;
     private readonly jwtService;
     constructor(testsService: TestsService, jwtService: JwtService);
-    create(testsDto: TestsDto): Promise<object>;
+    create(testsDto: TestsDto, headers: Record<string, string>): Promise<object>;
     getTests(): Promise<object>;
     getAll(class_number: number): Promise<object>;
     checkById(id: number, { answer }: {
@@ -25,6 +25,6 @@ export declare class TestsController {
         error: any;
         data?: undefined;
     }>;
-    update(id: number, testsDto: TestsDto): Promise<object>;
+    update(id: number, questionDto: QuestionDto): Promise<object>;
     deleteTests(id: number): Promise<object>;
 }

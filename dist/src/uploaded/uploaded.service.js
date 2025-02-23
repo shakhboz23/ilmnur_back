@@ -49,33 +49,18 @@ let UploadedService = class UploadedService {
         const seconds = parseInt(match[3], 10) || 0;
         return hours * 3600 + minutes * 60 + seconds;
     }
-    async create(uploadedDto, file) {
+    async create(file, file_type) {
         try {
-            let data;
-            if (uploadedDto.file_type != 'youtube') {
-                const file_data = await this.fileService.createFile(file, uploadedDto.file_type);
-                console.log(file_data.url);
-                data = await this.uploadedRepository.create({
-                    public_id: file_data.public_id,
-                    duration: uploadedDto.duration ? Math.floor(file_data.duration) : null,
-                    url: file_data.url,
-                    file_type: uploadedDto.file_type,
-                });
-                console.log(data);
+            let file_data;
+            if (file_type != 'youtube') {
+                file_data = await this.fileService.createFile(file, 'file');
             }
-            else {
-                data = await this.uploadedRepository.create({
-                    public_id: '1',
-                    duration: 0,
-                    url: uploadedDto.file1,
-                    file_type: 'youtube',
-                });
-            }
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                message: 'Created successfully',
-                data,
-            };
+            let data = await this.uploadedRepository.create({
+                duration: Math.floor(file_data.duration) || null,
+                file_type,
+                url: file_data.url,
+            });
+            return data.url;
         }
         catch (error) {
             console.log(error.message);
@@ -83,23 +68,6 @@ let UploadedService = class UploadedService {
         }
     }
     async upload(uploadedDto, file) {
-        try {
-            const file_data = await this.fileService.createFile(file, uploadedDto.file_type);
-            const data = await this.uploadedRepository.create({
-                public_id: '1',
-                duration: file_data.duration,
-                url: file_data.url,
-                file_type: uploadedDto.file_type,
-            });
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                message: 'Created successfully',
-                data,
-            };
-        }
-        catch (error) {
-            return { statusCode: common_1.HttpStatus.BAD_REQUEST, error: error.message };
-        }
     }
     async getAll() {
         try {
@@ -114,21 +82,6 @@ let UploadedService = class UploadedService {
         }
     }
     async getById(public_id) {
-        try {
-            const uploaded = await this.uploadedRepository.findOne({
-                where: { public_id },
-            });
-            if (!uploaded) {
-                throw new common_1.NotFoundException('Uploaded not found');
-            }
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                data: uploaded,
-            };
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(error.message);
-        }
     }
     async pagination(page) {
         try {

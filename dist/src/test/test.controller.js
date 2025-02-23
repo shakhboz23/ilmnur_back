@@ -27,8 +27,9 @@ let TestsController = class TestsController {
         this.testsService = testsService;
         this.jwtService = jwtService;
     }
-    create(testsDto) {
-        return this.testsService.create(testsDto);
+    create(testsDto, headers) {
+        const user_id = (0, token_1.extractUserIdFromToken)(headers, this.jwtService, true);
+        return this.testsService.create(testsDto, user_id);
     }
     getTests() {
         return this.testsService.getTests();
@@ -54,8 +55,8 @@ let TestsController = class TestsController {
         console.log('object');
         return this.testsService.create_url(file);
     }
-    update(id, testsDto) {
-        return this.testsService.update(id, testsDto);
+    update(id, questionDto) {
+        return this.testsService.update(id, questionDto);
     }
     deleteTests(id) {
         return this.testsService.delete(id);
@@ -66,8 +67,9 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Create a new tests' }),
     (0, common_1.Post)('/create'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [test_dto_1.TestsDto]),
+    __metadata("design:paramtypes", [test_dto_1.TestsDto, Object]),
     __metadata("design:returntype", void 0)
 ], TestsController.prototype, "create", null);
 __decorate([
@@ -148,7 +150,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, test_dto_1.TestsDto]),
+    __metadata("design:paramtypes", [Number, test_dto_1.QuestionDto]),
     __metadata("design:returntype", void 0)
 ], TestsController.prototype, "update", null);
 __decorate([

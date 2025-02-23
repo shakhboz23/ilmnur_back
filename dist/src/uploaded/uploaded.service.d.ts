@@ -12,30 +12,13 @@ export declare class UploadedService {
     getVideoDuration(youtube: string): Promise<number>;
     extractYoutubeId(url: string): string | null;
     parseDuration(duration: any): number;
-    create(uploadedDto: UploadedDto, file: any): Promise<{
-        statusCode: HttpStatus;
-        message: string;
-        data: any;
-        error?: undefined;
-    } | {
+    create(file: any, file_type: string): Promise<string | {
         statusCode: HttpStatus;
         error: any;
-        message?: undefined;
-        data?: undefined;
     }>;
-    upload(uploadedDto: UploadedDto, file: any): Promise<{
-        statusCode: HttpStatus;
-        message: string;
-        data: Uploaded;
-        error?: undefined;
-    } | {
-        statusCode: HttpStatus;
-        error: any;
-        message?: undefined;
-        data?: undefined;
-    }>;
+    upload(uploadedDto: UploadedDto, file: any): Promise<void>;
     getAll(): Promise<object>;
-    getById(public_id: number): Promise<object>;
+    getById(public_id: number): Promise<void>;
     pagination(page: number): Promise<object>;
     update(id: number, updateDto: UpdateDto): Promise<object>;
     delete(id: number): Promise<object>;

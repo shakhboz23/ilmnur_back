@@ -10,7 +10,7 @@ export declare class LessonService {
     create(lessonDto: LessonDto, video: any): Promise<object>;
     getAll(category_id: number): Promise<object>;
     getByCourse(course_id: number, user_id: number): Promise<Object>;
-    getById(id: number, user_id: number): Promise<object>;
+    getById(id: number, user_id?: number): Promise<object>;
     pagination(page: number): Promise<object>;
     update(id: number, lessonDto: LessonDto, video: any): Promise<object>;
     delete(id: number): Promise<object>;

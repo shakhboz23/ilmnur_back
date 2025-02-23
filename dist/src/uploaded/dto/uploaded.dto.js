@@ -20,26 +20,19 @@ __decorate([
         example: 'image',
         description: 'file type',
     }),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UploadedDto.prototype, "file_type", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'image',
-        description: 'file type',
+        example: 'https://example.com',
+        description: 'file url',
     }),
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Object)
-], UploadedDto.prototype, "file", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        example: 'image',
-        description: 'file type',
-    }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Object)
-], UploadedDto.prototype, "file1", void 0);
+    (0, class_validator_1.IsUrl)(),
+    __metadata("design:type", String)
+], UploadedDto.prototype, "file_url", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 'image',

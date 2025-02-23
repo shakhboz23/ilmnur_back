@@ -13,19 +13,24 @@ export class Test_settingsService {
   constructor(
     @InjectModel(Test_settings)
     private test_settingsRepository: typeof Test_settings,
-  ) {}
+  ) { }
 
   async create(test_settingsDto: Test_settingsDto): Promise<object> {
     try {
-      console.log(test_settingsDto);
       const { lesson_id } = test_settingsDto;
+      let test_settings = await this.test_settingsRepository.findOne({
+        where: { lesson_id }
+      })
+      if (test_settings) {
+        return this.update(test_settings.id, test_settingsDto);
+      }
       if (!lesson_id) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           message: 'Lesson id not found',
         };
       }
-      const test_settings =
+      test_settings =
         await this.test_settingsRepository.create(test_settingsDto);
       return {
         statusCode: HttpStatus.OK,
@@ -116,28 +121,20 @@ export class Test_settingsService {
   async update(
     id: number,
     test_settingsDto: Test_settingsDto,
-    user_id: number,
   ): Promise<object> {
     try {
       const test_settings = await this.test_settingsRepository.findByPk(id);
       if (!test_settings) {
         throw new BadRequestException('Test_settings not found');
       }
-      console.log(test_settingsDto);
-      // const update = await this.test_settingsRepository.update(
-      //   { test_settingsDto },
-      //   {
-      //     where: { id },
-      //     returning: true,
-      //   },
-      // );
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Updated successfully',
-        // data: {
-        //   test_settings: update[1][0],
-        // },
-      };
+      const update = await this.test_settingsRepository.update(
+        test_settingsDto,
+        {
+          where: { id },
+          returning: true,
+        },
+      );
+      return update[1][0];
     } catch (error) {
       throw new BadRequestException(error.message);
     }

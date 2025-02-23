@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
 } from 'class-validator';
 
 export class UploadedDto {
@@ -12,23 +13,17 @@ export class UploadedDto {
     example: 'image',
     description: 'file type',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  file_type: string;
+  file_type?: string;
 
   @ApiProperty({
-    example: 'image',
-    description: 'file type',
+    example: 'https://example.com',
+    description: 'file url',
   })
   @IsOptional()
-  file?: any;
-
-  @ApiProperty({ 
-    example: 'image',
-    description: 'file type',
-  })
-  @IsOptional()
-  file1?: any;
+  @IsUrl()
+  file_url?: string;
 
   @ApiProperty({
     example: 'image',

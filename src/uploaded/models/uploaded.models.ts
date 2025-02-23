@@ -8,7 +8,7 @@ import {
 // import { Video_lesson } from '../video_lesson/models/video_lesson.models';
 
 interface UploadedAttributes {
-  public_id: string;
+  status: boolean;
   duration: number;
   file_type: string;
   url: string;
@@ -24,14 +24,7 @@ export class Uploaded extends Model<Uploaded, UploadedAttributes> {
   id: number;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  public_id: string;
-
-  @Column({
     type: DataType.INTEGER,
-    allowNull: true,
   })
   duration: number;
 
@@ -46,4 +39,10 @@ export class Uploaded extends Model<Uploaded, UploadedAttributes> {
     allowNull: false,
   })
   url: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  status: boolean;
 }

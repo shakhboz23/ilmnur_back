@@ -22,15 +22,21 @@ let Test_settingsService = class Test_settingsService {
     }
     async create(test_settingsDto) {
         try {
-            console.log(test_settingsDto);
             const { lesson_id } = test_settingsDto;
+            let test_settings = await this.test_settingsRepository.findOne({
+                where: { lesson_id }
+            });
+            if (test_settings) {
+                return this.update(test_settings.id, test_settingsDto);
+            }
             if (!lesson_id) {
                 return {
                     statusCode: common_1.HttpStatus.BAD_REQUEST,
                     message: 'Lesson id not found',
                 };
             }
-            const test_settings = await this.test_settingsRepository.create(test_settingsDto);
+            test_settings =
+                await this.test_settingsRepository.create(test_settingsDto);
             return {
                 statusCode: common_1.HttpStatus.OK,
                 message: 'Created successfully',
@@ -73,11 +79,6 @@ let Test_settingsService = class Test_settingsService {
             const test_settings = await this.test_settingsRepository.findOne({
                 where: { lesson_id: id },
             });
-            if (!test_settings) {
-                return {
-                    message: "Test settings not found"
-                };
-            }
             return test_settings;
         }
         catch (error) {
@@ -111,17 +112,17 @@ let Test_settingsService = class Test_settingsService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async update(id, test_settingsDto, user_id) {
+    async update(id, test_settingsDto) {
         try {
             const test_settings = await this.test_settingsRepository.findByPk(id);
             if (!test_settings) {
                 throw new common_1.BadRequestException('Test_settings not found');
             }
-            console.log(test_settingsDto);
-            return {
-                statusCode: common_1.HttpStatus.OK,
-                message: 'Updated successfully',
-            };
+            const update = await this.test_settingsRepository.update(test_settingsDto, {
+                where: { id },
+                returning: true,
+            });
+            return update[1][0];
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
