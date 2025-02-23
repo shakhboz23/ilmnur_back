@@ -41,7 +41,7 @@ export class CourseService {
       }
       const file_type: string = 'image';
       let file_data: any;
-      let image_url: string;
+      let image_url: string; 
       if (cover) {
         file_data = await this.uploadedService.create(cover, file_type);
         cover = file_data;
