@@ -306,7 +306,7 @@ export class LessonService {
           file_type = 'video';
           file_data = await this.uploadedService.create({ file_type }, video);
           console.log(file_data);
-          video = file_data.data.url;
+          video = file_data;
         }
         lessonDto.lesson_id = +lessonDto.lesson_id || null;
         lessonDto.course_id = lesson.course_id;
