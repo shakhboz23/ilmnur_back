@@ -39,7 +39,6 @@ let UserService = class UserService {
         this.fileService = fileService;
     }
     async register(registerUserDto) {
-        var _a;
         try {
             let is_new_role = false;
             console.log(registerUserDto);
@@ -52,7 +51,7 @@ let UserService = class UserService {
             let is_role;
             if (user) {
                 is_role = await this.roleService.getUserRoles(user.id, role);
-                if ((_a = is_role.data) === null || _a === void 0 ? void 0 : _a.length) {
+                if (is_role.data?.length) {
                     throw new common_1.BadRequestException('Already registered');
                 }
                 else {
@@ -61,7 +60,10 @@ let UserService = class UserService {
             }
             const current_role = registerUserDto.role;
             if (is_new_role) {
-                const roleData = Object.assign(Object.assign({}, registerUserDto), { user_id: user.id });
+                const roleData = {
+                    ...registerUserDto,
+                    user_id: user.id,
+                };
                 await this.roleService.create(roleData);
                 user = await this.userRepository.findByPk(user.id);
                 await this.updateCurrentRole(user.id, current_role);
@@ -79,7 +81,10 @@ let UserService = class UserService {
                 };
             }
             else {
-                user = await this.userRepository.create(Object.assign(Object.assign({}, registerUserDto), { hashed_password }));
+                user = await this.userRepository.create({
+                    ...registerUserDto,
+                    hashed_password,
+                });
                 const { access_token, refresh_token } = await (0, token_1.generateToken)({ id: user.id, is_active: user.is_active }, this.jwtService);
                 const hashed_refresh_token = await (0, bcryptjs_1.hash)(refresh_token, 7);
                 const uniqueKey = uuid.v4();
@@ -88,7 +93,10 @@ let UserService = class UserService {
                     activation_link: uniqueKey,
                 }, { where: { id: user.id }, returning: true });
                 await this.mailService.sendUserConfirmation(updateuser[1][0], access_token);
-                const roleData = Object.assign(Object.assign({}, registerUserDto), { user_id: user.id });
+                const roleData = {
+                    ...registerUserDto,
+                    user_id: user.id,
+                };
                 await this.roleService.create(roleData);
                 await this.updateCurrentRole(user.id, current_role);
                 const user_data = await this.userRepository.findByPk(user.id, {
@@ -144,7 +152,7 @@ let UserService = class UserService {
         if (!user) {
             throw new common_1.BadRequestException('Activation link not found');
         }
-        else if (user === null || user === void 0 ? void 0 : user.is_active) {
+        else if (user?.is_active) {
             throw new common_1.BadRequestException('User already activated');
         }
         const updateduser = await this.userRepository.update({ is_active: true }, { where: { activation_link }, returning: true });
@@ -243,7 +251,7 @@ let UserService = class UserService {
                 throw new common_1.NotFoundException('User not found!');
             }
             const userdata = await this.userRepository.findByPk(id);
-            const current_role = (userdata === null || userdata === void 0 ? void 0 : userdata.current_role) || 'student';
+            const current_role = userdata?.current_role || 'student';
             const user = await this.userRepository.findOne({
                 where: { id },
                 include: [
@@ -534,7 +542,7 @@ let UserService = class UserService {
                 email: process.env.INITIAL_EMAIL,
             });
         }
-        catch (_a) { }
+        catch { }
     }
 };
 exports.UserService = UserService;

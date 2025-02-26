@@ -238,11 +238,11 @@ let RoleService = class RoleService {
                 filter.push(sequelize_typescript_1.Sequelize.literal(`"Role"."class"::text = '${JSON.stringify([class_data])}'`));
             }
             const roles = await this.roleRepository.findAll({
-                where: Object.assign({ role: 'teacher' }, filter),
+                where: { role: 'teacher', ...filter },
             });
             let result = [];
             let data;
-            for (let i = 0; i < (roles === null || roles === void 0 ? void 0 : roles.length); i++) {
+            for (let i = 0; i < roles?.length; i++) {
                 let totalReyting = 0;
                 const conditions = roles[i].class.map((role_class) => {
                     return sequelize_typescript_1.Sequelize.literal(`"Role"."class"::text = '${JSON.stringify([role_class])}'`);
@@ -291,7 +291,7 @@ let RoleService = class RoleService {
                 for (let total of data) {
                     totalReyting += +total.get('totalReyting');
                 }
-                result.push(Object.assign(Object.assign({}, roles[i].toJSON()), { totalReyting }));
+                result.push({ ...roles[i].toJSON(), totalReyting });
             }
             result.sort((a, b) => b.totalReyting - a.totalReyting);
             return {
@@ -437,7 +437,7 @@ let RoleService = class RoleService {
             if (!user) {
                 throw new common_1.NotFoundException('User not found');
             }
-            const update = await this.roleRepository.update(Object.assign(Object.assign({}, user), { user_status: 'solved' }), {
+            const update = await this.roleRepository.update({ ...user, user_status: 'solved' }, {
                 where: { id },
                 returning: true,
             });
@@ -470,7 +470,7 @@ let RoleService = class RoleService {
             if (user.parent_id) {
                 throw new common_1.NotFoundException('Already exists');
             }
-            const update = await this.roleRepository.update(Object.assign(Object.assign({}, user), { parent_id }), {
+            const update = await this.roleRepository.update({ ...user, parent_id }, {
                 where: {
                     [sequelize_2.Op.and]: [
                         sequelize_typescript_1.Sequelize.literal(`"class"::text = '${JSON.stringify(classes)}'`),

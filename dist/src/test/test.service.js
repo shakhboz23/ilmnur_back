@@ -33,11 +33,10 @@ let TestsService = class TestsService {
         this.fileService = fileService;
     }
     async create(testsDto, user_id) {
-        var _a;
         try {
             const { test, lesson_id, start_date, end_date, sort_level, period, mix, } = testsDto;
             const lesson = await this.lessonService.getById(lesson_id);
-            if (((_a = lesson.course) === null || _a === void 0 ? void 0 : _a.user_id) != user_id) {
+            if (lesson.course?.user_id != user_id) {
                 throw new common_1.BadRequestException("You have not access");
             }
             let variants;
@@ -142,7 +141,6 @@ let TestsService = class TestsService {
         }
     }
     async getById(lesson_id, user_id) {
-        var _a, _b, _c, _d, _e;
         console.log(user_id);
         const lesson = this.lessonService.getById(lesson_id);
         try {
@@ -170,17 +168,20 @@ let TestsService = class TestsService {
             });
             const test_settings = await this.test_settingsService.getByLessonId(lesson_id);
             let randomizedVariants;
-            console.log((_a = lesson.course) === null || _a === void 0 ? void 0 : _a.user_id, user_id);
+            console.log(lesson.course?.user_id, user_id);
             if (lesson.course.user_id != user_id) {
                 randomizedVariants = this.shuffle(tests).map((variant) => {
                     const randomizedOptions = this.shuffle(variant.get('variants'));
-                    return Object.assign(Object.assign({}, variant.toJSON()), { variants: randomizedOptions });
+                    return {
+                        ...variant.toJSON(),
+                        variants: randomizedOptions,
+                    };
                 });
             }
             return {
-                user_id: lesson === null || lesson === void 0 ? void 0 : lesson.course.get('user_id'),
-                category_id: (_d = (_c = (_b = category === null || category === void 0 ? void 0 : category.lesson) === null || _b === void 0 ? void 0 : _b.course) === null || _c === void 0 ? void 0 : _c.category) === null || _d === void 0 ? void 0 : _d.id,
-                lesson_id: (_e = category === null || category === void 0 ? void 0 : category.lesson) === null || _e === void 0 ? void 0 : _e.id,
+                user_id: lesson?.course.get('user_id'),
+                category_id: category?.lesson?.course?.category?.id,
+                lesson_id: category?.lesson?.id,
                 test: randomizedVariants || tests,
                 test_settings,
             };
@@ -207,7 +208,6 @@ let TestsService = class TestsService {
         }
     }
     async checkAnswers(user_id, lesson_id, checkDto) {
-        var _a;
         const { answers } = checkDto;
         let message;
         try {
@@ -226,7 +226,7 @@ let TestsService = class TestsService {
                     ball += 1;
                 }
             }
-            const percentage = (ball / ((_a = Object.keys(results)) === null || _a === void 0 ? void 0 : _a.length)) * 100;
+            const percentage = (ball / Object.keys(results)?.length) * 100;
             console.log(percentage);
             const data = {
                 ball,

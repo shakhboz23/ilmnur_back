@@ -50,7 +50,10 @@ let LessonService = class LessonService {
                     video = file_data;
                 }
                 lessonDto.lesson_id = +lessonDto.lesson_id || null;
-                let video_lesson = await this.lessonRepository.create(Object.assign(Object.assign({}, lessonDto), { video }));
+                let video_lesson = await this.lessonRepository.create({
+                    ...lessonDto,
+                    video,
+                });
                 video_lesson = await this.lessonRepository.update({
                     position: video_lesson.id,
                 }, {
@@ -88,7 +91,9 @@ let LessonService = class LessonService {
             }
             const lessons = await this.lessonRepository.findAll({
                 where: { type: 'lesson' },
-                include: [{ model: lesson_models_1.Lesson }, Object.assign({ model: course_models_1.Course, attributes: [] }, category)],
+                include: [{ model: lesson_models_1.Lesson }, {
+                        model: course_models_1.Course, attributes: [], ...category,
+                    }],
                 order: [['id', 'ASC']],
             });
             return lessons;
@@ -242,7 +247,11 @@ let LessonService = class LessonService {
                 lessonDto.lesson_id = +lessonDto.lesson_id || null;
                 lessonDto.course_id = lesson.course_id;
                 console.log(lessonDto, '=========');
-                update = await this.lessonRepository.update(Object.assign(Object.assign({}, lessonDto), { video, course_id: lesson.course_id }), {
+                update = await this.lessonRepository.update({
+                    ...lessonDto,
+                    video,
+                    course_id: lesson.course_id,
+                }, {
                     where: { id },
                     returning: true,
                 });

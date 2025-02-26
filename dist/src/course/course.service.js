@@ -49,8 +49,12 @@ let CourseService = class CourseService {
                 file_data = await this.uploadedService.create(cover, file_type);
                 cover = file_data;
             }
-            const course = await this.courseRepository.create(Object.assign(Object.assign({}, courseDto), { group_id: +courseDto.group_id, user_id,
-                cover }));
+            const course = await this.courseRepository.create({
+                ...courseDto,
+                group_id: +courseDto.group_id,
+                user_id,
+                cover,
+            });
             await this.chatGroupService.create({ course_id: course.id, chat_type: chat_group_dto_1.ChatGroupType.group, group_id: courseDto.group_id });
             return {
                 statusCode: common_1.HttpStatus.OK,
@@ -68,7 +72,10 @@ let CourseService = class CourseService {
             if (+category_id) {
                 category = { where: { category_id } };
             }
-            const courses = await this.courseRepository.findAll(Object.assign(Object.assign({}, category), { order: [['id', 'ASC']] }));
+            const courses = await this.courseRepository.findAll({
+                ...category,
+                order: [['id', 'ASC']],
+            });
             if (!courses.length) {
                 throw new common_1.NotFoundException('Courses not found');
             }
@@ -92,13 +99,17 @@ let CourseService = class CourseService {
                     }
                 };
             }
-            const courses = await this.courseRepository.findAll(Object.assign(Object.assign({}, category), { order: [['title', 'ASC']], include: [
+            const courses = await this.courseRepository.findAll({
+                ...category,
+                order: [['title', 'ASC']],
+                include: [
                     {
                         model: subscriptions_models_1.Subscriptions,
                         attributes: ['user_id'],
                         include: [{ model: user_models_1.User, include: [{ model: role_models_1.Role }] }],
                     },
-                ] }));
+                ],
+            });
             return courses;
         }
         catch (error) {
@@ -126,7 +137,7 @@ let CourseService = class CourseService {
                                     },
                                 },
                                 required: false
-                            }, { model: course_models_1.Course, where: Object.assign({}, id) }]
+                            }, { model: course_models_1.Course, where: { ...id } }]
                     }],
                 order: [[{ model: subscriptions_models_1.Subscriptions, as: 'subscriptions' }, { model: user_models_1.User, as: 'user' }, 'name', 'ASC']],
             });
@@ -252,7 +263,7 @@ let CourseService = class CourseService {
                 file_data = await this.uploadedService.create({ file_type }, cover);
                 cover = file_data.data.url;
             }
-            const update = await this.courseRepository.update(Object.assign(Object.assign({}, courseDto), { cover: cover || course.cover }), {
+            const update = await this.courseRepository.update({ ...courseDto, cover: cover || course.cover }, {
                 where: { id },
                 returning: true,
             });

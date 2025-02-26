@@ -41,12 +41,11 @@ let SubscriptionsService = class SubscriptionsService {
         }
     }
     async createSubscription(creaetSubscriptionsDto, user_id) {
-        var _a;
         try {
-            const user = await this.userService.register(Object.assign(Object.assign({}, creaetSubscriptionsDto), { role: 'student' }));
+            const user = await this.userService.register({ ...creaetSubscriptionsDto, role: 'student' });
             console.log(user);
             const { course_ids, role } = creaetSubscriptionsDto;
-            user_id = (_a = user.data) === null || _a === void 0 ? void 0 : _a.user.id;
+            user_id = user.data?.user.id;
             let subcription;
             let i;
             for (i of course_ids) {

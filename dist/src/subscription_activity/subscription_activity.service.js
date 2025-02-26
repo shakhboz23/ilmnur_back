@@ -42,7 +42,7 @@ let Subscription_activityService = class Subscription_activityService {
                 return this.update(exist.id, status);
             }
             else if (status !== 'none') {
-                return await this.subscription_activityRepository.create(Object.assign(Object.assign({}, subscriptionActivityDto), { createdAt: date || new Date() }));
+                return await this.subscription_activityRepository.create({ ...subscriptionActivityDto, createdAt: date || new Date() });
             }
             else {
                 return this.delete(exist.id);

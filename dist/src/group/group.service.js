@@ -41,7 +41,11 @@ let GroupService = class GroupService {
             if (cover) {
                 image_url = await this.uploadedService.create(cover, file_type);
             }
-            const group = await this.groupRepository.create(Object.assign(Object.assign({}, groupDto), { user_id, cover: image_url }));
+            const group = await this.groupRepository.create({
+                ...groupDto,
+                user_id,
+                cover: image_url,
+            });
             return group;
         }
         catch (error) {
@@ -56,7 +60,9 @@ let GroupService = class GroupService {
             }
             const filters = {
                 order: [['title', 'ASC']],
-                include: [{ model: user_models_1.User }, Object.assign({ model: course_models_1.Course, attributes: [] }, category)],
+                include: [{ model: user_models_1.User }, {
+                        model: course_models_1.Course, attributes: [], ...category,
+                    }],
                 attributes: {
                     include: [
                         [
@@ -79,10 +85,15 @@ let GroupService = class GroupService {
                 },
                 replacements: { category_id },
             };
-            const groups = await this.groupRepository.findAll(Object.assign({}, filters));
+            const groups = await this.groupRepository.findAll({
+                ...filters,
+            });
             let my_groups = [];
             if (user_id) {
-                my_groups = await this.groupRepository.findAll(Object.assign({ where: { user_id } }, filters));
+                my_groups = await this.groupRepository.findAll({
+                    where: { user_id },
+                    ...filters,
+                });
             }
             return {
                 groups,
@@ -151,7 +162,7 @@ let GroupService = class GroupService {
                 file_data = await this.uploadedService.create({ file_type }, cover);
                 cover = file_data.data.url;
             }
-            const update = await this.groupRepository.update(Object.assign(Object.assign({}, groupDto), { cover: cover || groupes.cover }), {
+            const update = await this.groupRepository.update({ ...groupDto, cover: cover || groupes.cover }, {
                 where: { id },
                 returning: true,
             });

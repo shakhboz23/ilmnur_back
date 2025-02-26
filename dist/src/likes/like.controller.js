@@ -33,12 +33,12 @@ let LikeController = class LikeController {
     }
     getAll(headers) {
         const auth_header = headers['authorization'];
-        const token = auth_header === null || auth_header === void 0 ? void 0 : auth_header.split(' ')[1];
+        const token = auth_header?.split(' ')[1];
         console.log(token, 'token2303');
         const user = token
             ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
             : null;
-        const user_id = user === null || user === void 0 ? void 0 : user.id;
+        const user_id = user?.id;
         console.log(user_id, '565456');
         return this.likeService.getAll();
     }

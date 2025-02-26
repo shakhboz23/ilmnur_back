@@ -27,11 +27,14 @@ let BotService = class BotService {
         this.userService = userService;
     }
     commands() {
-        return Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-            ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
-        ])
-            .oneTime()
-            .resize());
+        return {
+            parse_mode: 'HTML',
+            ...telegraf_1.Markup.keyboard([
+                ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+            ])
+                .oneTime()
+                .resize()
+        };
     }
     ;
     async start(ctx) {
@@ -45,26 +48,35 @@ let BotService = class BotService {
                     surname: ctx.from.last_name,
                     username: ctx.from.username,
                 });
-                await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-                    [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
-                ])
-                    .oneTime()
-                    .resize()));
+                await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, {
+                    parse_mode: 'HTML',
+                    ...telegraf_1.Markup.keyboard([
+                        [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+                    ])
+                        .oneTime()
+                        .resize(),
+                });
             }
             else if (!user.dataValues.status) {
-                await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-                    [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
-                ])
-                    .oneTime()
-                    .resize()));
+                await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, {
+                    parse_mode: 'HTML',
+                    ...telegraf_1.Markup.keyboard([
+                        [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+                    ])
+                        .oneTime()
+                        .resize(),
+                });
             }
             else {
                 await this.bot.telegram.sendChatAction(bot_id, 'typing');
-                await ctx.reply("Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-                    ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
-                ])
-                    .oneTime()
-                    .resize()));
+                await ctx.reply("Bu bot orqali IlmNur dasturi orqali ro'yhatga o'tilgan", {
+                    parse_mode: 'HTML',
+                    ...telegraf_1.Markup.keyboard([
+                        ["Parolni o'zgaritish", "Telefon raqamni o'zgartirish"],
+                    ])
+                        .oneTime()
+                        .resize()
+                });
             }
         }
         catch (error) {
@@ -74,16 +86,22 @@ let BotService = class BotService {
     async handlePhone(ctx) {
         const bot_id = ctx.from.id;
         const user = await this.botRepo.findOne({ where: { bot_id } });
-        await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-            [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
-        ])
-            .oneTime()
-            .resize()));
+        await ctx.reply(`Iltimos, <b> "Telefon raqamni yuborish"</b> tugmasini bosing!`, {
+            parse_mode: 'HTML',
+            ...telegraf_1.Markup.keyboard([
+                [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+            ])
+                .oneTime()
+                .resize(),
+        });
     }
     async handlePassword(ctx) {
         const bot_id = ctx.from.id;
         const user = await this.botRepo.findOne({ where: { bot_id } });
-        await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+        await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", {
+            parse_mode: 'HTML',
+            ...telegraf_1.Markup.removeKeyboard(),
+        });
     }
     async onContact(ctx) {
         if ('contact' in ctx.message) {
@@ -91,16 +109,22 @@ let BotService = class BotService {
             let is_phone = false;
             const user = await this.botRepo.findOne({ where: { bot_id } });
             if (!user) {
-                await ctx.reply(`Iltimos, <b>Start</b> tugmasini bosing!`, Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([['/start']])
-                    .oneTime()
-                    .resize()));
+                await ctx.reply(`Iltimos, <b>Start</b> tugmasini bosing!`, {
+                    parse_mode: 'HTML',
+                    ...telegraf_1.Markup.keyboard([['/start']])
+                        .oneTime()
+                        .resize(),
+                });
             }
             else if (ctx.message.contact.user_id != bot_id) {
-                await ctx.reply("Iltimos, o'zingizni telefon raqamingizni kiriting!", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.keyboard([
-                    [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
-                ])
-                    .oneTime()
-                    .resize()));
+                await ctx.reply("Iltimos, o'zingizni telefon raqamingizni kiriting!", {
+                    parse_mode: 'HTML',
+                    ...telegraf_1.Markup.keyboard([
+                        [telegraf_1.Markup.button.contactRequest('Telefon raqamni yuborish')],
+                    ])
+                        .oneTime()
+                        .resize(),
+                });
             }
             else {
                 if (user.phone) {
@@ -117,10 +141,16 @@ let BotService = class BotService {
                     returning: true
                 });
                 if (is_phone) {
-                    await ctx.reply("Telefon raqamingiz muvaffaqiyatli o'zgartirildi", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+                    await ctx.reply("Telefon raqamingiz muvaffaqiyatli o'zgartirildi", {
+                        parse_mode: 'HTML',
+                        ...telegraf_1.Markup.removeKeyboard(),
+                    });
                 }
                 else {
-                    await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", Object.assign({ parse_mode: 'HTML' }, telegraf_1.Markup.removeKeyboard()));
+                    await ctx.reply("Parolingizni quyidagicha kiriting: 👇👇👇 \n\npass:user123", {
+                        parse_mode: 'HTML',
+                        ...telegraf_1.Markup.removeKeyboard(),
+                    });
                 }
             }
         }
@@ -132,7 +162,7 @@ let BotService = class BotService {
         const password = message.text.split(':')[1];
         const user = await this.botRepo.findOne({ where: { bot_id } });
         let bot_user;
-        if (!(user === null || user === void 0 ? void 0 : user.user_id)) {
+        if (!user?.user_id) {
             console.log(bot_user);
             console.log(bot_user.data.user.get('id'));
             await this.botRepo.update({ user_id: bot_user.data.user.get('id') }, {

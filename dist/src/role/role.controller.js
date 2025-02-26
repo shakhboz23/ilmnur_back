@@ -44,8 +44,7 @@ let RoleController = class RoleController {
         return this.roleService.getTeacherReyting(subject_id, roleReytingDto);
     }
     getAllStudent(class_id, request) {
-        var _a;
-        console.log((_a = request === null || request === void 0 ? void 0 : request.user) === null || _a === void 0 ? void 0 : _a.id, '-------------------------red');
+        console.log(request?.user?.id, '-------------------------red');
         return this.roleService.getAllStudent(class_id);
     }
     countUsers(users) {
@@ -72,16 +71,16 @@ let RoleController = class RoleController {
     }
     handleUserId(headers) {
         const auth_header = headers['authorization'];
-        const token = auth_header === null || auth_header === void 0 ? void 0 : auth_header.split(' ')[1];
+        const token = auth_header?.split(' ')[1];
         const user = token
             ? this.jwtService.verify(token, { secret: process.env.ACCESS_TOKEN_KEY })
             : null;
-        if (!(user === null || user === void 0 ? void 0 : user.id)) {
+        if (!user?.id) {
             throw new common_1.UnauthorizedException({
                 message: 'Token topilmadi!',
             });
         }
-        const user_id = user === null || user === void 0 ? void 0 : user.id;
+        const user_id = user?.id;
         return user_id;
     }
 };
